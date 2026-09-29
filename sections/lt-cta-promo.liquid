@@ -1,0 +1,327 @@
+<div id="shopify-section-{{ section.id }}" class="lt-cta-split-section">
+  <div class="page-width">
+    <div class="lt-cta-split-wrapper {% if section.settings.layout == 'image_left' %}lt-cta-split-wrapper--reverse{% endif %}">
+      
+      <div class="lt-cta-content-wrap">
+        <div class="lt-cta-content-inner">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="lt-cta-heading" style="color: {{ section.settings.heading_color }};">
+              {{ section.settings.heading }}
+            </h2>
+          {%- endif -%}
+
+          {%- if section.settings.subheading != blank -%}
+            <div class="lt-cta-subheading">
+              <p>{{ section.settings.subheading }}</p>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.button_label != blank -%}
+            <div class="lt-cta-button-wrap">
+              <a href="{{ section.settings.button_link | default: '#' }}" 
+                 class="lt-cta-btn" 
+                 style="background-color: {{ section.settings.button_bg_color }}; color: {{ section.settings.button_text_color }};">
+                {{ section.settings.button_label }}
+              </a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="lt-cta-image-wrap">
+        {%- if section.settings.image != blank -%}
+          <img 
+            src="{{ section.settings.image | image_url: width: 1400 }}" 
+            alt="{{ section.settings.image.alt | escape | default: section.settings.heading }}" 
+            loading="lazy" 
+            width="{{ section.settings.image.width }}" 
+            height="{{ section.settings.image.height }}"
+            class="lt-cta-img"
+          >
+        {%- else -%}
+          {{ 'lifestyle-2' | placeholder_svg_tag: 'lt-placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Scoped Section Styles */
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    overflow: hidden; /* Prevents large images from breaking horizontal scroll */
+  }
+
+  /* Desktop First Layout */
+  #shopify-section-{{ section.id }} .lt-cta-split-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-split-wrapper--reverse {
+    flex-direction: row-reverse;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-content-wrap {
+    flex: 1 1 50%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-image-wrap {
+    flex: 1 1 50%;
+    width: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-heading {
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-subheading {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-subheading p {
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-btn {
+    display: inline-block;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 9999px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  #shopify-section-{{ section.id }} .lt-cta-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 700px;
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .lt-placeholder-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #f3f3f3;
+    fill: #cccccc;
+    aspect-ratio: 1 / 1;
+  }
+
+  /* Tablet & Mobile Breakpoint (767px) */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+      margin-top: {{ section.settings.margin_top | times: 0.6 | round }}px;
+      margin-bottom: {{ section.settings.margin_bottom | times: 0.6 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-split-wrapper,
+    #shopify-section-{{ section.id }} .lt-cta-split-wrapper--reverse {
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-content-wrap,
+    #shopify-section-{{ section.id }} .lt-cta-image-wrap {
+      width: 100%;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-heading {
+      font-size: 36px;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-subheading {
+      font-size: 18px;
+      margin-bottom: 32px;
+    }
+  }
+
+  /* Small Mobile Breakpoint (480px) */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-cta-heading {
+      font-size: 32px;
+      text-align: left;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-subheading {
+      font-size: 16px;
+      text-align: left;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-btn {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 14px;
+      padding: 12px 30px;
+      letter-spacing: 0;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT CTA Split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#28234A"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background",
+      "default": "#28234A"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image Position (Desktop)",
+      "options": [
+        {
+          "value": "image_right",
+          "label": "Image on right"
+        },
+        {
+          "value": "image_left",
+          "label": "Image on left"
+        }
+      ],
+      "default": "image_right"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ready to finally sleep better?"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Experience deeper, calmer sleep starting tonight."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Get Your Muzzle Gravity Blanket"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Section Image",
+      "info": "Transparent background PNG recommended for best effect if using a colored section background."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT CTA Split",
+      "category": "Promotional"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,353 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+<div class="lt-loyalty-balance">
+  <div class="page-width">
+    <div class="lt-loyalty-balance__inner">
+
+      <div class="lt-loyalty-balance__media">
+        {%- if section.settings.image != blank -%}
+          <img
+            class="lt-loyalty-balance__img"
+            src="{{ section.settings.image | image_url }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            loading="lazy"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+          >
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'lt-loyalty-balance__placeholder' }}
+        {%- endif -%}
+      </div>
+
+      <div class="lt-loyalty-balance__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <span class="lt-loyalty-balance__eyebrow">{{ section.settings.eyebrow }}</span>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-loyalty-balance__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="lt-loyalty-balance__description">{{ section.settings.description }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.button_label != blank -%}
+          <a href="{{ section.settings.button_link }}" class="lt-loyalty-balance__button">
+            <span>{{ section.settings.button_label }}</span>
+            {%- if section.settings.show_arrow -%}
+              <svg class="lt-loyalty-balance__arrow" viewBox="0 0 20 20" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 10h11m0 0l-4.5-4.5M15 10l-4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 64px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ section.settings.image_radius }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__placeholder {
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    opacity: 0.4;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__eyebrow {
+    display: inline-block;
+    padding: 8px 18px;
+    margin-bottom: 24px;
+    border-radius: 100px;
+    background-color: {{ section.settings.eyebrow_bg_color }};
+    color: {{ section.settings.eyebrow_text_color }};
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__heading {
+    margin: 0 0 24px;
+    font-size: 52px;
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -1px;
+    color: {{ section.settings.heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__description {
+    max-width: 560px;
+    margin-bottom: 32px;
+    font-size: 18px;
+    line-height: 1.55;
+    color: {{ section.settings.text_color }};
+    opacity: 0.85;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__description p {
+    margin: 0 0 12px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__description p:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 17px 34px;
+    border-radius: 100px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__button:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+
+  #shopify-section-{{ section.id }} .lt-loyalty-balance__arrow {
+    flex: 0 0 auto;
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-balance__inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-balance__media {
+      order: 1;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-balance__content {
+      order: 2;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-balance__heading {
+      font-size: 34px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-balance__description {
+      font-size: 16px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-loyalty-balance__heading {
+      font-size: 28px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Loyalty Balance",
+  "tag": "section",
+  "class": "lt-loyalty-balance-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Muzzle Sleep Club"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_bg_color",
+      "label": "Eyebrow background",
+      "default": "#ECEAFB"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_text_color",
+      "label": "Eyebrow text",
+      "default": "#5B4FCF"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Rewards That Help You Rest Easy"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1F1B4D"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Better sleep is a routine — and we believe routines deserve to be rewarded. Whether you're stocking up on your favorite Muzzle Sleeping Strips, trying a new hold strength, or sharing your experience, The Muzzle Sleep Club helps you earn more from every step.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Sign Up Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show arrow icon",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#1B1740"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Loyalty Balance"
+    }
+  ]
+}
+{% endschema %}

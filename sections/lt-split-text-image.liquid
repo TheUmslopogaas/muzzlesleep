@@ -1,0 +1,584 @@
+{%- liquid
+  assign pt     = section.settings.padding_top
+  assign pb     = section.settings.padding_bottom
+  assign mt     = section.settings.margin_top
+  assign mb     = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+
+  assign layout_reverse = section.settings.layout_reverse
+-%}
+
+<div
+  class="lt-split"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <div class="page-width">
+    <div class="lt-split__inner{% if layout_reverse %} lt-split__inner--reverse{% endif %}">
+
+      {%- comment -%}━━━━━━━ LEFT: Text ━━━━━━━{%- endcomment -%}
+      <div class="lt-split__text-col">
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-split__heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.body_text != blank -%}
+          <p class="lt-split__body" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.body_text }}
+          </p>
+        {%- endif -%}
+
+        {%- assign bullet_blocks = section.blocks | where: 'type', 'bullet' -%}
+        {%- if bullet_blocks.size > 0 -%}
+          <ul class="lt-split__bullets" aria-label="Key features">
+            {%- for block in bullet_blocks -%}
+              {%- if block.settings.text != blank -%}
+                <li class="lt-split__bullet" {{ block.shopify_attributes }}>
+                  <span class="lt-split__bullet-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="10" cy="10" r="10" fill="{{ section.settings.check_bg_color }}"/>
+                      <path d="M5.5 10.25L8.5 13.25L14.5 7.25" stroke="{{ section.settings.check_icon_color }}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="lt-split__bullet-text" style="color: {{ section.settings.text_color }};">{{ block.settings.text }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- assign paragraph_blocks = section.blocks | where: 'type', 'paragraph' -%}
+        {%- if paragraph_blocks.size > 0 -%}
+          <div class="lt-split__paragraphs">
+            {%- for block in paragraph_blocks -%}
+              {%- if block.settings.text != blank -%}
+                <div class="lt-split__paragraph-inside" {{ block.shopify_attributes }}>
+                  <p>
+                    {{ block.settings.text }}
+                  </p>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}        
+
+        {%- if section.settings.cta_text != blank and section.settings.cta_url != blank -%}
+          <a
+            href="{{ section.settings.cta_url }}"
+            class="lt-split__cta"
+            style="background-color: {{ section.settings.cta_bg_color }}; color: {{ section.settings.cta_text_color }};"
+          >
+            {{ section.settings.cta_text }}
+          </a>
+        {%- endif -%}
+
+      </div>
+
+      {%- comment -%}━━━━━━━ RIGHT: Image ━━━━━━━{%- endcomment -%}
+      <div class="lt-split__img-col">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | img_url: 'master' }}"
+            alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+            class="lt-split__img"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'lt-split__img lt-split__img--placeholder' }}
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .lt-split__inner {
+    display: grid;
+    grid-template-columns: {{ section.settings.text_col_width }}fr {{ section.settings.img_col_width }}fr;
+    gap: {{ section.settings.col_gap }}px;
+    align-items: center;
+    min-height: {{ section.settings.min_height }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__inner--reverse {
+    direction: rtl;
+  }
+  #shopify-section-{{ section.id }} .lt-split__inner--reverse > * {
+    direction: ltr;
+  }
+
+  /* ── Text column ───────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-split__text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-right: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__inner--reverse .lt-split__text-col {
+    padding-right: 0;
+    padding-left: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    line-height: 1.07;
+    letter-spacing: -1px;
+    margin: 0 0 28px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__body,
+  #shopify-section-{{ section.id }} .lt-split__paragraph-inside p {
+    font-size: 18px;
+    line-height: 1.8;
+    margin: 0 0 20px;
+    max-width: 460px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    color: #222;
+  }
+  #shopify-section-{{ section.id }} .lt-split__paragraph-inside {
+    margin-top: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__paragraph-inside:first-child {
+    margin-top: 0;
+  }  
+
+  /* ── Bullets ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-split__bullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-split__bullet {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid {{ section.settings.divider_color }};
+    {% if section.settings.smaller_gap == true %}
+      padding: 7px 0;
+    {% endif %}
+  }
+  #shopify-section-{{ section.id }} .lt-split__bullet:first-child {
+    border-top: 1px solid {{ section.settings.divider_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-split__bullet:last-child {
+    margin-bottom: 10px;
+  }
+  {% if section.settings.smaller_gap == true %}
+    #shopify-section-{{ section.id }} .lt-split__bullet-icon svg {
+      width: 15px;
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .lt-split__bullet-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-top: 2px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__bullet-text {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  /* ── CTA ───────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-split__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+    padding: 15px 36px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    align-self: flex-start;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    letter-spacing: 0.1px;
+  }
+  #shopify-section-{{ section.id }} .lt-split__cta:hover {
+    opacity: 0.87;
+    transform: translateY(-1px);
+  }
+
+  /* ── Image column ──────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-split__img-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+  #shopify-section-{{ section.id }} .lt-split__img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .lt-split__img--placeholder {
+    width: 100%;
+    opacity: 0.2;
+  }
+
+  /* ── Full Width Image Breakout Logic ───────── */
+  {% if section.settings.full_width %}
+    #shopify-section-{{ section.id }} .lt-split {
+      overflow: hidden; /* Crops the overflowing image at screen edge */
+    }
+    #shopify-section-{{ section.id }} .lt-split__inner,
+    #shopify-section-{{ section.id }} .lt-split__inner--reverse {
+      align-items: stretch; /* Stretch columns so they match in height */
+      grid-template-columns: {{ section.settings.text_col_width }}fr minmax(0, {{ section.settings.img_col_width }}fr);
+    }
+    #shopify-section-{{ section.id }} .lt-split__text-col {
+      justify-content: center; /* Keeps text centered vertically */
+    }
+    
+    /* Lock the image column so the absolute image stays anchored to it */
+    #shopify-section-{{ section.id }} .lt-split__img-col {
+      position: relative; 
+    }
+    
+    /* Make the image absolute so it stops forcing the grid height to expand */
+    #shopify-section-{{ section.id }} .lt-split__img,
+    #shopify-section-{{ section.id }} .lt-split__img--placeholder {
+      position: absolute;
+      top: 0;
+      left: 0; /* Anchor to the text side on standard layout */
+      width: 100vw;
+      height: 100%; /* Fill the height dictated by the text column */
+      max-width: none;
+      object-fit: cover;
+    }
+
+    /* Anchor to the text side on reversed layout */
+    #shopify-section-{{ section.id }} .lt-split__inner--reverse .lt-split__img,
+    #shopify-section-{{ section.id }} .lt-split__inner--reverse .lt-split__img--placeholder {
+      left: auto;
+      right: 0;
+    }
+  {% endif %}
+
+  /* ── Responsive 767px ─────────────────────── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-split {
+      padding-top: {{ pt_mob }}px !important;
+      padding-bottom: {{ pb_mob }}px !important;
+      margin-top: {{ mt_mob }}px !important;
+      margin-bottom: {{ mb_mob }}px !important;
+    }
+    #shopify-section-{{ section.id }} .lt-split__inner,
+    #shopify-section-{{ section.id }} .lt-split__inner--reverse {
+      grid-template-columns: 1fr;
+      direction: ltr;
+      gap: 36px;
+      min-height: unset;
+      {% if section.settings.full_width %}
+        align-items: center; /* Remove stretch on stacked mobile view */
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .lt-split__inner--reverse .lt-split__text-col,
+    #shopify-section-{{ section.id }} .lt-split__text-col {
+      padding-right: 0;
+      padding-left: 0;
+      order: 2;
+    }
+    #shopify-section-{{ section.id }} .lt-split__img-col {
+      order: 1;
+    }
+    
+    {% if section.settings.full_width %}
+      /* Bleed edge-to-edge on mobile devices automatically */
+      #shopify-section-{{ section.id }} .lt-split__img,
+      #shopify-section-{{ section.id }} .lt-split__img--placeholder {
+        position: relative; /* Reset absolute positioning for mobile flow */
+        height: auto;
+        max-height: 50vh; /* Prevent the image from taking over the whole phone screen */
+        margin-left: calc(-50vw + 50%); /* Pulls image to left screen edge perfectly */
+      }
+    {% endif %}
+
+    #shopify-section-{{ section.id }} .lt-split__heading {
+      font-size: {{ section.settings.heading_size | times: 0.6 | round }}px;
+      margin-bottom: 20px;
+    }
+    #shopify-section-{{ section.id }} .lt-split__cta {
+      width: 100%;
+      padding: 12px 30px;
+    }
+  }
+
+  /* ── Responsive 480px ─────────────────────── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-split__heading {
+      font-size: {{ section.settings.heading_size | times: 0.75 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-split__body {
+      font-size: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Split: Text + Image",
+  "class": "lt-section-split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body & bullet text color",
+      "default": "#2d2d3a"
+    },
+    {
+      "type": "color",
+      "id": "check_bg_color",
+      "label": "Checkmark circle color",
+      "default": "#7c6ef5"
+    },
+    {
+      "type": "color",
+      "id": "check_icon_color",
+      "label": "Checkmark tick color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Bullet divider color",
+      "default": "#e8e8f0"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Designed Specifically For Sleep"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading font size (px)",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "default": 60
+    },
+    {
+      "type": "textarea",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "Unlike standard earplugs made for work or concerts, Muzzle Snooze™ is built for overnight wear."
+    },
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg_color",
+      "label": "Button background",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "cta_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width image",
+      "default": false,
+      "info": "Breaks the image out of the container to bleed to the edge of the screen"
+    },
+    {
+      "type": "checkbox",
+      "id": "layout_reverse",
+      "label": "Reverse layout (image left, text right)",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "text_col_width",
+      "label": "Text column weight",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1,
+      "info": "Relative to image column weight"
+    },
+    {
+      "type": "range",
+      "id": "img_col_width",
+      "label": "Image column weight",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1,
+      "info": "Relative to text column weight"
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "label": "Column gap (px)",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Min section height (px)",
+      "min": 300,
+      "max": 900,
+      "step": 20,
+      "default": 500
+    },
+    {
+      "type": "checkbox",
+      "id": "smaller_gap",
+      "label": "Smaller Gap in between list items",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bullet",
+      "name": "Bullet Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Bullet text",
+          "default": "Lightweight & flexible for extended comfort"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "name": "Paragraph",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Paragraph text",
+          "default": "And before you realize it… you’re asleep."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "LT Split: Text + Image",
+      "category": "LT Sections",
+      "blocks": [
+        { "type": "bullet", "settings": { "text": "Lightweight & flexible for extended comfort" } },
+        { "type": "bullet", "settings": { "text": "Low-profile design for side sleepers" } },
+        { "type": "bullet", "settings": { "text": "Reduces background noise while still allowing awareness of important sounds" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,560 @@
+{%- liquid
+  assign pt     = section.settings.padding_top
+  assign pb     = section.settings.padding_bottom
+  assign mt     = section.settings.margin_top
+  assign mb     = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+
+  assign section_bg = section.settings.bg_color
+  if section.settings.bg_gradient != blank
+    assign section_bg = section.settings.bg_gradient
+  endif
+-%}
+
+<div
+  class="lt-faq"
+  data-section-id="{{ section.id }}"
+  style="
+    background: {{ section_bg }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <div class="page-width">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="lt-faq__heading" style="color: {{ section.settings.heading_color }};">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    <div class="lt-faq__list" role="list">
+      {%- assign faq_blocks = section.blocks | where: 'type', 'faq' -%}
+      {%- for block in faq_blocks -%}
+        {%- if block.settings.question != blank -%}
+          {%- assign item_id = 'lt-faq-item-' | append: section.id | append: '-' | append: forloop.index -%}
+          {%- assign panel_id = 'lt-faq-panel-' | append: section.id | append: '-' | append: forloop.index -%}
+
+          <div
+            class="lt-faq__item{% if forloop.first and section.settings.first_open %} lt-faq__item--open{% endif %}"
+            role="listitem"
+            {{ block.shopify_attributes }}
+          >
+            {%- comment -%} Question trigger ─ white card row {%- endcomment -%}
+            <button
+              class="lt-faq__trigger"
+              type="button"
+              id="{{ item_id }}"
+              aria-expanded="{% if forloop.first and section.settings.first_open %}true{% else %}false{% endif %}"
+              aria-controls="{{ panel_id }}"
+              style="
+                background: {{ section.settings.card_bg }};
+                border-color: {{ section.settings.card_border }};
+                border-radius: {{ section.settings.card_radius }}px;
+                color: {{ section.settings.question_color }};
+              "
+            >
+              <span class="lt-faq__question">{{ block.settings.question }}</span>
+              <span
+                class="lt-faq__chevron-wrap"
+                aria-hidden="true"
+                style="background-color: {{ section.settings.chevron_bg }};"
+              >
+                <svg class="lt-faq__chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 10L8 5L13 10" stroke="{{ section.settings.chevron_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+
+            {%- comment -%} Answer panel ─ sits on gradient bg {%- endcomment -%}
+            <div
+              class="lt-faq__panel"
+              id="{{ panel_id }}"
+              role="region"
+              aria-labelledby="{{ item_id }}"
+              style="color: {{ section.settings.answer_color }};"
+            >
+              <div class="lt-faq__answer">
+                {{ block.settings.answer }}
+              </div>
+            </div>
+
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* ── Heading ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__heading {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    text-align: center;
+    letter-spacing: -0.5px;
+    margin: 0 0 52px;
+  }
+
+  /* ── List ──────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: {{ section.settings.content_max_width }}px;
+    margin: 0 auto;
+  }
+
+  /* ── Item ──────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Trigger (white card) ──────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 15px 20px 15px 24px;
+    border: 1px solid;
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    z-index: 1;
+    transition: box-shadow 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-faq__trigger:hover {
+    box-shadow: 0 4px 16px rgba(30, 27, 75, 0.08);
+  }
+  #shopify-section-{{ section.id }} .lt-faq__question {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
+    flex: 1;
+  }
+
+  /* ── Chevron circle ────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__chevron-wrap {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-faq__chevron {
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* starts pointing UP (open = up chevron per reference) */
+    transform: rotate(0deg);
+  }
+
+  /* Collapsed state — chevron points down */
+  #shopify-section-{{ section.id }} .lt-faq__item:not(.lt-faq__item--open) .lt-faq__chevron {
+    transform: rotate(180deg);
+  }
+
+  /* ── Answer panel ──────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lt-faq__item--open .lt-faq__panel {
+    grid-template-rows: 1fr;
+  }
+  #shopify-section-{{ section.id }} .lt-faq__answer {
+    overflow: hidden;
+    min-height: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0 24px;
+    /* fade + slide */
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.3s ease 0.05s,
+      transform 0.3s ease 0.05s;
+  }
+  #shopify-section-{{ section.id }} .lt-faq__item--open .lt-faq__answer {
+    opacity: 1;
+    transform: translateY(0);
+    padding: 20px 24px 28px;
+  }
+  #shopify-section-{{ section.id }} .lt-faq__answer p { margin: 0 0 10px; }
+  #shopify-section-{{ section.id }} .lt-faq__answer p:last-child { margin: 0; }
+
+  /* ── Divider between items ─────────────────── */
+  #shopify-section-{{ section.id }} .lt-faq__item + .lt-faq__item {
+    margin-top: 12px;
+  }
+
+  /* bottom border for last item answer area */
+  #shopify-section-{{ section.id }} .lt-faq__list::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: {{ section.settings.card_border }};
+    margin-top: 4px;
+    opacity: 0.4;
+  }
+
+  /* ── Responsive 767px ──────────────────────── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-faq {
+      padding-top: {{ pt_mob }}px !important;
+      padding-bottom: {{ pb_mob }}px !important;
+      margin-top: {{ mt_mob }}px !important;
+      margin-bottom: {{ mb_mob }}px !important;
+    }
+    #shopify-section-{{ section.id }} .lt-faq__heading {
+      font-size: 30px;
+      margin-bottom: 36px;
+    }
+    #shopify-section-{{ section.id }} .lt-faq__question {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-faq__trigger {
+      padding: 16px 14px 16px 18px;
+    }
+  }
+
+  /* ── Responsive 480px ──────────────────────── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-faq__heading {
+      font-size: 24px;
+    }
+    #shopify-section-{{ section.id }} .lt-faq__question {
+      font-size: 14px;
+    }
+    #shopify-section-{{ section.id }} .lt-faq__answer {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  function initFaq(sectionEl) {
+    if (!sectionEl) return;
+
+    var triggers = Array.from(sectionEl.querySelectorAll('.lt-faq__trigger'));
+    var allowMultiple = {{ section.settings.allow_multiple | json }};
+
+    function openItem(item, trigger) {
+      item.classList.add('lt-faq__item--open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeItem(item, trigger) {
+      item.classList.remove('lt-faq__item--open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function handleTrigger(trigger) {
+      var item = trigger.closest('.lt-faq__item');
+      if (!item) return;
+      var isOpen = item.classList.contains('lt-faq__item--open');
+
+      if (!allowMultiple) {
+        triggers.forEach(function (t) {
+          closeItem(t.closest('.lt-faq__item'), t);
+        });
+      }
+
+      if (isOpen) {
+        closeItem(item, trigger);
+      } else {
+        openItem(item, trigger);
+      }
+    }
+
+    triggers.forEach(function (trigger) {
+      trigger.addEventListener('click', function () {
+        handleTrigger(trigger);
+      });
+
+      /* Keyboard: Space / Enter already fire click; also support arrow keys */
+      trigger.addEventListener('keydown', function (e) {
+        var idx = triggers.indexOf(trigger);
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (triggers[idx + 1]) triggers[idx + 1].focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (triggers[idx - 1]) triggers[idx - 1].focus();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          triggers[0].focus();
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          triggers[triggers.length - 1].focus();
+        }
+      });
+    });
+
+    sectionEl._ltFaqCleanup = function () {
+      triggers.forEach(function (trigger) {
+        trigger.replaceWith(trigger.cloneNode(true));
+      });
+    };
+  }
+
+  function teardownFaq(sectionEl) {
+    if (sectionEl && typeof sectionEl._ltFaqCleanup === 'function') {
+      sectionEl._ltFaqCleanup();
+      delete sectionEl._ltFaqCleanup;
+    }
+  }
+
+  /* Boot */
+  document.querySelectorAll('[data-section-id="{{ section.id }}"]').forEach(initFaq);
+
+  document.addEventListener('shopify:section:load', function (e) {
+    var el = e.target.querySelector('[data-section-id="{{ section.id }}"]') || e.target;
+    initFaq(el);
+  });
+
+  document.addEventListener('shopify:section:unload', function (e) {
+    var el = e.target.querySelector('[data-section-id="{{ section.id }}"]') || e.target;
+    teardownFaq(el);
+  });
+
+  /* Theme editor: re-init when a block is added/removed */
+  document.addEventListener('shopify:block:select', function (e) {
+    var item = e.target;
+    if (!item) return;
+    var trigger = item.querySelector('.lt-faq__trigger');
+    if (trigger) {
+      var parentItem = trigger.closest('.lt-faq__item');
+      if (parentItem) parentItem.classList.add('lt-faq__item--open');
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "LT FAQ Accordion",
+  "class": "lt-section-faq",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background base color",
+      "default": "#ede8f5"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(180deg, #FFFFFF 0%, #F8F6FE 25%, #F9F3FB 50%, #F6E8F7 75%, #E6DFFB 100%)"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Question card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border",
+      "label": "Question card border color",
+      "default": "#ddd8f0"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question text color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer text color",
+      "default": "#2d2d3a"
+    },
+    {
+      "type": "color",
+      "id": "chevron_bg",
+      "label": "Chevron circle color",
+      "default": "#3730a3"
+    },
+    {
+      "type": "color",
+      "id": "chevron_color",
+      "label": "Chevron icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Got Questions? We've got answers."
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "first_open",
+      "label": "Open first item by default",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multiple",
+      "label": "Allow multiple items open at once",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max-width (px)",
+      "min": 480,
+      "max": 1100,
+      "step": 20,
+      "default": 860
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius (px)",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How much noise do they block?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Muzzle Snooze™ helps reduce noise by up to 33dB, depending on fit and environment.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "LT FAQ Accordion",
+      "category": "LT Sections",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How much noise do they block?",
+            "answer": "<p>Muzzle Snooze™ helps reduce noise by up to 33dB, depending on fit and environment.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Are they comfortable for side sleepers?",
+            "answer": "<p>Yes. The low-profile, flexible design minimizes pressure when sleeping on your side.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I still hear my alarm?",
+            "answer": "<p>They reduce background noise but are designed to allow awareness of important sounds like alarms.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Are they reusable?",
+            "answer": "<p>Yes. Simply clean after use and store for nightly wear.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

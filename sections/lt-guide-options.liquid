@@ -1,0 +1,293 @@
+<style>
+  #shopify-section-{{ section.id }} .lt-guide-options {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-title {
+    font-size: 40px;
+    margin: 0 0 20px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-options {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  #shopify-section-{{ section.id }} .lt-option {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+  #shopify-section-{{ section.id }} .lt-option-media {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-option-media img {
+    width: 100%;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-badge {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    padding: 6px 20px;
+    border-radius: 10px;
+    background: #27214D;
+    color: #ffffff;
+    font-size: 14px;
+    letter-spacing: 0px;
+  }
+  #shopify-section-{{ section.id }} .lt-option-content {
+    padding-top: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-option-title {
+    font-size: 25px;
+    margin: 0 0 10px;
+  }
+  #shopify-section-{{ section.id }} .lt-option-desc ul {
+    margin: 0;
+    padding-left: 30px;
+  }
+  #shopify-section-{{ section.id }} .lt-option-desc li {
+    margin-bottom: 10px;
+    line-height: 1.4;
+    color: #121212;
+    font-size: 18px;
+    font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .lt-option-desc p {
+    margin: 0;
+    line-height: 1.4;
+    color: #121212;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+  }  
+  @media(max-width:900px){
+    #shopify-section-{{ section.id }} .lt-title {font-size: 28px;}
+    #shopify-section-{{ section.id }} .lt-guide-options {
+      padding-top: calc({{ section.settings.padding_top }}px * 0.6);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * 0.6);
+    }
+    #shopify-section-{{ section.id }} .lt-options {
+      flex-direction: column;
+    }
+  }
+
+  /* extra styles for optional mobile slider (no change when disabled) */
+  #shopify-section-{{ section.id }} .lt-guide-options-dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-steps2-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    border: none;
+    padding: 0;
+    background: #d0d0e5;
+    cursor: pointer;
+  }
+  #shopify-section-{{ section.id }} .lt-steps2-dot.is-active {
+    background: #27214D;
+  }
+  @media(max-width:900px){
+    #shopify-section-{{ section.id }} .lt-guide-options.lt-guide-options--has-slider .lt-options {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-options.lt-guide-options--has-slider .lt-option {
+      flex: 0 0 100%;
+      min-width: 100%;
+      scroll-snap-align: start;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-options.lt-guide-options--has-slider .lt-guide-options-dots {
+      display: flex;
+    }
+  }
+  @media(max-width:600px){
+    #shopify-section-{{ section.id }} .lt-option-title {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+    #shopify-section-{{ section.id }} .lt-option-desc li,
+    #shopify-section-{{ section.id }} .lt-option-desc p {
+      font-size: 15px;
+    }
+  }
+</style>
+
+<section class="lt-guide-options{% if section.settings.enable_mobile_slider %} lt-guide-options--has-slider{% endif %}">
+  <div class="lt-container">
+    <h2 class="lt-title">{{ section.settings.title }}</h2>
+    <div class="lt-options">
+      {% for block in section.blocks %}
+        <div class="lt-option" {{ block.shopify_attributes }} data-index="{{ forloop.index0 }}">
+          <div class="lt-option-media">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.title | escape }}">
+            {% endif %}
+            {% if block.settings.badge != blank %}
+              <span class="lt-badge">{{ block.settings.badge }}</span>
+            {% endif %}
+          </div>
+          <div class="lt-option-content">
+            {% if block.settings.title != blank %}
+              <h3 class="lt-option-title">{{ block.settings.title }}</h3>
+            {% endif %}
+            <div class="lt-option-desc">{{ block.settings.option_desc }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.enable_mobile_slider %}
+      <div class="lt-guide-options-dots">
+        {% for block in section.blocks %}
+          <button class="lt-steps2-dot{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if section.settings.enable_mobile_slider %}
+<script>
+  (function() {
+    var section = document.querySelector('#shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    var slider = section.querySelector('.lt-options');
+    var dots = section.querySelectorAll('.lt-steps2-dot');
+    if (!slider || !dots.length) return;
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 900px)').matches;
+    }
+
+    function setActiveDot(index) {
+      dots.forEach(function(dot) {
+        dot.classList.toggle('is-active', Number(dot.getAttribute('data-index')) === index);
+      });
+    }
+
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        if (!isMobile()) return;
+        var index = Number(dot.getAttribute('data-index'));
+        var width = slider.clientWidth;
+        slider.scrollTo({ left: width * index, behavior: 'smooth' });
+        setActiveDot(index);
+      });
+    });
+
+    slider.addEventListener('scroll', function() {
+      if (!isMobile()) return;
+      var width = slider.clientWidth;
+      var index = Math.round(slider.scrollLeft / width);
+      setActiveDot(index);
+    });
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "LT Guide Options",
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Section title",
+      "default": "Best Time to Apply"
+    },
+    {
+      "id": "padding_top",
+      "type": "range",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "padding_bottom",
+      "type": "range",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "enable_mobile_slider",
+      "type": "checkbox",
+      "label": "Enable mobile slider",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "option",
+      "name": "Option",
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge text",
+          "default": "Option 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Right before bedtime"
+        },
+        {
+          "type": "richtext",
+          "id": "option_desc",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Guide Options",
+      "blocks": [
+        {
+          "type": "option",
+          "settings": {
+            "badge": "Option 1",
+            "title": "Right before bedtime",
+            "option_desc": "<ul><li>Have your child lie down, close their eyes, and prepare for sleep.</li><li>Apply the tape gently over closed lips.</li><li>Hold firmly for 15 seconds. Avoid talking/moving afterward.</li></ul>"
+          }
+        },
+        {
+          "type": "option",
+          "settings": {
+            "badge": "Option 2",
+            "title": "After they fall asleep",
+            "option_desc": "<ul><li>Wait 1.5–2 hours (deepest sleep cycle).</li><li>Walk in quietly and apply tape while they are fully relaxed.</li></ul>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

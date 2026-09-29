@@ -1,0 +1,438 @@
+{%- liquid
+    assign _ss = section.settings
+    assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#faq_'
+    assign _this = section.id | prepend: '#shopify-section-'
+-%}
+
+{%- capture section_content -%}
+    <style>
+        {{ _this }} {
+            position: relative;
+        }
+
+        {{ _section }} {
+            position: relative;
+            background: {{ _ss.background }};
+            padding-top: {{ _ss.padding_top }}px;
+            padding-bottom: {{ _ss.padding_bottom }}px;
+        }
+    
+        {{ _section }} .ask_section {
+            position: relative;
+            max-width: {{ _ss.max_with }}px;
+            margin: auto;
+            padding: 0px 40px;
+        }
+    
+        {{ _section }} .down_img {
+            cursor: pointer;
+            transition: 0.3s;
+        }
+    
+        {{ _section }} .rotate {
+            transform: rotate(135deg);
+            transition: 0.3s;
+        }
+    
+        {{ _section }} .ask_title {
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        {{ _section }} .ask_title img {
+            width: 60px;
+            height: auto;
+            margin-right: 13px;
+            transform: translateY(17%);
+        }
+    
+        {{ _section }} .ask_title__text {
+            color: #26214E;
+            font-family: Manrope;
+            font-size: 30px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 120%;
+            letter-spacing: -0.6px;
+            text-transform: capitalize;
+            margin: 0;
+        }
+    
+        {{ _section }} .ask_title__text span {
+            color: #9487DF;
+        }
+    
+        {{ _section }} .ask_group {
+            margin: 50px 0;
+        }
+    
+        {{ _section }} .ask_group1 {border-bottom: 1px solid #E3DAEF;padding: 22px 0;}
+    
+        {{ _section }} .ask_group_flip {
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+    
+        {{ _section }} .ask_group1:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+    
+        {{ _section }} .ask_group1:first-child {
+            padding-top: 0;
+        }
+    
+        {{ _section }} .ask_group_title {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 16px */
+            letter-spacing: -0.32px;
+        }
+    
+        {{ _section }} .upcircle_content {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 140%; /* 16px */
+            letter-spacing: -0.32px;
+            margin-top: 20px;
+        }
+    
+        {{ _section }} .ask_group_flip img {
+            width: 19px;
+            height: 19px;
+        }
+    
+        {{ _section }} .still_ask_content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #27214D;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            letter-spacing: -0.28px;
+        }
+    
+        {{ _section }} a.ask_team {
+            margin-left: 5px;
+            font-weight: 700;
+            color: #9487DF;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+        }
+    
+        @media screen and (max-width: 900px) {
+            {{ _section }} {
+                padding-top: {{ _ss.padding_top_mobile }}px;
+                padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+            }
+            
+            {{ _section }} .ask_section {
+                padding: 0px 24px;
+            }
+    
+            {{ _section }} .ask_title {
+                flex-direction: row-reverse;
+                align-items: center;
+                justify-content: space-between;
+            }
+    
+            {{ _section }} .ask_title__text {
+                font-size: 24px;
+            }
+    
+            {{ _section }} .ask_title__text span {
+                display: block;
+            }
+    
+            {{ _section }} .ask_title img {
+                width: 90px;
+                margin-right: 0;
+                margin-left: 12px;
+            }
+    
+            {{ _section }} .ask_group {
+                margin: 33px 0;
+            }
+    
+            {{ _section }} .ask_group1 {
+                padding: 20px 0;
+            }
+    
+            {{ _section }} .ask_group_title {
+                font-size: 14px;
+            }
+    
+            {{ _section }} .ask_group_flip img {
+                width: 16px;
+                height: 16px;
+            }
+    
+            {{ _section }} .upcircle_content {
+                font-size: 14px;
+                margin-top: 15px;
+            }
+    
+            {{ _section }} .still_ask_content {
+                font-size: 12px;
+            }
+    
+        }
+    
+    </style>
+
+
+<div id="faq_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="ask_section">
+        <div class="ask_content">
+            <h2 class="ask_title">
+                {% if _ss.muzzle_icon %}
+                    <img src="{{ _ss.muzzle_icon | image_url: width: 100 }}" alt="muzzle icon">
+                {% endif %}
+                <span class="ask_title__text">
+                    {{- _ss.heading -}}
+                </span>
+            </h2>
+            <div class="ask_group">
+
+                {% for block in section.blocks %}
+                    {%- if block.type == "block" -%}
+                        <div class="ask_group1" {{ block.shopify_attributes }}>
+                            <div class="ask_group_flip">
+                                <div class="ask_group_title">
+                                    {{ block.settings.q }}
+                                </div>
+                                <img src="{{ 'faq-icon-plus.svg' | asset_url }}" alt="faq plus icon" class="down_img">
+                            </div>
+                            <div class="upcircle_content" style="display: none;">
+                                {{ block.settings.a }}
+                            </div>
+                        </div>
+                    {%- endif -%}
+                {% endfor %}
+            </div>
+            <div class="still_ask_content">
+                <div class="still_ask">
+                    {{ _ss.text_above_link }}
+                </div>
+                <a class="ask_team" href="{{ _ss.link_target }}" target="_blank">
+                    {{ _ss.link_txt }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- liquid
+    assign cloud_item = section.blocks | where: "type", "cloud"
+    if cloud_item.size > 0
+        assign cloud_item = cloud_item[0]
+    endif
+-%}
+
+{%- if cloud_item -%}
+    <div id="{{ cloud_item.id }}" {{ cloud_item.shopify_attributes }} lazy-scroll="24">
+        <style>
+            #{{ cloud_item.id }} {
+                position: absolute;
+                top: 0;
+                right: 11%;
+                width: {{ cloud_item.settings.width_desktop }}px;
+                height: auto;
+                display: flex;
+            }
+
+            #{{ cloud_item.id }} .cloud-imageWrapper {
+                transform: translateY(-50%);
+                width: 100%;
+                height: 100%;
+                display: flex;
+            }
+
+            #{{ cloud_item.id }} .cloud-imageWrapper>* {
+                width: 100%;
+                height: 100%;
+            }
+
+            @media screen and (max-width: 900px) {
+                #{{ cloud_item.id }} {
+                    top: 0;
+                    right: 0;
+                    width: {{ cloud_item.settings.width_mobile }}px;
+                }
+            }
+        </style>
+        <div class="cloud-imageWrapper">
+            <img src="{{ cloud_item.settings.image | image_url: width: 100 }}" alt="cloud image">
+        </div>
+    </div>
+{%- endif -%}
+
+<script>
+    $("{{ _section }} .ask_group_flip").click(function () {
+        $(this).next().slideToggle();
+        $(this).find('.down_img').toggleClass('rotate');
+    });
+
+</script>
+
+{%- endcapture -%}
+
+{{- section_content | remove: '  ' | strip_newlines -}}
+
+{% schema %}
+    {
+        "name": "FAQ (new)",
+        "settings": [
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1920
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "label": "Desktop padding top",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_top_mobile",
+                "label": "Mobile padding top",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "image_picker",
+                "id": "muzzle_icon",
+                "label": "Muzzle Icon"
+            },
+            {
+                "type": "textarea",
+                "id": "heading",
+                "label": "Heading",
+                "default": "<span>Got Questions?</span> We’ve got answers.",
+                "info": "Please input <span></span> for coloured heading"
+            },
+            {
+                "type": "text",
+                "id": "text_above_link",
+                "label": "Text above link",
+                "default": "Still no answer?"
+            },
+            {
+                "type": "text",
+                "id": "link_txt",
+                "label": "Link text",
+                "default": "Send us a message"
+            },
+            {
+                "type": "url",
+                "id": "link_target",
+                "label": "Link target"
+            }
+        ],
+        "blocks": [
+            {
+                "name": "faq",
+                "type": "block",
+                "settings": [
+                    {
+                        "type": "textarea",
+                        "id": "q",
+                        "label": "Question",
+                        "default": "Lorem ipsum dolor sit ament?"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "a",
+                        "label": "Answer",
+                        "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, sapien id pretium bibendum, elit nulla aliquet elit, vel tempor ante eros non mi. Sed eget mauris vel odio efficitur rhoncus. Nullam finibus tellus id lorem malesuada, vitae malesuada mi commodo. Aenean tincidunt tellus non risus tempor, vel bibendum quam porttitor"
+                    }
+                ]
+            },
+            {
+                "name": "Cloud",
+                "type": "cloud",
+                "limit": 1,
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Cloud image"
+                    },
+                    {
+                        "type": "range",
+                        "id": "width_desktop",
+                        "label": "Desktop width",
+                        "min": 0,
+                        "max": 300,
+                        "step": 5,
+                        "unit": "px",
+                        "default": 210
+                    },
+                    {
+                        "type": "range",
+                        "id": "width_mobile",
+                        "label": "Mobile width",
+                        "min": 0,
+                        "max": 300,
+                        "step": 5,
+                        "unit": "px",
+                        "default": 150
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "FAQ (new)"
+        }]
+    }
+{% endschema %}

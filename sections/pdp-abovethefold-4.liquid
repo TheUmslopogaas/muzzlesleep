@@ -1,0 +1,651 @@
+{% render 'pdp-abovethefold-styles' %}
+{% render 'frontrow-banner' %}
+<style>
+  .lt-pdp-main-widget .variant-picker {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .lt-pdp-main-widget .variant-pill {
+    flex: 1;
+    padding: 12px 10px;
+    text-align: center;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease;
+    font-size: 15px;
+    letter-spacing: 0;
+  }
+  .lt-pdp-main-widget .variant-pill-title {
+    display: block;
+  }
+  .lt-pdp-main-widget .variant-pill-subtext {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #777;
+    line-height: 1;
+  }  
+  .lt-pdp-main-widget .variant-pill.selected {
+    border-color: #666;
+    background-color: #F6F5FF;
+  }
+  .lt-pdp-main-widget .lt-variant-hidden {
+    display: none !important;
+  }
+</style>
+<div class="lt-pdp-main-widget">
+  <div class="container">
+    <div class="product-layout">
+      <!-- Left Gallery Section -->
+      <div class="gallery-section">
+        <div class="swiper main-swiper">
+          <div class="swiper-wrapper">
+            {% for image in product.images %}
+                <div class="swiper-slide" data-variant-ids="{% for image_variant in image.variants %}{{ image_variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}">
+                  <img src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}">
+                </div>
+            {% endfor %}
+          </div>
+          <!-- Add navigation arrows -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+  
+        <div class="swiper thumbs-swiper">
+          <div class="swiper-wrapper">
+            {% for image in product.images %}
+                <div class="swiper-slide" data-variant-ids="{% for image_variant in image.variants %}{{ image_variant.id }}{% unless forloop.last %},{% endunless %}{% endfor %}">
+                  <img src="{{ image | img_url: 'master' }}" alt="thumbnail_{{ image.alt | escape }}">
+                </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+  
+      <!-- Right Purchase Section -->
+      <div id="purchase-wrapper" class="purchase-section">
+        <div class="product-details">
+          <div class="text-contents">
+            {% comment %} <div class="recommendation-badge">Doctor Recommended</div> {% endcomment %}
+            <div class="product-title">{{product.title}}</div>
+            <a href="#judgeme_product_reviews" class="product-review">
+              <div class="review-star">
+                {% for i in (1..5) %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                    </svg>
+                {% endfor %}
+              </div>
+              <div class="review-score">4.94/5 Overall Rating</div>
+              <div class="review-text">Trusted by 11,000+ Customers</div>
+            </a>
+                                      {%  render 'frontrow' %}
+            <div class="product-description">{{product.description}}</div>
+            <div class="product-tags-wrap">
+              {% for tag in product.metafields.custom.pdp_badges.value %}
+                <div class="product-tag">{{ tag.badge_name }}</div>
+              {% endfor %}
+            </div>
+
+          </div>
+
+          {% if product.metafields.custom.product_sticker != blank %}
+            <div class="product-sticker">
+              <img src="{{ product.metafields.custom.product_sticker | img_url: 'master' }}" alt="">
+            </div>
+          {% endif %}
+        </div>    
+        {% unless product.tags contains 'bf_presale' %}
+          <h2 class="section-title">Select Option</h2>
+          <div class="variant-picker">
+            {% for variant in product.variants %}
+              <div class="variant-pill{% if forloop.first %} selected{% endif %}" data-variant-id="{{ variant.id }}">
+                <span class="variant-pill-title">{{ variant.title }}</span>
+                {% if variant.metafields.custom.description != blank %}
+                  <span class="variant-pill-subtext">{{ variant.metafields.custom.description }}</span>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endunless %}
+        {% unless product.tags contains 'bf_presale' %}    
+          <h2 class="section-title">Select Purchase Type</h2>
+        {% endunless %}
+        {% for variant in product.variants %}
+          {% for allocation in variant.selling_plan_allocations %}
+            <div class="option option-subscirption selected"
+              data-variant-id="{{ variant.id }}"
+              data-selling-plan-id="{{ allocation.selling_plan.id }}"
+              data-available="{{ variant.available }}"
+              data-inventory-quantity="{{ variant.inventory_quantity }}"
+              data-inventory-policy="{{ variant.inventory_policy }}">
+
+              <div class="option-info-wrap">
+                <div class="option-left">
+                  <div class="radio-input"></div>
+                  <div class="option-info">
+                    <h3>Subscribe & Save <span class="badge">Save 20%</span></h3>
+                    <p>{{ allocation.selling_plan.name }}</p>
+                  </div>
+                </div>
+                <div class="price">
+                  <span class="discounted-price">{{ allocation.price | money }}</span>
+                  <span class="original-price">{{ variant.price | money }}</span>
+                </div>
+              </div>
+              <div class="benefits">
+                <div class="benefit">
+                  <div class="benefit-icon"><img src="https://muzzlesleep.com/cdn/shop/files/ba828a57981e2b49aee2ba4937c8e705.png" alt=""></div>
+                  Never Run Out
+                </div>
+                <div class="benefit">
+                  <div class="benefit-icon"><img src="https://muzzlesleep.com/cdn/shop/files/7147faef9a720d0eb86190eba9716c39.png" alt=""></div>
+                  Sleep And Forget About It
+                </div>
+                <div class="benefit">
+                  <div class="benefit-icon"><img src="https://muzzlesleep.com/cdn/shop/files/af1cdb23ae5c49cfca49f6b887c1517a.png" alt=""></div>
+                  Extra 20% Off For Subscribing
+                </div>
+              </div>
+            </div>    
+          {% endfor %}
+          {%- assign pack_size = variant.metafields.custom.pack_size.value -%}
+          {%- assign price_3_pack = variant.metafields.custom.price_3_pack.value -%}
+          {%- assign price_6_pack = variant.metafields.custom.price_6_pack.value -%}
+          {%- assign total_3_pack = variant.price | times: 3 -%}
+          {%- assign total_6_pack = variant.price | times: 6 -%}
+          {%- if price_3_pack != blank -%}
+            {%- assign price_3_pack_cents = price_3_pack | times: 100 | round -%}
+          {%- else -%}
+            {%- assign price_3_pack_cents = total_3_pack -%}
+          {%- endif -%}
+          {%- if price_6_pack != blank -%}
+            {%- assign price_6_pack_cents = price_6_pack | times: 100 | round -%}
+          {%- else -%}
+            {%- assign price_6_pack_cents = total_6_pack -%}
+          {%- endif -%}          
+          <div class="option{% if product.tags contains 'bf_presale' %} selected{% endif %}"
+            data-variant-id="{{ variant.id }}"
+            data-quantity="1"
+            data-available="{{ variant.available }}"
+            data-inventory-quantity="{{ variant.inventory_quantity }}"
+            data-inventory-policy="{{ variant.inventory_policy }}">
+
+            <div class="option-left">
+              <div class="radio-input"></div>
+              <div class="option-info">
+                <h3>
+                  {{ variant.title }}
+                  {% if variant.metafields.custom.badge != blank %}
+                    <span class="badge">{{variant.metafields.custom.badge | escape}}</span>
+                  {% endif %}
+                </h3>
+                {%- if pack_size != blank -%}
+                  {%- assign daily_1_pack = variant.price | divided_by: pack_size -%}
+                  <p>{{ pack_size }} Pcs - ({{ daily_1_pack | money }} / day)</p>
+                {%- elsif variant.metafields.custom.description != blank -%}
+                  <p>{{ variant.metafields.custom.description | metafield_tag }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="price">
+              <span class="discounted-price">{{ variant.price | money }}</span>
+              <span class="original-price">{{ variant.compare_at_price | money }}</span>
+            </div>
+          </div>
+
+          <div class="option"
+            data-variant-id="{{ variant.id }}"
+            data-quantity="3"
+            data-available="{{ variant.available }}"
+            data-inventory-quantity="{{ variant.inventory_quantity }}"
+            data-inventory-policy="{{ variant.inventory_policy }}">
+
+            <div class="option-left">
+              <div class="radio-input"></div>
+              <div class="option-info">
+                <h3>
+                  Buy 3 For The Price Of 2
+                  <span class="badge">Most Popular</span>
+                </h3>
+                {%- if pack_size != blank -%}
+                  {%- assign pcs_3_pack = pack_size | times: 3 -%}
+                  {%- assign daily_3_pack = price_3_pack_cents | divided_by: pcs_3_pack -%}
+                  <p>{{ pcs_3_pack }} Pcs - ({{ daily_3_pack | money }} / day)</p>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="price">
+              <span class="discounted-price">{{ price_3_pack_cents | money }}</span>
+              {%- if price_3_pack != blank -%}
+                <span class="original-price">{{ total_3_pack | money }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="option"
+            data-variant-id="{{ variant.id }}"
+            data-quantity="6"
+            data-available="{{ variant.available }}"
+            data-inventory-quantity="{{ variant.inventory_quantity }}"
+            data-inventory-policy="{{ variant.inventory_policy }}">
+
+            <div class="option-left">
+              <div class="radio-input"></div>
+              <div class="option-info">
+                <h3>
+                  6 Months Supply
+                  <span class="badge">Best Value</span>
+                </h3>
+                {%- if pack_size != blank -%}
+                  {%- assign pcs_6_pack = pack_size | times: 6 -%}
+                  {%- assign daily_6_pack = price_6_pack_cents | divided_by: pcs_6_pack -%}
+                  <p>{{ pcs_6_pack }} Pcs - ({{ daily_6_pack | money }} / day)</p>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="price">
+              <span class="discounted-price">{{ price_6_pack_cents | money }}</span>
+              {%- if price_6_pack != blank -%}
+                <span class="original-price">{{ total_6_pack | money }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {% endfor %}
+
+        {% unless product.tags contains 'bf_presale' %}
+          {% comment %} <div class="bf-promotion-above-atc-pdp">Use <b>BF25</b> to save 25%!</div> {% endcomment %}
+          <button class="checkout-btn" id="checkoutBtn">
+            Checkout Now <img src="https://muzzlesleep.com/cdn/shop/t/4/assets/icon-checkout-lock.svg" alt="">
+          </button>
+        {% endunless %}
+        {% if product.tags contains 'bf_presale' %}
+          <a class="checkout-btn" id="checkoutBtn" href="/cart/{{ product.selected_or_first_available_variant.id }}:1" style="text-decoration: none;">
+            Checkout Now <img src="https://muzzlesleep.com/cdn/shop/t/4/assets/icon-checkout-lock.svg" alt="">
+          </a>
+        {% endif %}
+
+        <div class="pdp-shipping-txt">
+          <img src="https://cdn.shopify.com/s/files/1/0886/5542/9998/files/fa7-solid_shipping-fast_1.png?v=1787345604">
+          <span id="dynamic-shipping-text">Ships Tomorrow</span>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            // getDay() returns 0 for Sunday, 1 for Monday, etc... 5 is Friday, 6 is Saturday
+            const currentDay = new Date().getDay();
+            const shippingTextEl = document.getElementById("dynamic-shipping-text");
+            
+            // If it's Friday (5) or Saturday (6)
+            if (currentDay === 5 || currentDay === 6) {
+              shippingTextEl.innerText = "Ships Next Monday";
+            } else {
+              // This automatically covers Sunday (0) through Thursday (4)
+              shippingTextEl.innerText = "Ships Tomorrow";
+            }
+          });
+        </script>
+        <div class="guarantee">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 15'%3E%3Crect width='20' height='15' fill='%23B22234'/%3E%3Cpath d='M0,0h20v1H0zM0,2h20v1H0zM0,4h20v1H0zM0,6h20v1H0zM0,8h20v1H0zM0,10h20v1H0zM0,12h20v1H0z' fill='white'/%3E%3Crect width='8' height='8' fill='%233C3B6E'/%3E%3C/svg%3E"
+            alt="US Flag" class="flag">
+          Engineered For Comfort. Crafted For Performance
+        </div>
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+          {%- assign atf_reviews = product.metafields.custom.product_abovethefold_reviews.value -%}
+          <div class="swiper review-swiper">
+            <div class="swiper-wrapper">
+              {%- for review_obj in atf_reviews -%}
+                {%- assign star_count  = review_obj.stars | default: 5 | plus: 0 -%}
+                {%- assign author_img  = review_obj.author_image -%}
+                {%- assign author_name = review_obj.author_name -%}
+                {%- assign review_body = review_obj.reviews | metafield_tag -%}
+                <div class="swiper-slide">
+                  <div class="review-slide">
+                    {%- if author_img != blank -%}
+                      <div class="review-header">
+                        <img src="{{ author_img | image_url: width: 72 }}"
+                          alt="{{ author_name | strip_html | escape }}" class="reviewer-avatar">
+                      </div>
+                    {%- endif -%}
+                    <div class="review-text">
+                      <div class="reviewer-info">
+                        {%- if author_name != blank -%}
+                          <h4>{{ author_name | strip_html | escape }}</h4>
+                        {%- endif -%}
+                        <span class="stars">
+                          {%- for i in (1..star_count) -%}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                              <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                            </svg>
+                          {%- endfor -%}
+                        </span>
+                      </div>
+                      {%- if review_body != blank -%}
+                        <p>{{ review_body }}</p>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+            <!-- Add navigation arrows -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>        
+
+        <!-- Accordion Section -->
+        <div class="accordion-section">
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <span>Description</span>
+              <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">
+                {% if product.handle == 'sleep-deeply' %}
+                  <b>Why Sleep Deeply:</b><br>
+                  If you find yourself tossing and turning, waking up through the night, or feeling drained even after a full eight hours. Sleep Deeply is made for you. Its calming herbal blend helps your body naturally wind down, easing tension and quieting the mind so you can fall asleep faster, stay asleep longer, and wake up feeling clear, balanced, and genuinely rested.<br>
+                  <br><b>How to Use:</b><br>
+                  Take two capsules about 30–60 minutes before bedtime. For sensitive users, start with one capsule to gauge your response, then adjust as needed. Consistent nightly use supports a balanced sleep cycle and promotes long-term restorative rest.
+                {% elsif product.handle == 'muzzle®-nasal-strips-for-kids' or product.handle == 'adult-nasal-strips' %}
+                  {% comment %} Show nothing {% endcomment %}                  
+                {% else %}
+                  Our premium mouth tape is designed for optimal comfort and effectiveness. Made with medical-grade
+                  materials, it promotes better sleep quality by encouraging nasal breathing throughout the night.
+                {% endif %}
+              </div>
+            </div>
+          </div>
+  
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <span>Delivery & Returns</span>
+              <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+              {% if product.handle == 'sleep-deeply' %}
+                <div class="accordion-body">
+                   Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our <a href="/policies/refund-policy">Return Policy</a>.
+                </div>
+              {% else %}
+                <div class="accordion-body">
+                   Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our <a href="/policies/refund-policy">Return Policy</a>.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if product.tags contains 'bf_presale' %}
+  <style>
+    #shopify-section-{{ section.id }} .option {
+      display: none;
+    }
+    [data-rebuy-id="244246"] {
+      display: none !important;
+    }
+  </style>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  // Initialize thumbnail swiper first
+  const thumbsSwiper = new Swiper('.lt-pdp-main-widget .thumbs-swiper', {
+    spaceBetween: 10,
+    slidesPerView: 5,
+    freeMode: true,
+    watchSlidesProgress: true,
+    breakpoints: {
+      320: {
+        slidesPerView: 3,
+      },
+      480: {
+        slidesPerView: 4,
+      },
+      768: {
+        slidesPerView: 5,
+      },
+      900: {
+        slidesPerView: 6,
+      },
+      1200: {
+        slidesPerView: 7,
+      }
+    }
+  });
+  // Initialize main swiper
+  const mainSwiper = new Swiper('.lt-pdp-main-widget .main-swiper', {
+    spaceBetween: 10,
+    navigation: {
+      nextEl: '.lt-pdp-main-widget .gallery-section .swiper-button-next',
+      prevEl: '.lt-pdp-main-widget .gallery-section .swiper-button-prev',
+    },
+    thumbs: {
+      swiper: thumbsSwiper,
+    },
+  });
+  // Initialize review swiper
+  const reviewSwiper = new Swiper('.lt-pdp-main-widget .review-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    navigation: {
+      nextEl: '.lt-pdp-main-widget .reviews-section .swiper-button-next',
+      prevEl: '.lt-pdp-main-widget .reviews-section .swiper-button-prev',
+    },
+  });
+
+  // Handle option selection
+  /////////////////////////////////////////////
+// Get all option elements and the checkout button
+  const options = document.querySelectorAll('.option');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  function updateCheckoutState() {
+    const selectedOption = document.querySelector('.option.selected');
+    if (!selectedOption) return;
+
+    const available = selectedOption.dataset.available === 'true';
+    const inventoryPolicy = selectedOption.dataset.inventoryPolicy;
+    const inventoryQty = parseInt(selectedOption.dataset.inventoryQuantity || '0', 10);
+    const quantity = parseInt(selectedOption.dataset.quantity || '1', 10);
+
+    const enoughStock =
+      available &&
+      (inventoryPolicy !== 'deny' || inventoryQty >= quantity);
+
+    if (enoughStock) {
+      checkoutBtn.classList.remove('disabled');
+      checkoutBtn.innerHTML = 'Checkout Now <img src="https://muzzlesleep.com/cdn/shop/t/4/assets/icon-checkout-lock.svg" alt="">';
+    } else {
+      checkoutBtn.classList.add('disabled');
+      checkoutBtn.innerHTML = 'Sold Out';
+    }
+  }
+
+
+  // Add a click event listener to each option to handle selection
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      // Remove 'selected' class from all options
+      options.forEach(opt => opt.classList.remove('selected'));
+      // Add 'selected' class to the clicked option
+      option.classList.add('selected');
+      updateCheckoutState();
+    });
+  });
+
+  // Handle variant selection
+  const variantPills = document.querySelectorAll('.lt-pdp-main-widget .variant-pill');
+  const widgetOptions = document.querySelectorAll('.lt-pdp-main-widget .option');
+  const mainSlides = document.querySelectorAll('.lt-pdp-main-widget .main-swiper .swiper-slide');
+
+  function filterGallery(variantId) {
+    let targetIndex = -1;
+    mainSlides.forEach((slide, index) => {
+      if (targetIndex === -1) {
+        const ids = (slide.dataset.variantIds || '').split(',').filter(Boolean);
+        if (ids.indexOf(variantId) !== -1) {
+          targetIndex = index;
+        }
+      }
+    });
+    if (targetIndex > -1) {
+      mainSwiper.slideTo(targetIndex);
+    }
+  }
+
+  function selectVariant(variantId) {
+    variantPills.forEach(pill => {
+      pill.classList.toggle('selected', pill.dataset.variantId === variantId);
+    });
+
+    let firstMatch = null;
+    widgetOptions.forEach(option => {
+      const matches = option.dataset.variantId === variantId;
+      option.classList.toggle('lt-variant-hidden', !matches);
+      option.classList.remove('selected');
+      if (matches && !firstMatch) {
+        firstMatch = option;
+      }
+    });
+    if (firstMatch) {
+      firstMatch.classList.add('selected');
+    }
+
+    filterGallery(variantId);
+    updateCheckoutState();
+  }
+
+  variantPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      selectVariant(pill.dataset.variantId);
+    });
+  });
+
+  if (variantPills.length) {
+    const initialPill = document.querySelector('.lt-pdp-main-widget .variant-pill.selected') || variantPills[0];
+    selectVariant(initialPill.dataset.variantId);
+  }
+
+  updateCheckoutState();
+
+  // Add a click event listener to the main checkout button
+  checkoutBtn.addEventListener('click', () => {
+    const selectedOption = document.querySelector('.option.selected');
+    if (!selectedOption) {
+      alert('Please select a purchase option.');
+      return;
+    }
+
+    const isSubscription = selectedOption.classList.contains('option-subscirption');
+    const variantId = selectedOption.getAttribute('data-variant-id');
+    const sellingPlanId = selectedOption.getAttribute('data-selling-plan-id');
+    const quantity = parseInt(selectedOption.getAttribute('data-quantity') || 1);
+
+    if (isSubscription) {
+      
+      const formData = {
+        'items': [{
+          'id': variantId,
+          'quantity': 1,
+          'selling_plan': sellingPlanId
+        }]
+      };
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Product added as subscription:', data);
+        openCartDrawer();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      
+    } else {
+      // Standard one-time purchase
+      const formData = {
+        'items': [{
+          'id': variantId,
+          'quantity': quantity
+        }]
+      };
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Product added as one-time purchase:', data);
+        openCartDrawer();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+  });
+
+  // Function to open the cart drawer
+  function openCartDrawer() {
+    // Dawn theme has a specific event listener to open the cart drawer.
+    document.dispatchEvent(new CustomEvent('cart:open'));
+  }
+
+  ////////////////////////////////////////////
+
+  // Handle accordion functionality
+  const accordionHeaders = document.querySelectorAll('.accordion-header');  
+
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const accordionItem = header.parentElement;
+      const isActive = accordionItem.classList.contains('active');
+
+      // Close all accordion items
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        accordionItem.classList.add('active');
+      }
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "PDP Above The Fold 4",
+  "settings": [
+  ],
+  "presets": [
+    {
+      "name": "PDP Above The Fold 4"
+    }
+  ]
+}
+{% endschema %}

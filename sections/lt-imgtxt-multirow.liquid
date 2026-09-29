@@ -1,0 +1,325 @@
+<style>
+  #shopify-section-{{ section.id }} .lt-imgtxt-multirow {
+    margin: 50px 0;
+  }
+  #shopify-section-{{ section.id }} .lt-row-content {
+    display: flex;
+    flex-direction: column;
+    background-color: {{ section.settings.row_background_color }};
+    border-radius: {{ section.settings.row_border_radius }}px;
+    overflow: hidden;
+    margin-bottom: {{ section.settings.row_spacing }}px;
+    box-shadow: {{ section.settings.enable_shadow | default: false | replace: 'true', '0 4px 20px rgba(0, 0, 0, 0.1)' | replace: 'false', 'none' }};
+  }
+  #shopify-section-{{ section.id }} .lt-row-content:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-image-container {
+    width: 100%;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lt-image,
+  #shopify-section-{{ section.id }} .lt-placeholder-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-placeholder-image {
+    background-color: #f4f4f4;
+    padding-top: 66.67%;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .lt-placeholder-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    opacity: 0.5;
+  }
+  #shopify-section-{{ section.id }} .lt-text-container {
+    padding: 30px;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .lt-counter-n-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #27214D;
+    color: #fff;
+    font-weight: bold;
+    font-size: 22px;
+  }
+  #shopify-section-{{ section.id }} .lt-title {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    color: #27214D;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-description {
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  #shopify-section-{{ section.id }} .lt-description p {
+    margin: 0 0 12px 0;
+  }
+  #shopify-section-{{ section.id }} .lt-description strong {
+    font-weight: 800;
+    letter-spacing: 0px;
+  }
+  #shopify-section-{{ section.id }} .lt-button-container {
+    margin-top: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-button {
+    display: inline-block;
+    font-size: 14px;
+    padding: 10px 40px;
+    background-color: #27214D;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 100px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    letter-spacing: 0px;
+  }
+  #shopify-section-{{ section.id }} .lt-button:hover {
+    background-color: #27214D;
+  }
+  @media screen and (min-width: 768px) {
+    #shopify-section-{{ section.id }} .lt-row-content {
+      flex-direction: row;
+      align-items: center;
+    }
+    #shopify-section-{{ section.id }} .lt-image-container {
+      width: 40%;
+      flex-shrink: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-text-container {
+      width: 60%;
+      flex-shrink: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-image-right .lt-image-container {
+      order: 2;
+    }
+    #shopify-section-{{ section.id }} .lt-image-right .lt-text-container {
+      order: 1;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-text-container {
+      padding: 20px 0;
+    }
+    #shopify-section-{{ section.id }} .lt-button {
+      display: block;
+      text-align: center;
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-title {
+      font-size: 25px;
+      letter-spacing: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-description {
+      font-size: 15px;
+    }
+  }
+</style>
+
+
+<div class="lt-imgtxt-multirow" id="lt-imgtxt-multirow-{{ section.id }}">
+  <div class="container">
+    {% for block in section.blocks %}
+      <div class="lt-row-content {% if block.settings.image_position == 'right' %}lt-image-right{% else %}lt-image-left{% endif %}">
+        <div class="lt-image-container">
+          {% if block.settings.image != blank %}
+            <img 
+              src="{{ block.settings.image | img_url: '800x' }}" 
+              alt="{{ block.settings.title | escape }}"
+              loading="lazy"
+              class="lt-image"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+            >
+          {% else %}
+            <div class="lt-placeholder-image">
+              {{ 'image' | placeholder_svg_tag: 'lt-placeholder-svg' }}
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="lt-text-container">
+          <div class="lt-counter-n-title">
+            <div class="lt-counter">{{ forloop.index }}</div>          
+            {% if block.settings.title != blank %}
+              <h2 class="lt-title">{{ block.settings.title }}</h2>
+            {% endif %}
+          </div>
+          
+          {% if block.settings.description != blank %}
+            <div class="lt-description">{{ block.settings.description }}</div>
+          {% endif %}
+          
+          {% if block.settings.button_label != blank %}
+            <div class="lt-button-container">
+              <a href="{{ block.settings.button_url }}" class="lt-button">
+                {{ block.settings.button_label }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+{% comment %} <script>
+  (function() {
+    // JavaScript functionality can be added here if needed
+    // For example, animations, interactions, etc.
+    
+    // Initialize any interactive elements
+    document.addEventListener('DOMContentLoaded', function() {
+      const section = document.getElementById('lt-imgtxt-multirow-{{ section.id }}');
+      if (!section) return;
+      
+      // Example: Add animation classes when elements come into view
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('lt-animate-in');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+        
+        section.querySelectorAll('.lt-row').forEach(row => {
+          observer.observe(row);
+        });
+      }
+    });
+  })();
+</script> {% endcomment %}
+
+{% schema %}
+{
+  "name": "LT Image Text Multi-Row",
+  "tag": "section",
+  "class": "lt-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "row_spacing",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Space Between Rows",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "row_background_color",
+      "label": "Row Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "row_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Row Border Radius",
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_shadow",
+      "label": "Enable Shadow",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Content Row",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Row Title"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Add your description text here. This text will appear below the title.</p>"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Label",
+          "default": "Learn More"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Image Text Multi-Row",
+      "category": "LT Sections",
+      "blocks": [
+        {"type": "row"},
+        {"type": "row"},
+        {"type": "row"}
+      ]
+    }
+  ]
+}
+{% endschema %}

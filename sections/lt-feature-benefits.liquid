@@ -1,0 +1,471 @@
+{% comment %}
+  Section: lt-feature-benefits.liquid
+  Layout: page-width-aligned content column (left) + viewport-right-edge-flush product image.
+
+  Left-column padding trick:
+    max(40px, calc((100vw - <page_width_ref>px) / 2 + 40px))
+  mirrors the left edge of a standard page-width container so the heading
+  aligns perfectly with the rest of the page. Adjust "Theme page width
+  reference" in the editor to match your theme's max-width.
+{% endcomment %}
+
+{%- liquid
+  assign bg_color      = section.settings.bg_color
+  assign text_color    = section.settings.text_color
+  assign heading_color = section.settings.heading_color
+  assign icon_color    = section.settings.icon_color
+  assign btn_bg        = section.settings.button_bg_color
+  assign btn_color     = section.settings.button_text_color
+  assign content_w     = section.settings.content_width_pct
+  assign image_w       = 100 | minus: content_w
+  assign pw_ref        = section.settings.page_width_ref | default: 1200
+  assign pt            = section.settings.padding_top
+  assign pb            = section.settings.padding_bottom
+  assign mt            = section.settings.margin_top
+  assign mb            = section.settings.margin_bottom
+  assign pt_m          = pt | times: 0.6 | round
+  assign pb_m          = pb | times: 0.6 | round
+  assign mt_m          = mt | times: 0.6 | round
+  assign mb_m          = mb | times: 0.6 | round
+-%}
+
+<div class="lt-feature-benefits" style="background-color: {{ bg_color }}; color: {{ text_color }};">
+  <div class="lt-fb-wrap">
+
+    {%- comment -%} ── LEFT: Content ── {%- endcomment -%}
+    <div class="lt-fb-content">
+
+      {%- if section.settings.heading != blank -%}
+        <h2 class="lt-fb-heading" style="color: {{ heading_color }};">
+          {{- section.settings.heading -}}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="lt-fb-list" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'benefit' -%}
+              <li class="lt-fb-item" {{ block.shopify_attributes }}>
+                <span class="lt-fb-icon" style="color: {{ icon_color }};" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span class="lt-fb-item-text">{{ block.settings.text }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        <a
+          href="{{ section.settings.button_url | default: '#' }}"
+          class="lt-fb-btn"
+          style="background-color: {{ btn_bg }}; color: {{ btn_color }};"
+        >{{- section.settings.button_label -}}</a>
+      {%- endif -%}
+
+    </div>
+
+    {%- comment -%} ── RIGHT: Image — stretches to the right viewport edge ── {%- endcomment -%}
+    <div class="lt-fb-image-col" style="background-color: {{ bg_color }};">
+      {%- if section.settings.image != blank -%}
+        <img
+          class="lt-fb-image"
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="{{ section.settings.image.alt | default: '' }}"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          loading="lazy"
+        >
+      {%- else -%}
+        <div class="lt-fb-placeholder">
+          {{- 'product-2' | placeholder_svg_tag: 'lt-fb-placeholder-svg' -}}
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* ── Section-level spacing ── */
+  #shopify-section-{{ section.id }} {
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-feature-benefits {
+    overflow: hidden; /* guard against sub-pixel flex bleed */
+  }
+
+  /* ── Two-column flex row ── */
+  #shopify-section-{{ section.id }} .lt-fb-wrap {
+    display: flex;
+    align-items: stretch;
+    min-height: 480px;
+  }
+
+  /* ── Left: content column ── */
+  #shopify-section-{{ section.id }} .lt-fb-content {
+    flex: 0 0 {{ content_w }}%;
+    max-width: {{ content_w }}%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*
+      Aligns the left edge with a {{ pw_ref }}px page-width container.
+      Formula: (viewport - page-width) / 2  +  page gutter (40px)
+      Falls back to 40px when viewport < page-width.
+    */
+    padding-left: max(40px, calc((100vw - {{ pw_ref }}px) / 2 + 40px));
+    padding-right: 80px;
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+  }
+
+  /* ── Heading ── */
+  #shopify-section-{{ section.id }} .lt-fb-heading {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    margin: 0 0 28px;
+  }
+
+  /* ── Benefit list ── */
+  #shopify-section-{{ section.id }} .lt-fb-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #shopify-section-{{ section.id }} .lt-fb-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .lt-fb-icon {
+    flex-shrink: 0;
+    display: flex;
+    line-height: 0;
+  }
+
+  /* ── CTA Button ── */
+  #shopify-section-{{ section.id }} .lt-fb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    padding: 16px 40px;
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-fb-btn:hover,
+  #shopify-section-{{ section.id }} .lt-fb-btn:focus-visible {
+    opacity: 0.85;
+    outline: none;
+  }
+
+  /* ── Right: image column — flush to right viewport edge ── */
+  #shopify-section-{{ section.id }} .lt-fb-image-col {
+    flex: 0 0 {{ image_w }}%;
+    max-width: {{ image_w }}%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  /*
+    object-fit: contain keeps the full product/hand visible.
+    object-position: right center glues it to the right edge.
+    The column background matches the section bg, so any "letterbox"
+    space on the left is invisible.
+  */
+  #shopify-section-{{ section.id }} .lt-fb-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right center;
+    display: block;
+  }
+
+  /* ── Placeholder (no image uploaded) ── */
+  #shopify-section-{{ section.id }} .lt-fb-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.18;
+  }
+  #shopify-section-{{ section.id }} .lt-fb-placeholder-svg {
+    width: 70%;
+    height: auto;
+  }
+
+  /* ───────────────────────────────────────────────
+     Responsive — Tablet ≤ 767px
+  ─────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-wrap {
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-content {
+      flex: none;
+      width: 100%;
+      max-width: 100%;
+      padding-left: 24px;
+      padding-right: 24px;
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-heading {
+      font-size: 38px;
+      letter-spacing: -0.5px;
+      margin-bottom: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-list {
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-item {
+      font-size: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-image-col {
+      flex: none;
+      width: 100%;
+      max-width: 100%;
+      height: 300px;
+      justify-content: center;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-image {
+      object-position: center;
+    }
+  }
+
+  /* ───────────────────────────────────────────────
+     Responsive — Mobile ≤ 480px
+  ─────────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-fb-heading {
+      font-size: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-item {
+      font-size: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-btn {
+      font-size: 14px;
+      padding: 14px 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-fb-image-col {
+      height: 240px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Feature Benefits",
+  "class": "lt-section-feature-benefits",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#EDEEF8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Checkmark icon color",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Why You'll Love Them"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Start Sleeping Better Tonight"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product image",
+      "info": "Works best with a light or transparent background that matches the section color"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width_pct",
+      "label": "Content column width",
+      "min": 45,
+      "max": 70,
+      "step": 5,
+      "default": 55,
+      "unit": "%",
+      "info": "The image column takes the remaining width"
+    },
+    {
+      "type": "range",
+      "id": "page_width_ref",
+      "label": "Theme page width reference",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "default": 1200,
+      "unit": "px",
+      "info": "Match your theme's max page-width so the heading left-aligns with the rest of the page"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Benefit text",
+          "default": "Your benefit text here"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "LT Feature Benefits",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Instantly opens nasal passages for easier breathing" } },
+        { "type": "benefit", "settings": { "text": "Helps reduce nighttime congestion and stuffiness" } },
+        { "type": "benefit", "settings": { "text": "Supports deeper, more restorative sleep" } },
+        { "type": "benefit", "settings": { "text": "May help reduce snoring caused by restricted nasal airflow" } },
+        { "type": "benefit", "settings": { "text": "Drug-free, non-invasive solution" } },
+        { "type": "benefit", "settings": { "text": "Comfortable all-night hold with easy removal in the morning" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

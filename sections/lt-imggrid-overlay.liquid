@@ -1,0 +1,399 @@
+<div id="shopify-section-{{ section.id }}" class="lt-image-grid-section">
+  <div class="page-width">
+    {%- if section.settings.title != blank -%}
+      <div class="lt-ig-header">
+        <h2 class="lt-ig-title" style="color: {{ section.settings.heading_color }};">{{ section.settings.title }}</h2>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.enable_mobile_carousel -%}
+      <div class="lt-ig-carousel swiper">
+    {%- endif -%}
+    <div class="lt-ig-grid{% if section.settings.enable_mobile_carousel %} swiper-wrapper{% endif %}">
+      {%- for block in section.blocks -%}
+        <div class="lt-ig-item{% if section.settings.enable_mobile_carousel %} swiper-slide{% endif %}" {{ block.shopify_attributes }}>
+          <div class="lt-ig-image-wrap">
+            {%- if block.settings.image != blank -%}
+              <img 
+                src="{{ block.settings.image | image_url: width: 800 }}" 
+                alt="{{ block.settings.image.alt | escape }}" 
+                loading="lazy" 
+                width="{{ block.settings.image.width }}" 
+                height="{{ block.settings.image.height }}"
+                class="lt-ig-img"
+              >
+            {%- else -%}
+              {{ 'collection-1' | placeholder_svg_tag: 'lt-placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          
+          {%- assign overlay_alpha = section.settings.overlay_opacity | times: 0.01 -%}
+          <div class="lt-ig-overlay" style="background: linear-gradient(to top, {{ section.settings.overlay_color | color_modify: 'alpha', overlay_alpha }} 0%, {{ section.settings.overlay_color | color_modify: 'alpha', 0 }} 100%);"></div>
+          
+          {%- if block.settings.text != blank -%}
+            <div class="lt-ig-content">
+              <div class="lt-ig-text" style="color: {{ section.settings.text_color }};">
+                {{ block.settings.text }}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+    {%- if section.settings.enable_mobile_carousel -%}
+        <div class="swiper-pagination"></div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  /* Scoped Section Styles */
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+
+  /* Desktop First Layout */
+  #shopify-section-{{ section.id }} .lt-ig-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-title {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin: 0;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.desktop_columns }}, 1fr);
+    gap: 24px;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    aspect-ratio: 1 / 1;
+    background-color: #e4e4e4;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-image-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-img,
+  #shopify-section-{{ section.id }} .lt-placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{ section.id }} .lt-placeholder-svg {
+    fill: #a0a0a0;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-content {
+    position: relative;
+    z-index: 2;
+    padding: 32px 24px 24px 24px;
+    width: 100%;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-text {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 400;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-ig-text p {
+    margin: 0;
+  }
+
+  /* Tablet Breakpoint (767px) */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+      margin-top: {{ section.settings.margin_top | times: 0.6 | round }}px;
+      margin-bottom: {{ section.settings.margin_bottom | times: 0.6 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-ig-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-ig-title {
+      font-size: 32px;
+    }
+  }
+
+  /* Small Mobile Breakpoint (480px) */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-ig-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-ig-content {
+      padding: 24px 20px 20px 20px;
+    }
+  }
+
+  {% if section.settings.enable_mobile_carousel %}
+  /* Mobile Swiper Styles */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-ig-carousel.swiper {
+      overflow: hidden;
+      width: 100%;
+      padding-bottom: 10px;
+    }
+    #shopify-section-{{ section.id }} .lt-ig-grid.swiper-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-ig-item.swiper-slide {
+      height: auto;
+    }
+    #shopify-section-{{ section.id }} .swiper-pagination {
+      position: relative;
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+    #shopify-section-{{ section.id }} .swiper-pagination-bullet {
+      width: 8px;
+      height: 8px;
+      background-color: {{ section.settings.heading_color }};
+      opacity: 0.3;
+      border-radius: 4px;
+      margin: 0 !important;
+      transition: width 0.3s ease, opacity 0.3s ease;
+      cursor: pointer;
+    }
+    #shopify-section-{{ section.id }} .swiper-pagination-bullet-active {
+      width: 30px;
+      opacity: 1;
+    }
+  }
+  {% endif %}
+</style>
+
+{% if section.settings.enable_mobile_carousel %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    function initIGSwiper_{{ section.id | remove: '-' }}() {
+      var container = document.querySelector('#shopify-section-{{ section.id }} .lt-ig-carousel');
+      if (!container) return;
+
+      var checkAndInit = function() {
+        if (window.innerWidth <= 767) {
+          if (!container.swiper) {
+            if (typeof Swiper === 'undefined') {
+              setTimeout(checkAndInit, 100);
+              return;
+            }
+            new Swiper(container, {
+              slidesPerView: 1.3,
+              spaceBetween: 16,
+              pagination: {
+                el: '#shopify-section-{{ section.id }} .swiper-pagination',
+                clickable: true,
+              },
+            });
+          }
+        } else {
+          if (container.swiper) {
+            container.swiper.destroy(true, true);
+          }
+        }
+      };
+
+      checkAndInit();
+      window.addEventListener('resize', checkAndInit);
+    }
+    
+    initIGSwiper_{{ section.id | remove: '-' }}();
+  });
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Image Grid with Overlay",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#F8F8FD"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#28234A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Overlay Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Gradient Base Color",
+      "default": "#1E1A38"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Gradient Opacity",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Content & Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_mobile_carousel",
+      "label": "Carousel on mobile",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Real Experiences"
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Desktop Columns",
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_card",
+      "name": "Image Card",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Square (1:1) aspect ratio recommended for best display."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Overlay Quote / Text",
+          "default": "<p>\"I didn't realize how tense my body was until I used this...\"</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Grid with Overlay",
+      "category": "Image",
+      "blocks": [
+        {
+          "type": "image_card",
+          "settings": {
+            "text": "<p>\"I didn't realize how tense my body was until I used this...\"</p>"
+          }
+        },
+        {
+          "type": "image_card",
+          "settings": {
+            "text": "<p>\"First night I used it, I actually stayed asleep.\"</p>"
+          }
+        },
+        {
+          "type": "image_card",
+          "settings": {
+            "text": "<p>\"This + mouth tape = best sleep I've had in years.\"</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

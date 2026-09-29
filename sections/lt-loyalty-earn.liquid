@@ -1,0 +1,558 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+{%- capture default_icons -%}person cart camera star cake{%- endcapture -%}
+{%- assign default_icon_list = default_icons | split: ' ' -%}
+
+<div class="lt-loyalty-earn">
+  <div class="page-width">
+    <div class="lt-loyalty-earn__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="lt-loyalty-earn__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="lt-loyalty-earn__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="lt-loyalty-earn__grid" style="--lt-cols: {{ section.settings.columns }};">
+        {%- for block in section.blocks -%}
+          {%- assign fallback_index = forloop.index0 | modulo: 5 -%}
+          {%- assign fallback_icon = default_icon_list[fallback_index] -%}
+          <div class="lt-loyalty-earn__card" {{ block.shopify_attributes }}>
+            <div class="lt-loyalty-earn__badge">
+              {%- if block.settings.icon != blank -%}
+                <img
+                  class="lt-loyalty-earn__icon-img"
+                  src="{{ block.settings.icon | image_url: width: 48 }}"
+                  alt="{{ block.settings.icon.alt | escape }}"
+                  loading="lazy"
+                  width="24"
+                  height="24"
+                >
+              {%- else -%}
+                {%- case fallback_icon -%}
+                  {%- when 'person' -%}
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.4 0-8 2.7-8 6v2h16v-2c0-3.3-3.6-6-8-6z"/></svg>
+                  {%- when 'cart' -%}
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 3h2l2.6 12.4a2 2 0 002 1.6h8.7a2 2 0 002-1.5L23 8H6.2M9 21a1 1 0 11-2 0 1 1 0 012 0zm10 0a1 1 0 11-2 0 1 1 0 012 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  {%- when 'camera' -%}
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8a2 2 0 012-2h2l1.5-2h7L17 6h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/><circle cx="12" cy="13" r="3.5"/></svg>
+                  {%- when 'star' -%}
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.8 6.1 20l1.2-6.5L2.5 8.9 9.1 8 12 2z"/></svg>
+                  {%- when 'cake' -%}
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 20h16M4 20v-6a2 2 0 012-2h12a2 2 0 012 2v6M12 8V5m-4 3V6m8 2V6"/><circle cx="12" cy="4" r="0.5" fill="currentColor"/></svg>
+                {%- endcase -%}
+              {%- endif -%}
+            </div>
+
+            {%- if block.settings.value != blank -%}
+              <div class="lt-loyalty-earn__value">{{ block.settings.value }}</div>
+            {%- endif -%}
+            {%- if block.settings.title != blank -%}
+              <h3 class="lt-loyalty-earn__title">{{ block.settings.title }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="lt-loyalty-earn__text">{{ block.settings.text }}</div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="lt-loyalty-earn__actions">
+        <a
+          href="{{ section.settings.button_link }}"
+          class="lt-loyalty-earn__button"
+          {% if section.settings.open_smile %}data-lt-smile-launch{% endif %}
+        >
+          {{ section.settings.button_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__head {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__eyebrow {
+    display: inline-block;
+    padding: 7px 16px;
+    margin-bottom: 20px;
+    border-radius: 100px;
+    background-color: {{ section.settings.eyebrow_bg_color }};
+    color: {{ section.settings.eyebrow_text_color }};
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__heading {
+    margin: 0;
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: {{ section.settings.heading_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--lt-cols), minmax(0, 1fr));
+    gap: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 24px;
+    border: 1px solid {{ section.settings.card_border_color }};
+    border-radius: 18px;
+    background-color: {{ section.settings.card_bg_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    background-color: {{ section.settings.badge_bg_color }};
+    color: {{ section.settings.icon_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__icon-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__value {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: {{ section.settings.value_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__title {
+    margin: 8px 0 12px;
+    font-size: 17px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: {{ section.settings.card_title_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__text {
+    font-size: 15px;
+    line-height: 1.5;
+    color: {{ section.settings.card_text_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__text p {
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__button {
+    display: inline-block;
+    padding: 18px 40px;
+    border-radius: 100px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-earn__button:hover {
+    transform: translateY(-2px);
+    opacity: 0.92;
+  }
+
+  @media screen and (max-width: 1024px) {
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__head {
+      margin-bottom: 28px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__heading {
+      font-size: 30px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__actions {
+      margin-top: 28px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__heading {
+      font-size: 26px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-earn__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var sectionId = {{ section.id | json }};
+
+    function init() {
+      var root = document.getElementById('shopify-section-' + sectionId);
+      if (!root) return;
+
+      var launcher = root.querySelector('[data-lt-smile-launch]');
+      if (!launcher || launcher.dataset.ltBound === 'true') return;
+
+      launcher.dataset.ltBound = 'true';
+
+      launcher.addEventListener('click', function (e) {
+        // Attempt to open the Smile.io panel. If the widget isn't available,
+        // fall back to the button's href (default browser navigation).
+        if (window.SmileUI && typeof window.SmileUI.openPanel === 'function') {
+          e.preventDefault();
+          window.SmileUI.openPanel();
+        } else if (window.smile && typeof window.smile.openPanel === 'function') {
+          e.preventDefault();
+          window.smile.openPanel();
+        }
+        // else: allow the anchor's href to navigate normally.
+      });
+    }
+
+    function destroy() {
+      var root = document.getElementById('shopify-section-' + sectionId);
+      if (!root) return;
+      var launcher = root.querySelector('[data-lt-smile-launch]');
+      if (launcher) launcher.dataset.ltBound = '';
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    document.addEventListener('shopify:section:load', function (e) {
+      if (e.detail && e.detail.sectionId === sectionId) init();
+    });
+    document.addEventListener('shopify:section:unload', function (e) {
+      if (e.detail && e.detail.sectionId === sectionId) destroy();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "LT Loyalty Ways to Earn",
+  "tag": "section",
+  "class": "lt-loyalty-earn-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#F5F5FA"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Ways to Earn"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_bg_color",
+      "label": "Eyebrow background",
+      "default": "#ECEAFB"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_text_color",
+      "label": "Eyebrow text",
+      "default": "#5B4FCF"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How Customers Earn Points"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1F1B4D"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#EAEAF0"
+    },
+    {
+      "type": "color",
+      "id": "card_title_color",
+      "label": "Card title color",
+      "default": "#1F1B4D"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#6B7280"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Points value color",
+      "default": "#5B4FCF"
+    },
+    {
+      "type": "header",
+      "content": "Icon badge"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background",
+      "default": "#ECEAFB"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color (SVG fallback)",
+      "default": "#FAC512"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Ways to Earn"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link (fallback)",
+      "info": "Used when the Smile.io panel isn't available. Point to your rewards page."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_smile",
+      "label": "Open Smile.io panel on click",
+      "info": "Opens the Smile.io rewards launcher instead of navigating. Falls back to the link above if the widget hasn't loaded.",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#1B1740"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "way",
+      "name": "Way to earn",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon",
+          "info": "Leave blank to use a built-in icon."
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Points value",
+          "default": "40 pts"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Create Account"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>One-time reward for signing up. 100 pts = $1.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "LT Loyalty Ways to Earn",
+      "blocks": [
+        {
+          "type": "way",
+          "settings": {
+            "value": "40 pts",
+            "title": "Create Account",
+            "text": "<p>One-time reward for signing up. 100 pts = $1.</p>"
+          }
+        },
+        {
+          "type": "way",
+          "settings": {
+            "value": "3–4 pts/$1",
+            "title": "Place an Order",
+            "text": "<p>3 pts (Starter) · 4 pts (Regular & VIP). On net spend.</p>"
+          }
+        },
+        {
+          "type": "way",
+          "settings": {
+            "value": "100–400 pts",
+            "title": "Leave a Review",
+            "text": "<p>Text (100) · Photo (240) · Video (400). Verified buyers only.</p>"
+          }
+        },
+        {
+          "type": "way",
+          "settings": {
+            "value": "240 pts",
+            "title": "Subscribe & Save",
+            "text": "<p>Awarded after your 2nd subscription shipment.</p>"
+          }
+        },
+        {
+          "type": "way",
+          "settings": {
+            "value": "240 pts",
+            "title": "Birthday Reward",
+            "text": "<p>Celebrate your birthday month with a bonus perk.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

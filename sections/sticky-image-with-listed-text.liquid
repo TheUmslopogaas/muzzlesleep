@@ -1,0 +1,423 @@
+{%- liquid
+	assign _ss 				= section.settings
+	assign _name 			= 'sticky-image-with-listed-text'
+	assign _id 				= section.id | split: '__' | last | slice: -4, 4 | prepend: "sn_"
+	assign _section 	= '#' | append: _id
+	assign _this 			= section.id | prepend: '#shopify-section-'
+-%}
+
+{%- capture section_content -%}
+<style>
+  {{ _section }} {
+    position: relative;
+    background: {{ _ss.background }};
+    padding-top: {{ _ss.padding_top }}px;
+    padding-bottom: {{ _ss.padding_bottom }}px;
+  }
+
+  {{ _section }} .section_holder {
+    position: relative;
+    max-width: {{ _ss.max_with }}px;
+    margin: auto;
+    padding: 0px 40px;
+    display: flex;
+  }
+
+  {{ _section }} .section_image_part {
+    width: 60%;
+    margin-right: 17px;
+  }
+
+  {{ _section }} .section_image {
+    position: sticky;
+    top: 100px;
+  }
+
+  {{ _section }} .image_wrapper {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: {{ _ss.image_ratio_desktop }}%;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  {{ _section }} .image_wrapper img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  {{ _section }} .image_wrapper.two_piece_wrapper img {
+    width: 50%;
+  }
+
+  {{ _section }} .image_wrapper.two_piece_wrapper img:last-child {
+    left: 50%;
+  }
+
+  {{ _section }} .section_text_part {
+    width: 40%;
+    padding: 28px 56px;
+  }
+
+  {{ _section }} .section_title {
+    color: #27214D;
+    font-family: Manrope;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%;
+    letter-spacing: -0.6px;
+    text-transform: capitalize;
+  }
+
+  {{ _section }} .section_title span {
+    color: #9487DF;
+  }
+
+  {{ _section }} .section_description {
+    margin-top: 11px;
+    color: #27214D;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
+    letter-spacing: -0.32px;
+  }
+
+  {{ _section }} .section_blocks {
+    margin-top: 30px;
+    /* height: 400px;
+    overflow: hidden; */
+  }
+
+  {{ _section }} .section_block {
+    position: relative;
+    padding-bottom: 28px;
+    opacity: 0.3;
+    transition: all .3s ease-in;
+  }
+
+  {{ _section }} .section_block.active {
+    opacity: 1;
+  }
+
+  {{ _section }} .section_block::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 0;
+    height: 100%;
+    border-left: 1px dashed;
+  }
+
+  {{ _section }} .section_block:last-child::before {
+    display: none;
+  }
+
+  {{ _section }} .section_block_title {
+    position: relative;
+    padding-left: 20px;
+    color: rgba(39, 33, 77, 0.5);
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 120%;
+    letter-spacing: -0.32px;
+    transform: translateY(15px);
+    transition: all .5s ease;
+  }
+  
+  {{ _section }} .section_block.active .section_block_title {
+    color: #27214D;
+    transform: translateY(0);
+  }
+
+  {{ _section }} .section_block_title::after {
+    position: absolute;
+    display: block;
+    content: "";
+    width: 13px;
+    height: 12px;
+    border-radius: 5px;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1.2px solid #27214D;
+    background: #FFF;
+  }
+  
+  {{ _section }} .section_block.active .section_block_title::after {
+    background: #27214D;
+    background-color: #27214D;
+  }
+
+  {{ _section }} .section_block_description {
+    padding-left: 20px;
+    color: #27214D;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    letter-spacing: -0.28px;
+    transform: translateY(15px);
+    transition: all .5s ease;
+  }
+
+  {{ _section }} .section_block.active .section_block_description {
+    transform: translateY(0);
+  }
+  
+  @media screen and (max-width: 900px) {
+    {{ _section }} {
+      padding-top: {{ _ss.padding_top_mobile }}px;
+      padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+    }
+    
+    {{ _section }} .section_holder {
+      padding: 0px 24px;
+      flex-direction: column;
+    }
+
+    {{ _section }} .image_wrapper {
+      padding-bottom: {{ _ss.image_ratio_mobile }}%;
+    }
+
+    {{ _section }} .section_image_part {
+      width: 100%;
+    }
+
+    {{ _section }} .section_text_part {
+      width: 100%;
+      padding: 0;
+      padding-top: 32px;
+    }
+
+    {{ _section }} .section_title {
+      font-size: 24px;
+    }
+
+    {{ _section }} .section_description {
+      font-size: 14px;
+    }
+
+    {{ _section }} .section_block {
+      padding-bottom: 22px;
+    }
+
+    {{ _section }} .section_block_title {
+      font-size: 14px;
+    }
+
+    {{ _section }} .section_block_description {
+      font-size: 12px;
+    }
+
+
+    {{ _section }} .for_desktop {
+      display: none !important;
+    }
+  }
+
+  @media screen and (min-width: 901px) {
+    {{ _section }} .for_mobile {
+      display: none !important;
+    }
+  }
+  
+
+</style>
+
+
+<div {{ _name }} id="{{ _id }}">
+  <div class="section_holder">
+    {%- if _ss.image -%}
+      <div class="section_image_part">
+        <div class="section_image">
+          <div class="image_wrapper{% if _ss.other_half_image %} two_piece_wrapper{% endif %}">
+            <img src="{{ _ss.image | image_url: width: 1200 }}" alt="banner image">
+            {% if _ss.other_half_image %}
+              <img src="{{ _ss.other_half_image | image_url: width: 1200 }}" alt="banner image">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+    <div class="section_text_part">
+      <div class="section_title">{{ _ss.title | newline_to_br }}</div>
+      <div class="section_description">{{ _ss.description }}</div>
+      <div class="section_blocks">
+        <div class="transition_wrapper">
+          {%- for block in section.blocks -%}
+            <div class="section_block">
+              <div class="section_block_title">{{ block.settings.title }}</div>
+              <div class="section_block_description">{{ block.settings.description }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  window.addEventListener('scroll', function() {
+    transition_content_{{ _id }}();
+  });
+
+  function isElementInViewport_{{ _id }}(el) {
+    const rect = el.getBoundingClientRect();
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const offset = 100;
+    return (
+      rect.top < (viewportHeight - offset)
+    );
+  }
+
+  function transition_content_{{ _id }}() {
+    const blocks = document.querySelectorAll("{{ _section }} .section_block");
+    blocks.forEach((block) => {
+      if(isElementInViewport_{{ _id }}(block)) {
+        block.classList.add("active");
+      }else{
+        block.classList.remove("active");
+      }
+    });
+  }
+  transition_content_{{ _id }}();
+  
+</script>
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+  {
+    "name": "Sticky Image - Textlist",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Image Settings"
+      },
+      {
+        "type": "number",
+        "id": "image_ratio_desktop",
+        "label": "Desktop image ratio (%)",
+        "default": 63
+      },
+      {
+        "type": "number",
+        "id": "image_ratio_mobile",
+        "label": "Mobile image ratio (%)",
+        "default": 100
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "other_half_image",
+        "label": "Other Half Image",
+        "info": "If you want to use the other half image, please upload the image here. Otherwise, leave it empty."
+      },
+      {
+        "type": "textarea",
+        "id": "title",
+        "label": "Title",
+        "default": "<span>subtitle</span>\nTitle",
+        "info": "Use <span> tag for subtitle style and break line for new line"
+      },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "General Settings"
+      },
+      {
+        "type": "color_background",
+        "id": "background",
+        "label": "Background color",
+        "default": "#FFFFFF00"
+      },
+      {
+        "type": "number",
+        "id": "max_with",
+        "label": "Max width",
+        "default": 1500
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Desktop padding top",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Desktop padding bottom",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "default": 100
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mobile",
+        "label": "Mobile padding top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "default": 50
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mobile",
+        "label": "Mobile padding bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "default": 50
+      }
+    ],
+    "blocks": [
+      {
+        "type": "usp",
+        "name": "USP",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description",
+            "default": "Description"
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "Sticky Image - Textlist"
+    }]
+  }
+{% endschema %}

@@ -1,0 +1,1079 @@
+{%- liquid
+  assign pt        = section.settings.padding_top
+  assign pb        = section.settings.padding_bottom
+  assign mt        = section.settings.margin_top
+  assign mb        = section.settings.margin_bottom
+  assign pt_mob    = pt | times: 60 | divided_by: 100
+  assign pb_mob    = pb | times: 60 | divided_by: 100
+  assign mt_mob    = mt | times: 60 | divided_by: 100
+  assign mb_mob    = mb | times: 60 | divided_by: 100
+  assign ov_dec    = section.settings.overlay_opacity | times: 1.0 | divided_by: 100
+  assign cols      = section.settings.columns_desktop
+  assign ar        = section.settings.video_aspect_ratio
+  assign use_swp   = section.settings.mobile_swiper
+-%}
+
+{% if use_swp %}
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    media="(max-width: 767px)">
+{% endif %}
+
+<style>
+  /* ─────────────────────────────────────────
+     Section shell
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  /* ─────────────────────────────────────────
+     Header
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 10px 0;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__desc {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.8;
+    letter-spacing: 0;
+    color: #222;
+    margin: 0;
+  }
+
+  /* ─────────────────────────────────────────
+     Desktop grid
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__grid {
+    display: grid;
+    grid-template-columns: repeat({{ cols }}, 1fr);
+    gap: 24px;
+  }
+
+  /* ─────────────────────────────────────────
+     Card
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__card {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0a0a0a;
+    position: relative;
+  }
+
+  /* ─────────────────────────────────────────
+     Media wrapper
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ ar }};
+    overflow: hidden;
+    display: block;
+    background: #111;
+  }
+
+  /* ─────────────────────────────────────────
+     Video element
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ─────────────────────────────────────────
+     Thumbnail (custom or preview_image)
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__thumb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    transition: opacity 0.4s ease;
+    display: block;
+  }
+
+  /* ─────────────────────────────────────────
+     Dark overlay (adjustable via setting)
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__overlay {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  /* ─────────────────────────────────────────
+     Play button
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__play {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.4s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__play-ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__play:hover .lt-vg__play-ring,
+  #shopify-section-{{ section.id }} .lt-vg__play:focus-visible .lt-vg__play-ring {
+    transform: scale(1.1);
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__play:focus-visible {
+    outline: none;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__play-ring svg {
+    width: 22px;
+    height: 22px;
+    fill: #111;
+    margin-left: 3px;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* ─────────────────────────────────────────
+     Playing state — fade out UI chrome
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__card.is-playing .lt-vg__thumb,
+  #shopify-section-{{ section.id }} .lt-vg__card.is-playing .lt-vg__overlay,
+  #shopify-section-{{ section.id }} .lt-vg__card.is-playing .lt-vg__play {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  /* Make video clickable to pause */
+  #shopify-section-{{ section.id }} .lt-vg__card.is-playing .lt-vg__video {
+    cursor: pointer;
+  }
+
+  /* ─────────────────────────────────────────
+     Mute Button
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__mute {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 4;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(4px);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__mute:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.05);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__mute svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__card.is-playing .lt-vg__mute {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ─────────────────────────────────────────
+     Empty placeholder (no video uploaded)
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, #e9eaf3 0%, #d6d8ea 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #9a9ab0;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__placeholder svg {
+    width: 38px;
+    height: 38px;
+    opacity: 0.35;
+  }
+
+  /* ─────────────────────────────────────────
+     Popup Modal
+  ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-vg__modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    background: #000;
+    border-radius: 14px;
+    overflow: hidden;
+    z-index: 2;
+    aspect-ratio: {{ ar }};
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-close:hover {
+    background: rgba(255,255,255,0.3);
+    transform: scale(1.05);
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-close svg {
+    width: 24px;
+    height: 24px;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-video {
+    width: 100%;
+    height: 100%;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__modal-video video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* ─────────────────────────────────────────
+     Swiper — desktop grid override
+     Force grid layout when swiper is enabled
+     but viewport is >= 768 px
+  ───────────────────────────────────────── */
+  {% if use_swp %}
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .lt-vg__swiper {
+      overflow: visible;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__swiper .swiper-wrapper {
+      display: grid !important;
+      grid-template-columns: repeat({{ cols }}, 1fr) !important;
+      gap: 24px !important;
+      transform: none !important;
+      width: 100% !important;
+      box-sizing: border-box;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__swiper .swiper-slide {
+      width: auto !important;
+      margin-right: 0 !important;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__swiper .lt-vg__pagination {
+      display: none;
+    }
+  }
+  {% endif %}
+
+  /* ─────────────────────────────────────────
+     Swiper pagination dots
+  ───────────────────────────────────────── */
+  {% if use_swp %}
+  #shopify-section-{{ section.id }} .lt-vg__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 22px;
+    position: relative;
+    bottom: auto;    
+  }
+  #shopify-section-{{ section.id }} .lt-vg__pagination .swiper-pagination-bullet {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: {{ section.settings.text_color }};
+    opacity: 0.25;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-vg__pagination .swiper-pagination-bullet-active {
+    opacity: 0.9;
+    transform: scale(1.3);
+  }
+  {% endif %}
+
+  /* ─────────────────────────────────────────
+     Responsive — tablet (≤ 767px)
+  ───────────────────────────────────────── */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mob }}px;
+      padding-bottom: {{ pb_mob }}px;
+      margin-top: {{ mt_mob }}px;
+      margin-bottom: {{ mb_mob }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__header {
+      margin-bottom: 32px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__heading {
+      font-size: {{ section.settings.heading_size | times: 0.75 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__desc {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__play-ring {
+      width: 52px;
+      height: 52px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__play-ring svg {
+      width: 18px;
+      height: 18px;
+    }
+    #shopify-section-{{ section.id }} .lt-vg__modal-content {
+      width: 100%;
+      border-radius: 0;
+      max-height: 100vh;
+    }
+  }
+
+  /* ─────────────────────────────────────────
+     Responsive — mobile (≤ 480px)
+  ───────────────────────────────────────── */
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-vg__grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+</style>
+
+{%- comment -%}
+  ─────────────────────────────────────────
+  Markup
+  ─────────────────────────────────────────
+{%- endcomment -%}
+
+<div class="lt-video-grid">
+  <div class="page-width">
+
+    {%- if section.settings.heading != blank or section.settings.description != blank -%}
+      <div class="lt-vg__header">
+        {%- if section.settings.heading != blank -%}
+          <{{ section.settings.heading_tag }} class="lt-vg__heading">
+            {{ section.settings.heading }}
+          </{{ section.settings.heading_tag }}>
+        {%- endif -%}        
+        {%- if section.settings.description != blank -%}
+          <p class="lt-vg__desc">{{ section.settings.description | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if use_swp -%}
+
+      {%- comment -%} ── Swiper path (mobile carousel + desktop grid override) ── {%- endcomment -%}
+      <div class="lt-vg__swiper swiper" data-lt-vg-swiper>
+        <div class="swiper-wrapper">
+          {%- for block in section.blocks -%}
+            <div class="lt-vg__card swiper-slide" {{ block.shopify_attributes }}>
+              <div class="lt-vg__media">
+
+                {%- if block.settings.video != blank -%}
+                  <video
+                    class="lt-vg__video"
+                    preload="metadata"
+                    playsinline
+                    data-lt-video>
+                    {%- for source in block.settings.video.sources -%}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {%- endfor -%}
+                  </video>
+                {%- else -%}
+                  <div class="lt-vg__placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <rect x="2" y="3" width="20" height="18" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
+                      <path d="M10 8.5l5.5 3.5-5.5 3.5V8.5z" fill="currentColor"/>
+                    </svg>
+                    <span>Add a video</span>
+                  </div>
+                {%- endif -%}
+
+                {%- comment -%} Thumbnail priority: custom → Shopify preview → nothing (video first frame) {%- endcomment -%}
+                {%- if block.settings.thumbnail != blank -%}
+                  <img
+                    class="lt-vg__thumb"
+                    src="{{ block.settings.thumbnail | image_url: width: 900 }}"
+                    srcset="{{ block.settings.thumbnail | image_url: width: 450 }} 450w,
+                            {{ block.settings.thumbnail | image_url: width: 900 }} 900w,
+                            {{ block.settings.thumbnail | image_url: width: 1350 }} 1350w"
+                    sizes="(max-width: 767px) 90vw, {{ 100 | divided_by: cols | append: 'vw' }}"
+                    alt="{{ block.settings.thumbnail.alt | default: '' | escape }}"
+                    loading="lazy"
+                    data-lt-thumb>
+                {%- elsif block.settings.video != blank and block.settings.video.preview_image != blank -%}
+                  <img
+                    class="lt-vg__thumb"
+                    src="{{ block.settings.video.preview_image | image_url: width: 900 }}"
+                    srcset="{{ block.settings.video.preview_image | image_url: width: 450 }} 450w,
+                            {{ block.settings.video.preview_image | image_url: width: 900 }} 900w"
+                    sizes="(max-width: 767px) 90vw, {{ 100 | divided_by: cols | append: 'vw' }}"
+                    alt="{{ block.settings.video.alt | default: '' | escape }}"
+                    loading="lazy"
+                    data-lt-thumb>
+                {%- endif -%}
+
+                <div class="lt-vg__overlay" style="opacity: {{ ov_dec }};" data-lt-overlay></div>
+
+                {%- if block.settings.video != blank -%}
+                  <button
+                    class="lt-vg__play"
+                    type="button"
+                    aria-label="Play video"
+                    data-lt-play>
+                    <span class="lt-vg__play-ring" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="6,3.5 20.5,12 6,20.5"/>
+                      </svg>
+                    </span>
+                  </button>
+
+                  <button class="lt-vg__mute" type="button" aria-label="Toggle mute" data-lt-mute>
+                    <svg class="lt-vg__icon-unmuted" viewBox="0 0 24 24" style="display: block;">
+                      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <svg class="lt-vg__icon-muted" viewBox="0 0 24 24" style="display: none;">
+                      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    </svg>
+                  </button>
+                {%- endif -%}
+
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="lt-vg__pagination swiper-pagination"></div>
+      </div>
+
+    {%- else -%}
+
+      {%- comment -%} ── Pure CSS grid path (no swiper) ── {%- endcomment -%}
+      <div class="lt-vg__grid">
+        {%- for block in section.blocks -%}
+          <div class="lt-vg__card" {{ block.shopify_attributes }}>
+            <div class="lt-vg__media">
+
+              {%- if block.settings.video != blank -%}
+                <video
+                  class="lt-vg__video"
+                  preload="metadata"
+                  playsinline
+                  data-lt-video>
+                  {%- for source in block.settings.video.sources -%}
+                    <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endfor -%}
+                </video>
+              {%- else -%}
+                <div class="lt-vg__placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="2" y="3" width="20" height="18" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M10 8.5l5.5 3.5-5.5 3.5V8.5z" fill="currentColor"/>
+                  </svg>
+                  <span>Add a video</span>
+                </div>
+              {%- endif -%}
+
+              {%- if block.settings.thumbnail != blank -%}
+                <img
+                  class="lt-vg__thumb"
+                  src="{{ block.settings.thumbnail | image_url: width: 900 }}"
+                  srcset="{{ block.settings.thumbnail | image_url: width: 450 }} 450w,
+                          {{ block.settings.thumbnail | image_url: width: 900 }} 900w,
+                          {{ block.settings.thumbnail | image_url: width: 1350 }} 1350w"
+                  sizes="(max-width: 767px) 48vw, {{ 100 | divided_by: cols | append: 'vw' }}"
+                  alt="{{ block.settings.thumbnail.alt | default: '' | escape }}"
+                  loading="lazy"
+                  data-lt-thumb>
+              {%- elsif block.settings.video != blank and block.settings.video.preview_image != blank -%}
+                <img
+                  class="lt-vg__thumb"
+                  src="{{ block.settings.video.preview_image | image_url: width: 900 }}"
+                  srcset="{{ block.settings.video.preview_image | image_url: width: 450 }} 450w,
+                          {{ block.settings.video.preview_image | image_url: width: 900 }} 900w"
+                  sizes="(max-width: 767px) 48vw, {{ 100 | divided_by: cols | append: 'vw' }}"
+                  alt="{{ block.settings.video.alt | default: '' | escape }}"
+                  loading="lazy"
+                  data-lt-thumb>
+              {%- endif -%}
+
+              <div class="lt-vg__overlay" style="opacity: {{ ov_dec }};" data-lt-overlay></div>
+
+              {%- if block.settings.video != blank -%}
+                <button
+                  class="lt-vg__play"
+                  type="button"
+                  aria-label="Play video"
+                  data-lt-play>
+                  <span class="lt-vg__play-ring" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <polygon points="6,3.5 20.5,12 6,20.5"/>
+                    </svg>
+                  </span>
+                </button>
+
+                <button class="lt-vg__mute" type="button" aria-label="Toggle mute" data-lt-mute>
+                  <svg class="lt-vg__icon-unmuted" viewBox="0 0 24 24" style="display: block;">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                  <svg class="lt-vg__icon-muted" viewBox="0 0 24 24" style="display: none;">
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                  </svg>
+                </button>
+              {%- endif -%}
+
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+    {%- endif -%}
+
+    {%- if section.settings.enable_popup -%}
+      <div class="lt-vg__modal" data-lt-modal>
+        <div class="lt-vg__modal-overlay" data-lt-modal-close></div>
+        <div class="lt-vg__modal-content">
+          <button class="lt-vg__modal-close" type="button" aria-label="Close modal" data-lt-modal-close>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <div class="lt-vg__modal-video" data-lt-modal-video></div>
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{%- comment -%} ── Swiper JS (conditional, deferred) ── {%- endcomment -%}
+{% if use_swp %}
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+{% endif %}
+
+<script>
+(function () {
+  'use strict';
+
+  /* ─── constants ─── */
+  var SECTION_ID = '{{ section.id }}';
+  var USE_SWIPER = {{ use_swp | json }};
+  var ENABLE_POPUP = {{ section.settings.enable_popup | json }};
+
+  /* ─── module state ─── */
+  var _swiper = null;
+
+  /* ─────────────────────────────────────────────
+     Helpers
+  ───────────────────────────────────────────── */
+  function root() {
+    return document.getElementById('shopify-section-' + SECTION_ID);
+  }
+
+  /* ─────────────────────────────────────────────
+     Video cards — play / pause / ended
+  ───────────────────────────────────────────── */
+  function bindCards(container) {
+    container.querySelectorAll('.lt-vg__card').forEach(function (card) {
+      var btn     = card.querySelector('[data-lt-play]');
+      var video   = card.querySelector('[data-lt-video]');
+      var muteBtn = card.querySelector('[data-lt-mute]');
+
+      if (!btn || !video) return;
+
+      btn.addEventListener('click', function () {
+        if (ENABLE_POPUP) {
+          openModal(video, container);
+        } else {
+          playInline(card, video, container);
+        }
+      });
+
+      /* Keyboard: Enter / Space */
+      btn.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (ENABLE_POPUP) {
+            openModal(video, container);
+          } else {
+            playInline(card, video, container);
+          }
+        }
+      });
+
+      /* Click video directly to pause (when playing inline) */
+      video.addEventListener('click', function () {
+        if (ENABLE_POPUP) return;
+        if (!video.paused) {
+          video.pause();
+          card.classList.remove('is-playing');
+        }
+      });
+
+      /* Restore UI when video finishes */
+      video.addEventListener('ended', function () {
+        card.classList.remove('is-playing');
+        video.currentTime = 0;
+      });
+
+      /* Mute toggle button */
+      if (muteBtn) {
+        muteBtn.addEventListener('click', function (e) {
+          e.stopPropagation(); /* prevents clicking the video underneath */
+          video.muted = !video.muted;
+          var iconUnmuted = muteBtn.querySelector('.lt-vg__icon-unmuted');
+          var iconMuted = muteBtn.querySelector('.lt-vg__icon-muted');
+          
+          if (video.muted) {
+            iconUnmuted.style.display = 'none';
+            iconMuted.style.display = 'block';
+          } else {
+            iconUnmuted.style.display = 'block';
+            iconMuted.style.display = 'none';
+          }
+        });
+      }
+    });
+
+    bindModal(container);
+  }
+
+  function playInline(card, video, container) {
+    /* Pause any sibling that is currently playing */
+    container.querySelectorAll('[data-lt-video]').forEach(function (v) {
+      if (v === video) return;
+      v.pause();
+      v.currentTime = 0;
+      var sibling = v.closest('.lt-vg__card');
+      if (sibling) sibling.classList.remove('is-playing');
+    });
+
+    card.classList.add('is-playing');
+    var promise = video.play();
+
+    /* Graceful autoplay-policy fallback */
+    if (promise !== undefined) {
+      promise.catch(function () {
+        card.classList.remove('is-playing');
+      });
+    }
+  }
+
+  /* ─────────────────────────────────────────────
+     Popup Modal Functionality
+  ───────────────────────────────────────────── */
+  function openModal(video, container) {
+    var modal = container.querySelector('[data-lt-modal]');
+    var modalContainer = container.querySelector('[data-lt-modal-video]');
+    if (!modal || !modalContainer) return;
+
+    /* Pause any background videos */
+    container.querySelectorAll('[data-lt-video]').forEach(function (v) {
+      v.pause();
+      var sibling = v.closest('.lt-vg__card');
+      if (sibling) sibling.classList.remove('is-playing');
+    });
+
+    modalContainer.innerHTML = '';
+    var cloned = video.cloneNode(true);
+    cloned.controls = true;
+    cloned.removeAttribute('data-lt-video');
+    modalContainer.appendChild(cloned);
+
+    modal.classList.add('is-open');
+    cloned.play().catch(function(){});
+  }
+
+  function bindModal(container) {
+    var modal = container.querySelector('[data-lt-modal]');
+    if (!modal) return;
+
+    var closeBtns = modal.querySelectorAll('[data-lt-modal-close]');
+    closeBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        modal.classList.remove('is-open');
+        var modalContainer = modal.querySelector('[data-lt-modal-video]');
+        if (modalContainer) {
+          modalContainer.innerHTML = '';
+        }
+      });
+    });
+  }
+
+  /* ─────────────────────────────────────────────
+     Swiper initialisation (mobile only)
+  ───────────────────────────────────────────── */
+  function initSwiper(container) {
+    if (!USE_SWIPER) return;
+
+    var el = container.querySelector('[data-lt-vg-swiper]');
+    if (!el) return;
+
+    /* Swiper script may still be loading — poll briefly */
+    var attempts = 0;
+    var timer = setInterval(function () {
+      attempts++;
+      if (typeof Swiper !== 'undefined') {
+        clearInterval(timer);
+        createSwiper(el);
+      } else if (attempts > 50) {
+        clearInterval(timer); /* give up after ~5 s */
+      }
+    }, 100);
+  }
+
+  function createSwiper(el) {
+    _swiper = new Swiper(el, {
+      /* Mobile defaults */
+      slidesPerView: 1.15,
+      spaceBetween: 14,
+      centeredSlides: false,
+      watchOverflow: true,
+      pagination: {
+        el: el.querySelector('.lt-vg__pagination'),
+        clickable: true
+      },
+      breakpoints: {
+        /* Slightly wider peek on larger phones */
+        481: {
+          slidesPerView: 1.3,
+          spaceBetween: 16
+        },
+        /* Disable entirely on desktop — CSS grid takes over */
+        768: {
+          enabled: false
+        }
+      }
+    });
+  }
+
+  /* ─────────────────────────────────────────────
+     Destroy — clean up swiper + pause all videos
+  ───────────────────────────────────────────── */
+  function destroy() {
+    var r = root();
+    if (r) {
+      r.querySelectorAll('video').forEach(function (v) {
+        v.pause();
+      });
+    }
+    if (_swiper) {
+      _swiper.destroy(true, true);
+      _swiper = null;
+    }
+  }
+
+  /* ─────────────────────────────────────────────
+     Boot
+  ───────────────────────────────────────────── */
+  function init() {
+    var r = root();
+    if (!r) return;
+    bindCards(r);
+    initSwiper(r);
+  }
+
+  /* ─────────────────────────────────────────────
+     Theme editor section lifecycle
+  ───────────────────────────────────────────── */
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail.sectionId !== SECTION_ID) return;
+    destroy();
+    init();
+  });
+
+  document.addEventListener('shopify:section:unload', function (e) {
+    if (e.detail.sectionId !== SECTION_ID) return;
+    destroy();
+  });
+
+  /* ─────────────────────────────────────────────
+     Initial page load
+  ───────────────────────────────────────────── */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "LT Video Grid",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "See It in Action"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading font size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Real people. Real results. Watch how the Muzzle Gravity Blanket transforms sleep — night after night."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "video_aspect_ratio",
+      "label": "Video aspect ratio",
+      "options": [
+        { "value": "16/9",  "label": "16:9 — Landscape" },
+        { "value": "4/3",   "label": "4:3 — Classic" },
+        { "value": "1/1",   "label": "1:1 — Square" },
+        { "value": "9/16",  "label": "9:16 — Portrait (TikTok / Reels)" }
+      ],
+      "default": "9/16"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_popup",
+      "label": "Open video in popup",
+      "info": "When enabled, clicking play opens the video in a full-screen modal.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Card overlay opacity",
+      "info": "Darkens the thumbnail before playback. 0 = transparent, 100 = fully black.",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_swiper",
+      "label": "Swiper carousel on mobile",
+      "info": "When enabled, cards become a touch-swipeable carousel below 768 px. Requires a page reload to take effect in the editor.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_card",
+      "name": "Video card",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Upload an MP4 or WebM. Shopify will auto-generate a thumbnail preview."
+        },
+        {
+          "type": "image_picker",
+          "id": "thumbnail",
+          "label": "Custom thumbnail",
+          "info": "Optional. Overrides the auto-generated video preview image."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Video Grid",
+      "blocks": [
+        { "type": "video_card" },
+        { "type": "video_card" },
+        { "type": "video_card" }
+      ]
+    }
+  ],
+  "max_blocks": 12
+}
+{% endschema %}

@@ -1,0 +1,514 @@
+{%- liquid
+  assign pt     = section.settings.padding_top
+  assign pb     = section.settings.padding_bottom
+  assign mt     = section.settings.margin_top
+  assign mb     = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+-%}
+
+<div
+  class="lt-comfort-split"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <div class="page-width">
+    <div class="lt-comfort-split__inner{% if section.settings.layout_reverse %} lt-comfort-split__inner--reverse{% endif %}">
+
+      {%- comment -%}━━━━ IMAGE COLUMN ━━━━{%- endcomment -%}
+      <div class="lt-comfort-split__img-col">
+        <div class="lt-comfort-split__img-frame">
+          {%- if section.settings.image != blank -%}
+            <img
+              src="{{ section.settings.image | img_url: 'master' }}"
+              alt="{{ section.settings.image.alt | default: section.settings.heading | escape }}"
+              class="lt-comfort-split__img"
+              width="{{ section.settings.image.width }}"
+              height="{{ section.settings.image.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {{ 'lifestyle-2' | placeholder_svg_tag: 'lt-comfort-split__img lt-comfort-split__img--ph' }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%}━━━━ TEXT COLUMN ━━━━{%- endcomment -%}
+      <div class="lt-comfort-split__text-col">
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-comfort-split__heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+
+        {%- assign bullet_blocks = section.blocks | where: 'type', 'bullet' -%}
+        {%- if bullet_blocks.size > 0 -%}
+          <ul class="lt-comfort-split__bullets">
+            {%- for block in bullet_blocks -%}
+              {%- if block.settings.text != blank -%}
+                <li class="lt-comfort-split__bullet" {{ block.shopify_attributes }}>
+                  <span class="lt-comfort-split__check" aria-hidden="true" style="background-color: {{ section.settings.check_bg }};">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2.5 6.25L5 8.75L9.5 4" stroke="{{ section.settings.check_color }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span class="lt-comfort-split__bullet-text" style="color: {{ section.settings.bullet_text_color }};">{{ block.settings.text }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+
+        {%- if section.settings.closing_text != blank -%}
+          <p class="lt-comfort-split__closing" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.closing_text }}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.cta_text != blank and section.settings.cta_url != blank -%}
+          <a
+            href="{{ section.settings.cta_url }}"
+            class="lt-comfort-split__cta"
+            style="background-color: {{ section.settings.cta_bg }}; color: {{ section.settings.cta_fg }};"
+          >
+            {{ section.settings.cta_text }}
+          </a>
+        {%- endif -%}
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Layout ─────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__inner {
+    display: grid;
+    grid-template-columns: {{ section.settings.img_col_fr }}fr {{ section.settings.text_col_fr }}fr;
+    gap: {{ section.settings.col_gap }}px;
+    align-items: center;
+    min-height: {{ section.settings.min_height }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse {
+    grid-template-columns: {{ section.settings.text_col_fr }}fr {{ section.settings.img_col_fr }}fr;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse .lt-comfort-split__img-col {
+    order: 2;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse .lt-comfort-split__text-col {
+    order: 1;
+  }
+
+  /* ── Image column ───────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__img-col {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: stretch;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__img-frame {
+    width: 100%;
+    border-radius: {{ section.settings.img_radius }}px;
+    overflow: hidden;
+    min-height: {{ section.settings.min_height }}px;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.img_position }};
+    display: block;
+    position: absolute;
+    inset: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__img--ph {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+  }
+
+  /* ── Text column ────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: {{ section.settings.text_indent }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse .lt-comfort-split__text-col {
+    padding-left: 0;
+    padding-right: {{ section.settings.text_indent }}px;
+  }
+
+  /* ── Heading ────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.5px;
+    margin: 0 0 32px;
+  }
+
+  /* ── Bullets ────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__bullets {
+    list-style: none;
+    margin: 0 0 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__bullet {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__check {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__bullet-text {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  /* ── Closing text ───────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__closing {
+    font-size: 16px;
+    line-height: 1.4;
+    margin: 8px 0 0;
+    letter-spacing: 0;
+  }
+
+  /* ── CTA ────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comfort-split__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+    padding: 15px 36px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    align-self: flex-start;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-comfort-split__cta:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  /* ── Responsive 767px ───────────────────────── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-comfort-split__inner,
+    #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse {
+      grid-template-columns: 1fr;
+      min-height: unset;
+      gap: 28px;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse .lt-comfort-split__img-col,
+    #shopify-section-{{ section.id }} .lt-comfort-split__img-col {
+      order: 1;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__inner--reverse .lt-comfort-split__text-col,
+    #shopify-section-{{ section.id }} .lt-comfort-split__text-col {
+      order: 2;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__img-frame {
+      min-height: 320px;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__heading {
+      font-size: {{ section.settings.heading_size | times: 0.6 | round }}px;
+      margin-bottom: 24px;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__cta {
+      width: 100%;
+    }
+  }
+
+  /* ── Responsive 480px ───────────────────────── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-comfort-split__heading {
+      font-size: {{ section.settings.heading_size | times: 0.5 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__img-frame {
+      min-height: 260px;
+    }
+    #shopify-section-{{ section.id }} .lt-comfort-split__bullet-text {
+      font-size: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Split: Image + Bullets",
+  "class": "lt-section-comfort-split",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "bullet_text_color",
+      "label": "Bullet text color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Closing text color",
+      "default": "#2d2d3a"
+    },
+    {
+      "type": "color",
+      "id": "check_bg",
+      "label": "Checkmark circle color",
+      "default": "#8b7fe8"
+    },
+    {
+      "type": "color",
+      "id": "check_color",
+      "label": "Checkmark tick color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Comfort You Can Feel"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading font size (px)",
+      "min": 32,
+      "max": 80,
+      "step": 2,
+      "default": 64
+    },
+    {
+      "type": "textarea",
+      "id": "closing_text",
+      "label": "Closing text (below bullets)",
+      "default": "A comfortable alternative to disposable foam earplugs."
+    },
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "cta_bg",
+      "label": "Button background",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "cta_fg",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "img_position",
+      "label": "Image focal point",
+      "options": [
+        { "value": "center center", "label": "Center"       },
+        { "value": "top center",    "label": "Top"          },
+        { "value": "bottom center", "label": "Bottom"       },
+        { "value": "center left",   "label": "Left"         },
+        { "value": "center right",  "label": "Right"        }
+      ],
+      "default": "center center"
+    },
+    {
+      "type": "range",
+      "id": "img_radius",
+      "label": "Image corner radius (px)",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "layout_reverse",
+      "label": "Reverse — text left, image right",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "img_col_fr",
+      "label": "Image column weight",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1,
+      "info": "Relative to text column weight"
+    },
+    {
+      "type": "range",
+      "id": "text_col_fr",
+      "label": "Text column weight",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "col_gap",
+      "label": "Column gap (px)",
+      "min": 0,
+      "max": 120,
+      "step": 8,
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "text_indent",
+      "label": "Text column indent (px)",
+      "min": 0,
+      "max": 80,
+      "step": 8,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Min section height (px)",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "default": 480
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bullet",
+      "name": "Bullet Point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Bullet text",
+          "default": "Soft, sleep-safe materials"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "LT Split: Image + Bullets",
+      "category": "LT Sections",
+      "blocks": [
+        { "type": "bullet", "settings": { "text": "Soft, sleep-safe materials" } },
+        { "type": "bullet", "settings": { "text": "Non-bulky design" } },
+        { "type": "bullet", "settings": { "text": "No harsh pressure inside the ear" } },
+        { "type": "bullet", "settings": { "text": "Reusable & easy to clean" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

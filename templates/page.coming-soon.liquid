@@ -1,0 +1,109 @@
+{% layout none %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page.title }} - {{ shop.name }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{ content_for_header }}
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f8f9fa;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .coming-soon-container {
+      max-width: 500px;
+      width: 100%;
+    }
+    .coming-soon-logo {
+      margin-bottom: 20px;
+    }
+    .coming-soon-logo img {
+      max-width: 150px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 20px;
+      color: #444;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input[type="email"] {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button {
+      padding: 12px;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      background: #27214D;
+      box-shadow: -24px 18.286px 11.429px 0px rgba(153, 145, 189, 0.04), -13.714px 10.286px 10.286px 0px rgba(153, 145, 189, 0.13), -5.714px 4.571px 6.857px 0px rgba(153, 145, 189, 0.23), -1.143px 1.143px 4.571px 0px rgba(153, 145, 189, 0.25);      
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: translateY(-2px)
+    }
+    footer {
+      margin-top: 40px;
+      font-size: 0.875rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="coming-soon-container">
+    <div class="coming-soon-logo">
+      {% if settings.logo %}
+        <img src="{{ settings.logo | img_url: '200x' }}" alt="{{ shop.name }}">
+      {% else %}
+        <h2>{{ shop.name }}</h2>
+      {% endif %}
+    </div>
+
+    <h1>Coming Soon</h1>
+    <p>We’re working hard to launch our new store. Stay tuned!</p>
+
+    {% form 'customer' %}
+    {{ form.errors | default_errors }}
+    {% if form.posted_successfully? %}
+        <p>Thanks for subscribing! We'll keep you updated.</p>
+    {% else %}
+        <input type="hidden" name="contact[tags]" value="coming-soon">
+        <input type="email" name="contact[email]" placeholder="Enter your email" required>
+        <button type="submit">Notify Me</button>
+    {% endif %}
+    {% endform %}
+
+
+    <footer>
+      &copy; {{ 'now' | date: "%Y" }} {{ shop.name }}
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,428 @@
+{%- comment -%}
+  Section : lt-who-its-for.liquid
+  Purpose : "Who It's For" image-card grid with gradient labels,
+             optional pretitle / heading / description / CTA,
+             and dynamic column controls for desktop + mobile.
+{%- endcomment -%}
+
+{%- assign pt   = section.settings.padding_top -%}
+{%- assign pb   = section.settings.padding_bottom -%}
+{%- assign mt   = section.settings.margin_top -%}
+{%- assign mb   = section.settings.margin_bottom -%}
+{%- assign pt_m = pt | times: 6 | divided_by: 10 -%}
+{%- assign pb_m = pb | times: 6 | divided_by: 10 -%}
+{%- assign mt_m = mt | times: 6 | divided_by: 10 -%}
+{%- assign mb_m = mb | times: 6 | divided_by: 10 -%}
+
+<style>
+  /* ─── Section wrapper ─────────────────────────────────────── */
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  /* ─── Header block ───────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-wif-header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-pretitle {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 100px;
+    padding: 6px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333333;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-title {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 14px;
+    color: {{ section.settings.heading_color }};
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-title:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-description {
+    font-size: 17px;
+    line-height: 1.65;
+    max-width: 620px;
+    margin: 0 auto;
+    color: {{ section.settings.text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-description p {
+    margin: 0;
+  }
+
+  /* ─── Grid ───────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-wif-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: 20px;
+  }
+
+  /* ─── Card ───────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-wif-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    aspect-ratio: 3 / 2;
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-card img,
+  #shopify-section-{{ section.id }} .lt-wif-card .lt-wif-placeholder {
+    width: 100%;
+    height: 100%;
+    /*object-fit: cover;*/
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+  }
+
+  /* ─── Gradient label ─────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-wif-label {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 64px 20px 18px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.50) 40%,
+      transparent 100%
+    );
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  /* ─── CTA button ─────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-wif-cta-wrap {
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-btn {
+    display: inline-block;
+    padding: 14px 36px;
+    background-color: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_text }};
+    border-radius: 100px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-wif-btn:hover {
+    opacity: 0.82;
+  }
+
+  /* ─── Tablet / Mobile ≤ 767px ────────────────────────────── */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-header {
+      margin-bottom: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-title {
+      font-size: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-description {
+      font-size: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-grid {
+      grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+      gap: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-label {
+      font-size: 14px;
+      padding: 44px 14px 14px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-cta-wrap {
+      margin-top: 32px;
+    }
+  }
+
+  /* ─── Small mobile ≤ 480px ───────────────────────────────── */
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-wif-title {
+      font-size: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-wif-label {
+      font-size: 13px;
+      padding: 36px 12px 12px;
+    }
+  }
+</style>
+
+<div class="lt-wif">
+  <div class="page-width">
+
+    {%- if section.settings.pretitle != blank
+         or section.settings.title != blank
+         or section.settings.description != blank -%}
+      <div class="lt-wif-header">
+
+        {%- if section.settings.pretitle != blank -%}
+          <div class="lt-wif-pretitle">{{ section.settings.pretitle | escape }}</div>
+        {%- endif -%}
+
+        {%- if section.settings.title != blank -%}
+          <h2 class="lt-wif-title">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.description != blank -%}
+          <div class="lt-wif-description">{{ section.settings.description }}</div>
+        {%- endif -%}
+
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="lt-wif-grid">
+        {%- for block in section.blocks -%}
+          <div class="lt-wif-card" {{ block.shopify_attributes }}>
+
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                alt="{{ block.settings.label | default: block.settings.image.alt | escape }}"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              {{- 'image' | placeholder_svg_tag: 'lt-wif-placeholder' -}}
+            {%- endif -%}
+
+            {%- if block.settings.label != blank -%}
+              <div class="lt-wif-label">{{ block.settings.label | escape }}</div>
+            {%- endif -%}
+
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <div class="lt-wif-cta-wrap">
+        <a
+          href="{{ section.settings.cta_url | default: '#' }}"
+          class="lt-wif-btn"
+        >{{ section.settings.cta_label | escape }}</a>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Who It's For",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1e5e"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "pretitle",
+      "label": "Pre-title",
+      "info": "Renders as a white pill badge above the heading. Leave blank to hide."
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Who They're For"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "info": "Optional supporting copy below the heading. Leave blank to hide."
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout"
+    },
+    {
+      "type": "select",
+      "id": "cols_desktop",
+      "label": "Cards per row — Desktop",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "cols_mobile",
+      "label": "Cards per row — Mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "info": "Leave blank to hide the button."
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button background",
+      "default": "#1e1e5e"
+    },
+    {
+      "type": "color",
+      "id": "btn_text",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Card label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Who It's For",
+      "settings": {
+        "cols_desktop": "3",
+        "cols_mobile": "1"
+      },
+      "blocks": [
+        { "type": "card", "settings": { "label": "Mouth Breathers" } },
+        { "type": "card", "settings": { "label": "Light snorers" } },
+        { "type": "card", "settings": { "label": "Allergy sufferers" } },
+        { "type": "card", "settings": { "label": "Individuals with nighttime congestion" } },
+        { "type": "card", "settings": { "label": "Athletes seeking improved airflow" } },
+        { "type": "card", "settings": { "label": "Anyone looking to support deeper, more restorative sleep" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

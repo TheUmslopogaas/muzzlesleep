@@ -1,0 +1,484 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "lt_multi_product_TmYmeW": {
+      "type": "lt-multi-product",
+      "blocks": {
+        "review_yBKaxa": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/content-1243870.webp",
+            "name": "Isobel",
+            "content": "Very pleased with this purchase! It's high-quality, easy to use, and reliable. Highly recommend for its efficiency and convenience."
+          }
+        },
+        "review_tVEhJa": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/content-1252543.webp",
+            "name": "Mishel E.",
+            "content": "Super easy to use. Kids love it and have been asking about it every night. Easy and painless to remove in the morning"
+          }
+        },
+        "review_MFVeWB": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/content-1241962.webp",
+            "name": "Brinley M.",
+            "content": "Muzzle has made a noticeable difference on how rested I feel, and it is so comfortable and gentle on my skin."
+          }
+        },
+        "dropdown_UHBWJg": {
+          "type": "dropdown",
+          "settings": {
+            "heading": "Delivery & Returns",
+            "content": "<p><strong>To learn more about our delivery & return policy, </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\" target=\"_blank\" title=\"Refund Policy\"><strong>click here.</strong></a></p>"
+          }
+        },
+        "dropdown_NEFB6L": {
+          "type": "dropdown",
+          "settings": {
+            "heading": "30-Day Money Back Guarantee",
+            "content": "<p><strong>Please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\" target=\"_blank\" title=\"Refund Policy\"><strong>Return Policy</strong></a><strong> for more details.</strong></p>"
+          }
+        }
+      },
+      "block_order": [
+        "review_yBKaxa",
+        "review_tVEhJa",
+        "review_MFVeWB",
+        "dropdown_UHBWJg",
+        "dropdown_NEFB6L"
+      ],
+      "name": "LT Multi Product",
+      "settings": {
+        "delivery_content": "<p>Some Text Here...</p>",
+        "warranty_content": "<p>Some Text Here...</p>",
+        "custom_id": "landing-product-main",
+        "background": "",
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 50,
+        "padding_bottom_mobile": 50
+      }
+    },
+    "lt_testimonial_w_stat_qGBAi9": {
+      "type": "lt-testimonial-w-stat",
+      "blocks": {
+        "testimonial_LtgLMh": {
+          "type": "testimonial",
+          "settings": {
+            "text": "As someone with extremely sensitive skin, I was worried about irritation. These strips are incredibly gentle. I've been using them for 3 months with no skin issues and dramatically improved sleep.",
+            "customer_name": "Michael R."
+          }
+        },
+        "testimonial_r3QqGd": {
+          "type": "testimonial",
+          "settings": {
+            "text": "My husband says I don't snore anymore, and I wake up feeling actually rested for the first time in years. The strips are so gentle - I barely feel them.",
+            "customer_name": "Sarah M."
+          }
+        },
+        "testimonial_ccM7ew": {
+          "type": "testimonial",
+          "settings": {
+            "text": "As a parent giving my child the opportunity for a well rested night sleep is a must. It’s easy enough for my 9 year old to do himself. The medium strength adhesive is strong enough to stay on without irritating his skin. All around great product.",
+            "customer_name": "Daniella S."
+          }
+        },
+        "testimonial_BDwqtt": {
+          "type": "testimonial",
+          "settings": {
+            "text": "I’ve struggled with snoring for years and these muzzle strips have been a game-changer.",
+            "customer_name": "Michael L."
+          }
+        },
+        "testimonial_btnabm": {
+          "type": "testimonial",
+          "settings": {
+            "text": "Muzzle Kids Mouth Tape has been a game-changer for my kids’ sleep! I love that it’s safe, third-party tested, and designed with a breathable opening—giving me peace of mind while improving their breathing and rest.",
+            "customer_name": "Caitlin W."
+          }
+        },
+        "statistic_DbCrVt": {
+          "type": "statistic",
+          "settings": {
+            "percentage": "94",
+            "description": "report reduced snoring within first week"
+          }
+        },
+        "statistic_iKnXJ6": {
+          "type": "statistic",
+          "settings": {
+            "percentage": "89",
+            "description": "experienced improved sleep quality"
+          }
+        },
+        "statistic_Bwgjty": {
+          "type": "statistic",
+          "settings": {
+            "percentage": "92",
+            "description": "would recommend to friends"
+          }
+        },
+        "statistic_xEhQMt": {
+          "type": "statistic",
+          "settings": {
+            "percentage": "35",
+            "description": "average improvement in sleep scores"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_LtgLMh",
+        "testimonial_r3QqGd",
+        "testimonial_ccM7ew",
+        "testimonial_BDwqtt",
+        "testimonial_btnabm",
+        "statistic_DbCrVt",
+        "statistic_iKnXJ6",
+        "statistic_Bwgjty",
+        "statistic_xEhQMt"
+      ],
+      "name": "LT Testimonial with Stats",
+      "settings": {
+        "title": "Real Results from Real People",
+        "subtitle": "See Why 50,000+ Customers Choose Muzzle Sleep",
+        "stats_title": "The Numbers"
+      }
+    },
+    "lt_txt_bg_kcM9CF": {
+      "type": "lt-txt-bg",
+      "name": "LT Text with Background",
+      "settings": {
+        "background_image": "shopify://shop_images/big-testimoial-bg.jpg",
+        "mobile_background_image": "shopify://shop_images/big-testimoial-bg-mbl.png",
+        "testimonial_text": "Muzzle offers a simple yet effective solution to support healthier breathing during sleep, promoting enhanced sleep quality, reduced snoring, and better management of sleep-related issues such as sleep apnea. By encouraging nasal breathing, it promotes healthier, more restful nights. I highly recommend Muzzle to anyone seeking to improve their sleep.",
+        "author_name": "DR. NICOLETTE NATALE",
+        "author_title": "Doctor of Osteopathy",
+        "show_stars": true
+      }
+    },
+    "lt_steps_process_WhQkpX": {
+      "type": "lt-steps-process",
+      "blocks": {
+        "step_CygrFT": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/steps-process1.png",
+            "title": "Step 1: Prepare",
+            "description": "Start with clean, dry skin around your lips for best adhesion."
+          }
+        },
+        "step_PCzpmm": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/steps-process2.png",
+            "title": "Step 2: Apply",
+            "description": "Peel and place horizontally across the center of your lips. The hypoallergenic adhesive provides secure but comfortable hold."
+          }
+        },
+        "step_MLmp83": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/steps-process3.png",
+            "title": "Step 3: Sleep Peacefully",
+            "description": "Your mouth stays gently closed, naturally directing airflow through your nose. This reduces snoring by up to 90% for most users."
+          }
+        }
+      },
+      "block_order": [
+        "step_CygrFT",
+        "step_PCzpmm",
+        "step_MLmp83"
+      ],
+      "name": "LT Steps Process Section",
+      "settings": {
+        "background_color": "#f6f5ff",
+        "subtitle": "Transform Your Sleep in 3 Simple Steps",
+        "title": "How Muzzle Sleep Strips Work",
+        "description": "Sleep shouldn't be complicated. Our gentle strips encourage nasal breathing, which is quieter, more efficient, and delivers better oxygen flow to your body.",
+        "cta_text": "Ready To Experience The Difference?",
+        "cta_url": ""
+      }
+    },
+    "lt_breathing_science_yYjbtq": {
+      "type": "lt-breathing-science",
+      "name": "LT Breathing Science",
+      "settings": {
+        "background_color": "#ffffff",
+        "section_title": "The Science Behind Better Breathing",
+        "main_image": "shopify://shop_images/science-breathing-img.jpg",
+        "main_title": "Why Nasal Breathing Changes Everything",
+        "main_description": "When you breathe through your nose, air is filtered, warmed, and humidified before reaching your lungs. This prevents snoring and improves oxygen absorption for more restorative sleep.",
+        "secondary_description": "Mouth breathing dries out your throat, causing tissues to vibrate and create snoring. Nasal breathing increases oxygen uptake by up to 20%, leading to:",
+        "benefits": "Deeper REM sleep cycles|Reduced morning fatigue|Better cognitive function|Improved immune response",
+        "doctor_note": "<p><strong>Doctor Recommended & Clinically Tested</strong> - Muzzle Sleep Strips are Doctor recommended for sleep and tested excellent for skin tolerability by Dermatest.</p>",
+        "cta_text": "Join thousands who've discovered better sleep.",
+        "button_text": "Order Muzzle Strips Today",
+        "button_url": ""
+      }
+    },
+    "lt_safety_quality_TxXahX": {
+      "type": "lt-safety-quality",
+      "blocks": {
+        "feature_LDnJtT": {
+          "type": "feature",
+          "settings": {
+            "icon_image": "shopify://shop_images/Group_427320964.png",
+            "title": "Breathe-Safe™ Technology",
+            "description": "Our patented design features breathable, micropore material that allows air circulation while maintaining secure hold."
+          }
+        },
+        "feature_tLCfUk": {
+          "type": "feature",
+          "settings": {
+            "icon_image": "shopify://shop_images/Group_427320965.png",
+            "title": "Toxin-Free Promise",
+            "description": "The only mouth tape certified free from BPA, Phthalates, Parabens, and PFAS (Forever Chemicals)."
+          }
+        },
+        "feature_LayEEE": {
+          "type": "feature",
+          "settings": {
+            "icon_image": "shopify://shop_images/Group_427320966.png",
+            "title": "Dermatologically Tested",
+            "description": "Independent testing shows excellent skin tolerability, even for users with sensitive skin conditions. Zero reported allergic reactions."
+          }
+        },
+        "feature_jJzRbx": {
+          "type": "feature",
+          "settings": {
+            "icon_image": "shopify://shop_images/Group_427320967.png",
+            "title": "HSA/FSA Approved",
+            "description": "Qualify for Health Savings Account purchases, making better sleep an investment in your health."
+          }
+        }
+      },
+      "block_order": [
+        "feature_LDnJtT",
+        "feature_tLCfUk",
+        "feature_LayEEE",
+        "feature_jJzRbx"
+      ],
+      "name": "LT Safety & Quality",
+      "settings": {
+        "background_color": "#f6f5ff",
+        "section_title": "Safety & Quality You Can Trust",
+        "section_subtitle": "Designed with Your Health in Mind",
+        "button_text": "Get Safe, Gentle Relief Now",
+        "button_url": "",
+        "bottom_text": "Your safety is our priority"
+      }
+    },
+    "ugc_video_slider_bgJjLj": {
+      "type": "ugc-video-slider",
+      "blocks": {
+        "ugc_video_item_t6XGpm": {
+          "type": "ugc_video_item",
+          "settings": {
+            "video": "shopify://files/videos/content-1276806.mp4",
+            "text": "“A Simple Way to Prevent Mouth Breathing”",
+            "target_product": "muzzle-sleeping-strips-for-adults-strong-hold-30-count",
+            "scroll_id": "landing-product-main"
+          }
+        },
+        "ugc_video_item_UF67na": {
+          "type": "ugc_video_item",
+          "settings": {
+            "video": "shopify://files/videos/content-1252070.mp4",
+            "text": "“What’s in the Package?”",
+            "target_product": "muzzle-sleeping-strips-for-kids-medium-hold-30-count",
+            "scroll_id": "landing-product-main"
+          }
+        },
+        "ugc_video_item_6whzmM": {
+          "type": "ugc_video_item",
+          "settings": {
+            "video": "shopify://files/videos/content-1270776.mp4",
+            "text": "“Improve Your Child’s Sleep with Muzzle Tape”",
+            "target_product": "",
+            "scroll_id": "landing-product-main"
+          }
+        },
+        "ugc_video_item_LA6U9V": {
+          "type": "ugc_video_item",
+          "settings": {
+            "video": "shopify://files/videos/Muzzle Video_4_without emojis.mp4",
+            "text": "“The Hidden Effects of Mouth Breathing in Kids”",
+            "target_product": "muzzle-sleeping-strips-for-kids-medium-hold-30-count",
+            "scroll_id": "landing-product-main"
+          }
+        },
+        "ugc_video_item_Y67JUA": {
+          "type": "ugc_video_item",
+          "settings": {
+            "video": "shopify://files/videos/content-1261863_4843d842-70da-464d-bd1d-46f6182d4db3.mp4",
+            "text": "“How to Use Muzzle Tape”",
+            "target_product": "muzzle-sleeping-strips-for-adults-medium-hold-30-count",
+            "scroll_id": "landing-product-main"
+          }
+        }
+      },
+      "block_order": [
+        "ugc_video_item_t6XGpm",
+        "ugc_video_item_UF67na",
+        "ugc_video_item_6whzmM",
+        "ugc_video_item_LA6U9V",
+        "ugc_video_item_Y67JUA"
+      ],
+      "name": "UGC Video slider",
+      "settings": {
+        "review_badge_image": "shopify://shop_images/Review_icon_21765d7e-6ee0-436e-88e0-c4aa3258a91e.png",
+        "review_text": "Over 4,500+ Happier Sleepers",
+        "title": "<span>A New</span> Daily Routine",
+        "button_text": "Try Muzzle Sleep",
+        "button_link": "",
+        "scroll_id": "",
+        "button_arrow_direction": "down",
+        "background": "#FFFFFF00",
+        "max_with": 1500,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 50,
+        "padding_bottom_mobile": 50
+      }
+    },
+    "lt_hold_strength_tcqk4Y": {
+      "type": "lt-hold-strength",
+      "blocks": {
+        "product_qPjwNL": {
+          "type": "product",
+          "settings": {
+            "product_image": "shopify://shop_images/medium-hold.png",
+            "product_title": "Medium Hold",
+            "product_description": "Perfect for most users. Gentle adhesion that's comfortable for sensitive skin while effectively reducing snoring."
+          }
+        },
+        "product_VzgJ4b": {
+          "type": "product",
+          "settings": {
+            "product_image": "shopify://shop_images/strong-hold.png",
+            "product_title": "Strong Hold",
+            "product_description": "For those who need extra security or are active sleepers. Stronger adhesion without compromising comfort."
+          }
+        },
+        "product_irbdRK": {
+          "type": "product",
+          "settings": {
+            "product_image": "shopify://shop_images/0_6a738dff-32dd-4720-bf4a-9da78dd7350e.webp",
+            "product_title": "Youth Tape",
+            "product_description": "Specially designed smaller strips for children 6+ with extra-gentle adhesive safe for young, sensitive skin."
+          }
+        }
+      },
+      "block_order": [
+        "product_qPjwNL",
+        "product_VzgJ4b",
+        "product_irbdRK"
+      ],
+      "name": "LT Hold Strength",
+      "settings": {
+        "heading": "Choose Your Hold Strength",
+        "subheading": "Find Your Perfect Match",
+        "recommendation_text": "Not sure which is right for you? Start with Medium Hold - it works for 85% of our customers.",
+        "cta_text": "Find My Perfect Strip",
+        "cta_link": "",
+        "background_color": "#ffffff"
+      }
+    },
+    "ugc_slider_ETBx9N": {
+      "type": "ugc-slider",
+      "blocks": {
+        "image_8xcPH6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1255323.webp"
+          }
+        },
+        "image_PXx9gj": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1248606.webp"
+          }
+        },
+        "image_VYBWad": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1242760.webp"
+          }
+        },
+        "image_E4UmFG": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1242537.webp"
+          }
+        },
+        "image_UHnkGM": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1241962.webp"
+          }
+        },
+        "image_9jhgKH": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1271490.webp"
+          }
+        },
+        "image_y7wPXD": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/content-1243870.webp"
+          }
+        }
+      },
+      "block_order": [
+        "image_8xcPH6",
+        "image_PXx9gj",
+        "image_VYBWad",
+        "image_E4UmFG",
+        "image_UHnkGM",
+        "image_9jhgKH",
+        "image_y7wPXD"
+      ],
+      "name": "UGC Slider",
+      "settings": {
+        "background": "#27214D",
+        "max_with": 1500,
+        "padding_top": 100,
+        "padding_bottom": 80,
+        "padding_top_mobile": 60,
+        "padding_bottom_mobile": 60
+      }
+    }
+  },
+  "order": [
+    "main",
+    "lt_multi_product_TmYmeW",
+    "lt_testimonial_w_stat_qGBAi9",
+    "lt_txt_bg_kcM9CF",
+    "lt_steps_process_WhQkpX",
+    "lt_breathing_science_yYjbtq",
+    "lt_safety_quality_TxXahX",
+    "ugc_video_slider_bgJjLj",
+    "lt_hold_strength_tcqk4Y",
+    "ugc_slider_ETBx9N"
+  ]
+}

@@ -1,0 +1,299 @@
+{% comment %}
+  Enhanced Collection Schema for SEO & Rich Results
+  Version: 1.4 - Fixed missing highPrice with more robust handling
+  Works with: All Shopify themes
+  Last Updated: 2025
+  
+  Features:
+  - CollectionPage schema for better SERP display
+  - BreadcrumbList for navigation
+  - ItemList for products in collection
+  - Multiple sort options support
+  - Pagination handling
+  - Compatible with filtered/tagged views
+  - FIX: Added highPrice to all products
+  - FIX: Proper rating validation to prevent 0 ratings
+  - FIX: Ensure highPrice always has a value for single variant products
+  - FIX: More robust highPrice calculation to prevent missing field errors
+{% endcomment %}
+
+{% comment %} Only render on collection pages {% endcomment %}
+{% if collection and collection.id %}
+
+{% comment %} Setup variables with fallbacks {% endcomment %}
+{% liquid
+  assign shop_url = shop.url
+  unless shop_url contains 'http'
+    if request.host contains 'myshopify.com'
+      assign shop_url = 'https://' | append: request.host
+    elsif shop.permanent_domain
+      assign shop_url = 'https://' | append: shop.permanent_domain
+    else
+      assign shop_url = 'https://' | append: shop.domain
+    endif
+  endunless
+  
+  assign collection_description = collection.description | strip_html | strip | truncate: 5000
+  if collection_description == blank or collection_description == nil
+    assign collection_description = collection.title | append: ' - Browse our collection at ' | append: shop.name
+  endif
+  
+  assign current_page = current_page | default: 1
+  assign products_per_page = collection.products.size | at_most: 50
+  
+  comment
+    Handle collection image
+  endcomment
+  assign collection_image = collection.image | default: collection.products.first.featured_image
+%}
+
+{% comment %} Main Collection Schema {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": {{ shop_url | append: collection.url | json }},
+  "name": {{ collection.title | json }},
+  "description": {{ collection_description | json }},
+  "url": {{ shop_url | append: collection.url | json }},
+  {% if collection_image %}
+  "image": {{ collection_image | image_url: width: 1200 | prepend: 'https:' | json }},
+  {% endif %}
+  "numberOfItems": {{ collection.all_products_count }},
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": {{ shop.name | json }},
+    "url": {{ shop_url | json }}
+  },
+  "breadcrumb": {
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": {{ shop_url | json }}
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ collection.title | json }},
+        "item": {{ shop_url | append: collection.url | json }}
+      }
+    ]
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ collection.products.size }},
+    "itemListElement": [
+      {% for product in collection.products limit: 50 %}
+        {% comment %} Calculate price values to ensure highPrice always exists {% endcomment %}
+        {% liquid
+          assign low_price = product.price_min | divided_by: 100.0 | round: 2
+          
+          comment
+            More robust handling of price_max to ensure highPrice always has a value
+          endcomment
+          if product.price_max and product.price_max > 0
+            assign high_price = product.price_max | divided_by: 100.0 | round: 2
+          else
+            assign high_price = low_price
+          endif
+          
+          comment
+            Additional safety checks
+          endcomment
+          unless high_price
+            assign high_price = low_price
+          endunless
+          
+          if high_price == blank or high_price == empty or high_price == nil
+            assign high_price = low_price
+          endif
+          
+          if high_price < low_price
+            assign high_price = low_price
+          endif
+          
+          comment
+            Final fallback - if somehow high_price is still not set, use price_min
+          endcomment
+          unless high_price > 0
+            assign high_price = product.price_min | divided_by: 100.0 | round: 2
+          endunless
+        %}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "name": {{ product.title | json }},
+          "url": {{ shop_url | append: product.url | json }},
+          "item": {
+            "@type": "Product",
+            "@id": {{ shop_url | append: product.url | json }},
+            "name": {{ product.title | json }},
+            "description": {{ product.description | strip_html | truncate: 160 | json }},
+            {% if product.featured_image %}
+            "image": {{ product.featured_image | image_url: width: 600 | prepend: 'https:' | json }},
+            {% endif %}
+            "brand": {
+              "@type": "Brand", 
+              "name": {{ product.vendor | default: shop.name | json }}
+            },
+            {% if product.selected_or_first_available_variant.sku %}
+            "sku": {{ product.selected_or_first_available_variant.sku | json }},
+            {% endif %}
+            {% if product.selected_or_first_available_variant.barcode %}
+            "gtin": {{ product.selected_or_first_available_variant.barcode | json }},
+            {% endif %}
+            "offers": {
+              "@type": "AggregateOffer",
+              "priceCurrency": {{ cart.currency.iso_code | default: shop.currency | json }},
+              "lowPrice": {{ low_price | json }},
+              "highPrice": {{ high_price | default: low_price | json }},
+              "offerCount": {{ product.variants.size }},
+              "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}"
+            }
+            {% comment %} Add ratings if available - with proper validation {% endcomment %}
+            {% assign rating_value = 0 %}
+            {% assign review_count = 0 %}
+            {% assign rating_found = false %}
+            
+            {% if product.metafields.reviews.rating.value %}
+              {% assign temp_rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | times: 1.0 %}
+              {% if temp_rating > 0 and temp_rating <= 5 %}
+                {% assign rating_found = true %}
+                {% assign rating_value = temp_rating %}
+                {% assign review_count = product.metafields.reviews.rating_count.value | default: product.metafields.reviews.rating_count | default: 1 %}
+              {% endif %}
+            {% elsif product.metafields.spr.reviews %}
+              {% assign temp_rating = product.metafields.spr.reviews | times: 1.0 %}
+              {% if temp_rating > 0 and temp_rating <= 5 %}
+                {% assign rating_found = true %}
+                {% assign rating_value = temp_rating %}
+                {% assign review_count = product.metafields.spr.review_count | default: 1 %}
+              {% endif %}
+            {% elsif product.metafields.loox.rating %}
+              {% assign temp_rating = product.metafields.loox.rating | times: 1.0 %}
+              {% if temp_rating > 0 and temp_rating <= 5 %}
+                {% assign rating_found = true %}
+                {% assign rating_value = temp_rating %}
+                {% assign review_count = product.metafields.loox.review_count | default: 1 %}
+              {% endif %}
+            {% elsif product.metafields.judgeme.badge %}
+              {% assign temp_rating = product.metafields.judgeme.badge.rating | default: product.metafields.judgeme.rating | times: 1.0 %}
+              {% if temp_rating > 0 and temp_rating <= 5 %}
+                {% assign rating_found = true %}
+                {% assign rating_value = temp_rating %}
+                {% assign review_count = product.metafields.judgeme.badge.review_count | default: product.metafields.judgeme.review_count | default: 1 %}
+              {% endif %}
+            {% elsif product.metafields.yotpo.reviews_average %}
+              {% assign temp_rating = product.metafields.yotpo.reviews_average | times: 1.0 %}
+              {% if temp_rating > 0 and temp_rating <= 5 %}
+                {% assign rating_found = true %}
+                {% assign rating_value = temp_rating %}
+                {% assign review_count = product.metafields.yotpo.reviews_count | default: 1 %}
+              {% endif %}
+            {% endif %}
+            
+            {% comment %} Only output rating if it's valid (between 1 and 5) {% endcomment %}
+            {% if rating_found and rating_value >= 1 and rating_value <= 5 %}
+            ,
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": {{ rating_value | round: 1 }},
+              "reviewCount": {{ review_count | round | at_least: 1 }},
+              "bestRating": "5",
+              "worstRating": "1"
+            }
+            {% endif %}
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  }
+  {% comment %} Add sorting/filtering information if available {% endcomment %}
+  {% if collection.default_sort_by or current_tags %}
+  ,
+  "potentialAction": {
+    "@type": "Action",
+    "name": "Filter Products",
+    "target": {
+      "@type": "EntryPoint",
+      {% assign sort_url = shop_url | append: collection.url | append: '?sort_by={sort_order}' %}
+"urlTemplate": {{ sort_url | json }},
+      "actionPlatform": [
+        "http://schema.org/DesktopWebPlatform",
+        "http://schema.org/MobileWebPlatform"
+      ]
+    }
+  }
+  {% endif %}
+}
+</script>
+
+{% comment %} Separate BreadcrumbList for better search appearance {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ shop_url | json }}
+    },
+    {
+      "@type": "ListItem", 
+      "position": 2,
+      "name": {{ collection.title | json }},
+      "item": {{ shop_url | append: collection.url | json }}
+    }
+    {% if current_tags %}
+      {% assign tag_list = current_tags | join: ', ' %}
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ tag_list | json }},
+        "item": {{ canonical_url | default: shop_url | append: collection.url | json }}
+      }
+    {% endif %}
+  ]
+}
+</script>
+
+{% comment %} Optional: FAQ Schema for collection-specific questions {% endcomment %}
+{% if collection.metafields.faq.question_1 and collection.metafields.faq.answer_1 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": {{ collection.metafields.faq.question_1 | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ collection.metafields.faq.answer_1 | strip_html | json }}
+      }
+    }
+    {% for i in (2..5) %}
+      {% assign question_key = 'question_' | append: i %}
+      {% assign answer_key = 'answer_' | append: i %}
+      {% if collection.metafields.faq[question_key] and collection.metafields.faq[answer_key] %}
+      ,{
+        "@type": "Question",
+        "name": {{ collection.metafields.faq[question_key] | json }},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{ collection.metafields.faq[answer_key] | strip_html | json }}
+        }
+      }
+      {% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+
+{% endif %}

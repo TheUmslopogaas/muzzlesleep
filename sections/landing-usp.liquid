@@ -1,0 +1,304 @@
+{%- assign _ss = section.settings -%}
+{%- assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#sn_' -%}
+{%- assign _this = section.id | prepend: '#shopify-section-' -%}
+
+{%- capture section_content -%}
+<style>
+    {{ _section }} {
+        position: relative;
+        background: {{ _ss.background }};
+        padding-top: {{ _ss.padding_top }}px;
+        padding-bottom: {{ _ss.padding_bottom }}px;
+    }
+
+    {{ _section }} .section_holder {
+        position: relative;
+        max-width: {{ _ss.max_with }}px;
+        margin: auto;
+        padding: 0px 40px;
+    }
+
+    {{ _section }} .section_title_text {
+        color: #26214E;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%; /* 36px */
+        letter-spacing: -0.6px;
+    }
+
+    {{ _section }} .section_title_text span {
+        color: #9487DF;
+    }
+
+    {{ _section }} .usp_items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        justify-content: space-between;
+        gap: 30px 18px;
+    }
+
+    {{ _section }} .usp_item {
+        max-width: 280px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    {{ _section }} .usp_item-image {
+        width: 46px;
+        height: 46px;
+        display: flex;
+    }
+
+    .usp_item-image img {
+        width: 100%;
+        height: auto;
+    }
+
+    {{ _section }} .usp_item-title {
+        margin-top: 14px;
+        height: 34px;
+        border-radius: 132px;
+        border: 1.333px solid #9487DF;
+        padding: 0 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9487DF;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0;
+    }
+
+    {{ _section }} .usp_item-description {
+        color: #26214E;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        letter-spacing: -0.32px;
+        margin-top: 11px;
+        text-align: center;
+    }
+
+    {{ _section }} .usp_item-description p {
+        margin: 0;
+    }
+
+    {{ _section }} .usp_item-description p strong {
+        font-weight: 600;
+    }
+
+    {{ _section }} .section_body {
+        margin-top: 41px;
+    }
+
+    @media screen and (max-width: 900px) {
+        {{ _section }} {
+            padding-top: {{ _ss.padding_top_mobile }}px;
+            padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+        }
+        
+        {{ _section }} .section_holder {
+            padding: 0px 24px;
+        }
+
+        {{ _section }} .section_title_text {
+            font-size: 24px;
+            letter-spacing: -0.48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        {{ _section }} .section_body {
+            margin-top: 30px;
+        }
+
+        {{ _section }} .section_image {
+            padding: 0 40px;
+        }
+
+        {{ _section }} .section_image img {
+            width: 100%;
+            height: auto;
+        }
+
+        {{ _section }} .section_content {
+            margin-top: 42px;
+        }
+
+        {{ _section }} .usp_item-image {
+            width: 34px;
+            height: 34px;
+        }
+
+        {{ _section }} .usp_item-title {
+            margin-top: 10px;
+            height: 25px;
+            font-size: 12px;
+            padding: 0 8px;
+        }
+
+        {{ _section }} .usp_item-description {
+            font-size: 12px;
+            letter-spacing: -0.24px;
+            margin-top: 7px;
+        }
+
+        {{ _section }} .for_desktop {
+            display: none !important;
+        }
+    }
+
+    @media screen and (min-width: 901px) {
+        {{ _section }} .for_mobile {
+            display: none !important;
+        }
+    }
+    
+
+</style>
+
+
+<div landing-usp id="sn_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="section_holder">
+        <div class="section_header">
+            <div class="section_title">
+                <div class="section_title_text">{{ _ss.title }}</div>
+            </div>
+        </div>
+        <div class="section_body">
+            {%- if _ss.image_mobile -%}
+                <div class="section_image for_mobile">
+                    <img src="{{ _ss.image_mobile | image_url: width: 700 }}" alt="mobile image">
+                </div>
+            {%- endif -%}
+            <div class="section_content">
+                <div class="usp_items">
+                    {%- for block in section.blocks -%}
+                        {%- assign _block = block.settings -%}
+                        <div class="usp_item">
+                            <div class="usp_item-image">
+                                <img src="{{ _block.image | image_url: width: 100 }}" alt="usp image-{{ forloop.index }}">
+                            </div>
+                            <div class="usp_item-title">{{ _block.title }}</div>
+                            <div class="usp_item-description">{{ _block.text }}</div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+    {
+        "name": "Landing USP",
+        "settings": [
+            {
+                "type": "textarea",
+                "id": "title",
+                "label": "Title",
+                "default": "Trusted by over <span>5000+ Americans</span>",
+                "info": "Use <span> tag for colored text"
+            },
+            {
+                "type": "image_picker",
+                "id": "image_mobile",
+                "label": "Image mobile"
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1920
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "label": "Desktop padding top",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_top_mobile",
+                "label": "Mobile padding top",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            }
+        ],
+        "blocks": [
+            {
+                "name": "USP Item",
+                "type": "usp",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Title"
+                    },
+                    {
+                        "type": "richtext",
+                        "id": "text",
+                        "label": "Text"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Landing USP"
+        }]
+    }
+{% endschema %}

@@ -1,0 +1,567 @@
+{% comment %} benefit-categories.liquid {% endcomment %}
+
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mobile = pt | times: 0.6 | round
+  assign pb_mobile = pb | times: 0.6 | round
+  assign mt_mobile = mt | times: 0.6 | round
+  assign mb_mobile = mb | times: 0.6 | round
+-%}
+
+<div
+  id="shopify-section-{{ section.id }}"
+  class="lt-benefit-categories"
+  style="
+    background-color: {{ section.settings.section_bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <style>
+    #shopify-section-{{ section.id }} {
+      --lt-accent: {{ section.settings.accent_color }};
+      --lt-card-bg: {{ section.settings.card_bg_color }};
+      --lt-card-radius: {{ section.settings.card_border_radius }}px;
+      --lt-icon-bg: {{ section.settings.icon_bg_color }};
+      --lt-title-color: {{ section.settings.title_color }};
+      --lt-divider-color: {{ section.settings.divider_color }};
+      --lt-text: {{ section.settings.text_color }};
+    }
+    #shopify-section-{{ section.id }} .lt-bc-grid {
+      display: grid;
+      grid-template-columns: repeat({{ section.blocks.size | at_most: 4 }}, 1fr);
+      gap: {{ section.settings.column_gap }}px;
+      align-items: stretch;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-card {
+      background: var(--lt-card-bg);
+      border-radius: var(--lt-card-radius);
+      padding: 50px 32px 36px;
+      margin-top: 32px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-icon-wrap {
+      width: 64px;
+      height: 64px;
+      background: var(--lt-icon-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: absolute;
+      top: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-sizing: border-box;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-icon-wrap img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      display: block;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-icon-wrap svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: var(--lt-accent);
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      display: block;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-card-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--lt-title-color);
+      margin: 0 0 24px;
+      line-height: 1.2;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-item {
+      padding: 14px 0;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--lt-text);
+      line-height: 1.4;
+      border-bottom: 1px solid var(--lt-divider-color);
+    }
+    #shopify-section-{{ section.id }} .lt-bc-item:first-child {
+      border-top: 1px solid var(--lt-divider-color);
+    }
+    #shopify-section-{{ section.id }} .lt-bc-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Section heading (optional) */
+    #shopify-section-{{ section.id }} .lt-bc-heading-wrap {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-section-heading {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--lt-text);
+      margin: 0 0 12px;
+      line-height: 1.2;
+    }
+    #shopify-section-{{ section.id }} .lt-bc-section-subheading {
+      font-size: 17px;
+      color: var(--lt-text);
+      opacity: 0.7;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Responsive — tablet */
+    @media (max-width: 1024px) {
+      #shopify-section-{{ section.id }} .lt-bc-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Responsive — mobile */
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ pt_mobile }}px !important;
+        padding-bottom: {{ pb_mobile }}px !important;
+        margin-top: {{ mt_mobile }}px !important;
+        margin-bottom: {{ mb_mobile }}px !important;
+      }
+
+      #shopify-section-{{ section.id }} .lt-bc-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-bc-card {
+        padding: 48px 24px 28px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-bc-section-heading {
+        font-size: 26px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-bc-heading-wrap {
+        margin-bottom: 32px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #shopify-section-{{ section.id }} .lt-bc-card-title {
+        font-size: 19px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-bc-item {
+        font-size: 14px;
+      }
+    }
+  </style>
+
+  <div class="page-width">
+
+    {%- if section.settings.section_heading != blank or section.settings.section_subheading != blank -%}
+      <div class="lt-bc-heading-wrap">
+        {%- if section.settings.section_heading != blank -%}
+          <h2 class="lt-bc-section-heading">{{ section.settings.section_heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.section_subheading != blank -%}
+          <p class="lt-bc-section-subheading">{{ section.settings.section_subheading }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="lt-bc-grid">
+      {%- for block in section.blocks -%}
+        <div class="lt-bc-card" {{ block.shopify_attributes }}>
+
+          {{- '' -}}
+          <div class="lt-bc-icon-wrap">
+            {%- if block.settings.icon_image != blank -%}
+              <img
+                src="{{ block.settings.icon_image | image_url }}"
+                alt="{{ block.settings.icon_image.alt | default: block.settings.card_title | escape }}"
+                width="{{ block.settings.icon_image.width }}"
+                height="{{ block.settings.icon_image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              {%- case block.settings.icon_type -%}
+                {%- when 'lips' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 18s-6-2.5-6-7c0-1.5.5-2.5 1.5-3C8.5 7.5 10 7 12 7s3.5.5 4.5 1c1 .5 1.5 1.5 1.5 3 0 4.5-6 7-6 7z" stroke="var(--lt-accent)" fill="none"/>
+                    <path d="M8.5 8.5S10 10 12 10s3.5-1.5 3.5-1.5" stroke="var(--lt-accent)" fill="none"/>
+                  </svg>
+                {%- when 'moon' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="var(--lt-accent)" fill="none"/>
+                  </svg>
+                {%- when 'sparkle' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z" stroke="var(--lt-accent)" fill="none"/>
+                    <path d="M5 3l.74 2.26L8 6l-2.26.74L5 9l-.74-2.26L2 6l2.26-.74L5 3z" stroke="var(--lt-accent)" fill="none" stroke-width="1.4"/>
+                  </svg>
+                {%- when 'star' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="var(--lt-accent)" fill="none"/>
+                  </svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="var(--lt-accent)" fill="none"/>
+                  </svg>
+                {%- when 'leaf' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M17 8C8 10 5.9 16.17 3.82 22c3.48-3 7.95-3.68 11.63-5.5 3.68-1.82 5.55-5 5.55-8.5 0-2.5-1-4.5-3-6C17 3 14 2 12 3c3 1 5 3 5 5z" stroke="var(--lt-accent)" fill="none"/>
+                  </svg>
+                {%- when 'sun' -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5" stroke="var(--lt-accent)" fill="none"/>
+                    <line x1="12" y1="1" x2="12" y2="3" stroke="var(--lt-accent)"/>
+                    <line x1="12" y1="21" x2="12" y2="23" stroke="var(--lt-accent)"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="var(--lt-accent)"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="var(--lt-accent)"/>
+                    <line x1="1" y1="12" x2="3" y2="12" stroke="var(--lt-accent)"/>
+                    <line x1="21" y1="12" x2="23" y2="12" stroke="var(--lt-accent)"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="var(--lt-accent)"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="var(--lt-accent)"/>
+                  </svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2l2.09 6.26L20 10l-5.91 1.74L12 18l-2.09-6.26L4 10l5.91-1.74L12 2z" stroke="var(--lt-accent)" fill="none"/>
+                  </svg>
+              {%- endcase -%}
+            {%- endif -%}
+          </div>
+
+          {{- '' -}}
+          {%- if block.settings.card_title != blank -%}
+            <h3 class="lt-bc-card-title">{{ block.settings.card_title }}</h3>
+          {%- endif -%}
+
+          {{- '' -}}
+          {%- assign has_items = false -%}
+          {%- for i in (1..8) -%}
+            {%- assign item_key = 'item_' | append: i -%}
+            {%- if block.settings[item_key] != blank -%}
+              {%- assign has_items = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if has_items -%}
+            <ul class="lt-bc-items">
+              {%- for i in (1..8) -%}
+                {%- assign item_key = 'item_' | append: i -%}
+                {%- if block.settings[item_key] != blank -%}
+                  <li class="lt-bc-item">{{ block.settings[item_key] }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+        </div>
+      {%- else -%}
+        <p style="opacity:0.5;text-align:center;grid-column:1/-1;">Add category blocks in the theme editor.</p>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT Benefit Categories",
+  "class": "lt-benefit-categories-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / icon color",
+      "default": "#f04e8c"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background",
+      "default": "#fde8f0"
+    },
+    {
+      "type": "color",
+      "id": "icon_bg_color",
+      "label": "Icon circle background",
+      "default": "#fcd4e4"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Card title color",
+      "default": "#f04e8c"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Item divider color",
+      "default": "#f5c0d4"
+    },
+    {
+      "type": "header",
+      "content": "Section Heading (optional)"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "section_subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category Card",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Custom icon image",
+          "info": "Upload a custom SVG/PNG icon. Leave blank to use a built-in icon."
+        },
+        {
+          "type": "select",
+          "id": "icon_type",
+          "label": "Built-in icon",
+          "info": "Used when no custom image is set.",
+          "options": [
+            { "value": "lips",    "label": "Lips" },
+            { "value": "moon",    "label": "Moon" },
+            { "value": "sparkle", "label": "Sparkle / Star" },
+            { "value": "star",    "label": "Star (outlined)" },
+            { "value": "heart",   "label": "Heart" },
+            { "value": "leaf",    "label": "Leaf" },
+            { "value": "sun",     "label": "Sun" }
+          ],
+          "default": "sparkle"
+        },
+        {
+          "type": "header",
+          "content": "Card Content"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Category title",
+          "default": "Category"
+        },
+        {
+          "type": "header",
+          "content": "Benefit Items (up to 8)"
+        },
+        {
+          "type": "text",
+          "id": "item_1",
+          "label": "Item 1",
+          "default": "Benefit item one"
+        },
+        {
+          "type": "text",
+          "id": "item_2",
+          "label": "Item 2",
+          "default": "Benefit item two"
+        },
+        {
+          "type": "text",
+          "id": "item_3",
+          "label": "Item 3",
+          "default": "Benefit item three"
+        },
+        {
+          "type": "text",
+          "id": "item_4",
+          "label": "Item 4"
+        },
+        {
+          "type": "text",
+          "id": "item_5",
+          "label": "Item 5"
+        },
+        {
+          "type": "text",
+          "id": "item_6",
+          "label": "Item 6"
+        },
+        {
+          "type": "text",
+          "id": "item_7",
+          "label": "Item 7"
+        },
+        {
+          "type": "text",
+          "id": "item_8",
+          "label": "Item 8"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Benefit Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "icon_type": "lips",
+            "card_title": "Beauty",
+            "item_1": "Hydration Retention Overnight",
+            "item_2": "Lip Barrier Softening",
+            "item_3": "Morning Skin Radiance",
+            "item_4": "Renewed Complexion",
+            "item_5": "",
+            "item_6": "",
+            "item_7": "",
+            "item_8": ""
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "icon_type": "moon",
+            "card_title": "Sleep + Wellness",
+            "item_1": "Improved REM Quality",
+            "item_2": "Snore Reduction Support",
+            "item_3": "Oral Freshness on Waking",
+            "item_4": "Functional Nasal Breathing",
+            "item_5": "",
+            "item_6": "",
+            "item_7": "",
+            "item_8": ""
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "icon_type": "sparkle",
+            "card_title": "Aesthetic",
+            "item_1": "Jawline Definition Over Time",
+            "item_2": "Reduced Facial Puffiness",
+            "item_3": "Facial Balance + Symmetry",
+            "item_4": "",
+            "item_5": "",
+            "item_6": "",
+            "item_7": "",
+            "item_8": ""
+          }
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6
+}
+{% endschema %}

@@ -1,0 +1,640 @@
+{%- assign _ss = section.settings -%}
+{%- assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#sn_' -%}
+{%- assign _this = section.id | prepend: '#shopify-section-' -%}
+
+{%- capture section_content -%}
+<style>
+    {{ _section }} {
+        position: relative;
+        background: {{ _ss.background }};
+        padding-bottom: {{ _ss.padding_bottom }}px;
+    }
+
+    {{ _section }} .section_holder {
+        position: relative;
+        /* max-width: {{ _ss.max_with }}px; */
+        margin: auto;
+        padding: 0px 0px;
+    }
+
+    {{ _section }} .section_banner {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: max(38%, 550px);
+    }
+
+    {{ _section }} .section_banner img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    {{ _section }} .section_logo {
+        position: absolute;
+        width: 130px;
+        height: 33px;
+        display: flex;
+        top: 39px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    {{ _section }} .section_text {
+        position: relative;
+    }
+
+    {{ _section }} .section_main {
+        position: absolute;
+        top: 79px;
+        left: 170px;
+    }
+
+    {{ _section }} .section_text--small-text {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 31.09px; /* 172.722% */
+        letter-spacing: 0.66px;
+        text-transform: capitalize;
+        margin-bottom: 2px;
+    }
+
+    {{ _section }} .section_text--title {
+        color: rgba(255, 255, 255, 0.60);
+        font-family: Manrope;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: -0.8px;
+    }
+
+    {{ _section }} .section_text--title.overlay_text {
+        position: absolute;
+        mix-blend-mode: overlay;
+        top: 0;
+        left: 0;
+    }
+
+    {{ _section }} .section_text--usp {
+        margin-top: 11px;
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .usp--item {
+        color: #FFF;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0;
+        display: flex;
+        align-items: center;
+        height: 30px;
+        padding: 0 9px;
+        margin-right: 8px;
+        border-radius: 5px;
+        background: rgba(39,33,77,0.1);
+        backdrop-filter: blur(4px);
+    }
+
+    {{ _section }} .usp--item:last-child {
+        margin-right: 0;
+    }
+
+    {{ _section }} .usp--icon {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        margin-left: 4px;
+    }
+
+    {{ _section }} .section_overlay {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        width: 100%;
+        height: 277px;
+        background: linear-gradient(180deg, rgba(39, 33, 77, 0.60) 0%, rgba(39, 33, 77, 0.00) 100%);
+    }
+
+    {{ _section }} .section--button {
+        display: flex;
+        min-width: 204px;
+        color: #27214D;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%; /* 16px */
+        text-decoration: none;
+        letter-spacing: -0.32px;
+        text-transform: capitalize;
+        border-radius: 30px;
+        background: #FFF;
+        box-shadow: -21px 16px 10px 0px rgba(153, 145, 189, 0.04), -12px 9px 9px 0px rgba(153, 145, 189, 0.13), -5px 4px 6px 0px rgba(153, 145, 189, 0.23), -1px 1px 4px 0px rgba(153, 145, 189, 0.25);
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        height: 50px;
+        padding: 0 24px;
+        margin-top: auto;
+    }
+
+    {{ _section }} .section_button {
+        display: flex;
+    }
+
+    {{ _section }} .graph_band_item--icon {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        background: #F1E5FF;
+        border-radius: 99px;
+        padding: 7px;
+        mix-blend-mode: screen;
+        margin-right: 9.6px;
+    }
+
+    {{ _section }} .metrix_item {
+        position: absolute;
+        border-radius: 14.4px;
+        background: rgba(39,33,77,0.04);
+        backdrop-filter: blur(32px);
+    }
+
+    {{ _section }} .graph_band_item {
+        right: 170px;
+        bottom: 79px;
+    }
+
+    {{ _section }} .graph_band_item--icon img {
+        opacity: 0.6;
+    }
+
+    {{ _section }} .graph_band_item--title {
+        margin-top: 3px;
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.32px;
+    }
+
+    {{ _section }} .graph_band_item--graph {
+        margin-top: 11px;
+        width: 372px;
+        height: auto;
+        display: flex;
+    }
+
+    {{ _section }} .graph_band_item--graph img {
+        width: 100%;
+        height: auto;
+    }
+
+    {{ _section }} .graph_band_item--footer {
+        margin-top: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    {{ _section }} .graph_band_item--info {
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .graph_band_item--big_text {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.461px;
+        margin-right: 3px;
+    }
+
+    {{ _section }} .graph_band_item--small_text {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.23px;
+    }
+
+    {{ _section }} .graph_band_item--score {
+        display: flex;
+        align-items: flex-end;
+        margin-top: 6px;
+    }
+
+    {{ _section }} .graph_band_item--text {
+        color: #F1E5FF;
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.23px;
+        text-transform: capitalize;
+        margin-left: 6px;
+    }
+
+    {{ _section }} .graph_band_item--badge {
+        color: #483D83;
+        font-family: Manrope;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: -0.24px;
+        text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 19px;
+        min-width: 40px;
+        padding: 0 5px;
+        background: #F1E5FF;
+        border-radius: 2.4px;
+    }
+
+    {{ _section }} .graph_band_item--wrapper {
+        padding: 16.8px 19.2px;
+    }
+
+    {{ _section }} .peak_shap_item {
+        right: 35%;
+        bottom: 25%;
+        padding: 23px 0 20px;
+    }
+
+    {{ _section }} .peak_shap_item--icon {
+        width: 183px;
+        height: 52px;
+        display: flex;
+    }
+
+    {{ _section }} .peak_shap_item--icon>* {
+        width: 100%;
+        height: 100%;
+    }
+
+    {{ _section }} .peak_shap_item--score {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 34.56px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.691px;
+        padding-left: 13px;
+        margin-top: 9px;
+    }
+
+    {{ _section }} .peak_shap_item--text {
+        color: #F1E5FF;
+        font-family: Manrope;
+        font-size: 14.4px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.288px;
+        padding-left: 13px;
+        margin-top: 7px;
+    }
+
+    @media screen and (max-width: 900px) {
+        {{ _section }} {
+            padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+        }
+        
+        {{ _section }} .section_holder {
+            padding: 0px 0px;
+        }
+
+        {{ _section }} .section_banner {
+            padding-bottom: min(147%, 570px);
+        }
+
+        {{ _section }} .section_main {
+            top: 60px;
+            left: 24px;
+        }
+
+        {{ _section }} .section_overlay {
+            background: linear-gradient(180deg, rgba(39, 33, 77, 0.60) 0%, rgba(39, 33, 77, 0.00) 100%);
+        }
+
+        {{ _section }} .section_logo {
+            width: 90px;
+            height: 23px;
+            top: 23px;
+        }
+
+        {{ _section }} .section_text--title {
+            font-size: 34px;
+            letter-spacing: -0.68px;
+        }
+
+        {{ _section }} .section_text--small-text {
+            font-size: 14px;
+            line-height: 1;
+            letter-spacing: 0.66px;
+            text-align: center;
+        }
+
+        {{ _section }} .section_button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        {{ _section }} .section--button {
+            font-size: 16px;
+            width: 100%;
+            height: 50px;
+            max-width: 300px;
+        }
+
+        {{ _section }} .section_text--usp {
+            margin-top: 7px;
+            width: 100%;
+        }
+
+        {{ _section }} .usp--item {
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 7px;
+            flex-grow: 1;
+            border-radius: 4px;
+            padding: 0 8px;
+            height: 26px;
+        }
+
+        {{ _section }} .usp--item:last-child {
+            margin-right: 0;
+        }
+
+        {{ _section }} .usp--item img {
+            width: 13px;
+            height: 13px;
+        }
+
+        {{ _section }} .metrix_item {
+            border-radius: 12px;
+            backdrop-filter: blur(25px);
+        }
+
+        {{ _section }} .graph_band_item {
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: fit-content;
+        }
+
+        {{ _section }} .graph_band_item--wrapper {
+            padding: 14px 16px;
+        }
+
+        {{ _section }} .graph_band_item--graph {
+            margin-top: 7px;
+            width: 310px;
+            height: 108px;
+        }
+
+        {{ _section }} .graph_band_item--footer {
+            margin-top: 9px;
+        }
+
+        {{ _section }} .graph_band_item--icon {
+            width: 31px;
+            height: 31px;
+            padding: 6px;
+            margin-right: 8px;
+        }
+
+        {{ _section }} .graph_band_item--title {
+            margin-top: 3px;
+            font-size: 12px;
+            letter-spacing: -0.24px;
+        }
+
+        {{ _section }} .graph_band_item--score {
+            margin-top: 5px;
+        }
+
+        {{ _section }} .graph_band_item--big_text {
+            font-size: 20px;
+            letter-spacing: -0.32px;
+        }
+
+        {{ _section }} .graph_band_item--small_text {
+            font-size: 10px;
+            letter-spacing: -0.16px;
+            line-height: 1.3;
+        }
+
+        {{ _section }} .graph_band_item--text {
+            font-size: 10px;
+            letter-spacing: -0.2px;
+            margin-left: 5px;
+            line-height: 1.3;
+        }
+
+        {{ _section }} .graph_band_item--badge {
+            font-size: 10px;
+            letter-spacing: -0.2px;
+            height: 16px;
+            min-width: 34px;
+            padding: 0 4px;
+            border-radius: 2px;
+        }
+
+        {{ _section }} .peak_shap_item {
+            right: 9%;
+            bottom: 34%;
+            padding: 16px 0 13px;
+        }
+
+        {{ _section }} .peak_shap_item--icon {
+            width: 127px;
+            height: 36px;
+        }
+
+        {{ _section }} .peak_shap_item--score {
+            font-size: 24px;
+            letter-spacing: -0.48px;
+            padding-left: 10px;
+            margin-top: 5px;
+        }
+
+        {{ _section }} .peak_shap_item--text {
+            font-size: 10px;
+            letter-spacing: -0.2px;
+            padding-left: 11px;
+            margin-top: 4px;
+        }
+
+        {{ _section }} .for_desktop {
+            display: none !important;
+        }
+    }
+
+    @media screen and (min-width: 901px) {
+        {{ _section }} .for_mobile {
+            display: none !important;
+        }
+    }
+    
+
+</style>
+
+{%- assign usp_items = section.blocks | where: "type", "usp_item" -%}
+
+<div landing-banner-2 id="sn_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="section_holder">
+        <div class="section_banner">
+            {%- if _ss.banner_image != blank -%}
+                {%- if _ss.banner_image_mobile != blank -%}
+                    <img class="banner_image_el for_mobile" src="{{ _ss.banner_image_mobile | image_url: width: 700 }}" alt="mobile banner">
+                    <img class="banner_image_el for_desktop" src="{{ _ss.banner_image | image_url: width: 2000 }}" alt="desktop banner">
+                {%- else -%}
+                    <img class="banner_image_el" src="{{ _ss.banner_image | image_url: width: 2000 }}" alt="desktop banner">
+                {%- endif -%}
+            {%- endif -%}
+        </div>
+        <div class="section_overlay"> </div>
+        <div class="section_main">
+            <div class="section_text">
+                {%- if _ss.title != blank -%}
+                    <div class="section_text--title">{{ _ss.title | newline_to_br }}</div>
+                    {% comment %} <div class="section_text--title overlay_text">{{ _ss.title | newline_to_br }}</div> {% endcomment %}
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="metrix_item graph_band_item">
+            <div class="graph_band_item--wrapper">
+                <div class="graph_band_item--title">Sleep Score</div>
+                <div class="graph_band_item--graph">
+                    <img src="{{ "icon-graph.svg" | asset_url }}" alt="graph">
+                </div>
+                <div class="graph_band_item--footer">
+                    <div class="graph_band_item--info">
+                        <div class="graph_band_item--icon">
+                            <img src="{{ "icon-zzz.svg" | asset_url }}" alt="Zzz">
+                        </div>
+                        <div class="graph_band_item--score">
+                            {% comment %} <div class="graph_band_item--big_text">85</div> {% endcomment %}
+                            {% comment %} <div class="graph_band_item--small_text">/100</div> {% endcomment %}
+                            <div class="graph_band_item--text">In a clinical study, mouth taping was shown<br>to reduce snoring frequency by <br>47% in individuals with mild sleep apnea.</div>
+                        </div>
+                    </div>
+                    {% comment %} <div class="graph_band_item--badge">+22%</div> {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener('resize', function() {
+        adjust_zoom_section_{{ section.id |  slice: -5, 5  }}();
+    });
+    function adjust_zoom_section_{{ section.id |  slice: -5, 5  }}() {
+        var scale;
+        if (window.innerWidth > 900) {
+            scale = 1 - (1760 - window.innerWidth) * 5.2 / 10000;
+        } else {
+            scale = 1;
+        }
+        document.querySelector("#shopify-section-{{ section.id }}").style.zoom = scale;
+    }
+
+    adjust_zoom_section_{{ section.id |  slice: -5, 5  }}();
+</script>
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+    {
+        "name": "Full Image Banner 2",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Main Settings"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner_image",
+                "label": "Banner Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner_image_mobile",
+                "label": "Mobile Banner Image"
+            },
+            {
+                "type": "textarea",
+                "id": "title",
+                "label": "Title"
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1920
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            }
+        ],
+        "blocks": [],
+        "presets": [{
+            "name": "Full Image Banner 2"
+        }]
+    }
+{% endschema %}

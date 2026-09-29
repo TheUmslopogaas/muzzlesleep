@@ -1,0 +1,818 @@
+{% render 'pdp-abovethefold-styles' %}
+{% render 'frontrow-banner' %}
+<style>
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-section {
+    margin: 24px 0;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-title {
+    margin: 0 0 12px;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: #27214d;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-swiper {
+    overflow: hidden;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-swiper .swiper-slide {
+    height: auto;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-card .lt-ugc-video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-play-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    padding-left: 4px;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-card.is-playing .lt-ugc-play {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-card .lt-ugc-video,
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-play {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+  }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-prev { left: 2px; }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-next { right: 2px; }
+  #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-arrow.swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }            
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{section.id}} .lt-pdp-main-widget .lt-ugc-play {
+      transition: none;
+    }
+  }
+</style>
+<div class="lt-pdp-main-widget">
+  <div class="container">
+    <div class="product-layout">
+      <!-- Left Gallery Section -->
+      <div class="gallery-section">
+        <div class="swiper main-swiper">
+          <div class="swiper-wrapper">
+            {% for image in product.images %}
+              <div class="swiper-slide" data-image-id="{{ image.id }}">
+                <img src="{{ image | img_url: 'master' }}" alt="{{ image.alt | escape }}">
+              </div>
+            {% endfor %}
+          </div>
+          <!-- Add navigation arrows -->
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+        </div>
+  
+        <div class="swiper thumbs-swiper">
+          <div class="swiper-wrapper">
+            {% for image in product.images %}
+                <div class="swiper-slide">
+                  <img src="{{ image | img_url: 'master' }}" alt="thumbnail_{{ image.alt | escape }}">
+                </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      {% comment %} {% assign video_metafield = product.metafields.custom.product_above_the_fold_video %}
+      {% if video_metafield != blank %}
+        <div class="pdp-abovethefold-video">
+          <video controls loading="lazy">
+            <source src="{{ video_metafield | file_url }}" type="{{ video_metafield.mime_type }}">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      {% endif %} {% endcomment %}
+
+      </div>
+  
+      <!-- Right Purchase Section -->
+      <div id="purchase-wrapper" class="purchase-section">
+        <div class="product-details">
+          <div class="text-contents">
+            {% comment %} <div class="recommendation-badge">Doctor Recommended</div> {% endcomment %}
+            <div class="product-title">{{product.title}}</div>
+            <a href="#judgeme_product_reviews" class="product-review">
+              <div class="review-star">
+                {% for i in (1..5) %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                        <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                    </svg>
+                {% endfor %}
+              </div>
+              <div class="review-score">4.94/5 Overall Rating</div>
+              <div class="review-text">Trusted by 11,000+ Customers</div>
+            </a>
+                                      {%  render 'frontrow' %}
+            <div class="product-description">{{product.description}}</div>
+            <div class="product-tags-wrap">
+              {% for tag in product.metafields.custom.pdp_badges.value %}
+                <div class="product-tag">{{ tag.badge_name }}</div>
+              {% endfor %}
+            </div>
+
+          </div>
+
+          {% if product.metafields.custom.product_sticker != blank %}
+            <div class="product-sticker">
+              <img src="{{ product.metafields.custom.product_sticker | img_url: 'master' }}" alt="">
+            </div>
+          {% endif %}
+        </div>    
+        {% unless product.tags contains 'bf_presale' %}    
+          <h2 class="section-title">Select Purchase Type</h2>
+        {% endunless %}
+        {% for variant in product.variants %}
+          {% for allocation in variant.selling_plan_allocations %}
+            <div class="option option-subscirption selected"
+              data-variant-id="{{ variant.id }}"
+              data-image-id="{{ variant.featured_image.id }}"
+              data-selling-plan-id="{{ allocation.selling_plan.id }}"
+              data-available="{{ variant.available }}"
+              data-inventory-quantity="{{ variant.inventory_quantity }}"
+              data-inventory-policy="{{ variant.inventory_policy }}">
+
+              <div class="option-info-wrap">
+                <div class="option-left">
+                  <div class="radio-input"></div>
+                  <div class="option-info">
+                    <h3>Subscribe &amp; Save <span class="badge">Save 20%</span></h3>
+                    <p>{{ allocation.selling_plan.name }}</p>
+                  </div>
+                </div>
+                <div class="price">
+                  <span class="discounted-price">{{ allocation.price | money }}</span>
+                  <span class="original-price">{{ variant.price | money }}</span>
+                </div>
+              </div>
+              <div class="benefits">
+                <div class="benefit">
+                  <div class="benefit-icon"><img src="https://muzzlesleep.com/cdn/shop/files/ba828a57981e2b49aee2ba4937c8e705.png" alt=""></div>
+                  Never Run Out
+                </div>
+                <div class="benefit">
+                  <div class="benefit-icon"><img src="https://muzzlesleep.com/cdn/shop/files/7147faef9a720d0eb86190eba9716c39.png" alt=""></div>
+                  Sleep And Forget About It
+                </div>
+                <div class="benefit">
+                  <div class="benefit-icon"><img src="https://muzzlesleep.com/cdn/shop/files/af1cdb23ae5c49cfca49f6b887c1517a.png" alt=""></div>
+                  Extra 20% Off For Subscribing
+                </div>
+              </div>
+            </div>    
+          {% endfor %}
+          <div class="option{% if product.tags contains 'bf_presale' %} selected{% endif %}"
+            data-variant-id="{{ variant.id }}"
+            data-image-id="{{ variant.featured_image.id }}"
+            data-quantity="1"
+            data-available="{{ variant.available }}"
+            data-inventory-quantity="{{ variant.inventory_quantity }}"
+            data-inventory-policy="{{ variant.inventory_policy }}">
+
+            <div class="option-left">
+              <div class="radio-input"></div>
+              <div class="option-info">
+                <h3>
+                  {{ variant.title }}
+                  {% if variant.metafields.custom.badge != blank %}
+                    <span class="badge">{{variant.metafields.custom.badge | escape}}</span>
+                  {% endif %}
+                </h3>
+                {% if variant.metafields.custom.description != blank %}
+                  <p>{{ variant.metafields.custom.description | metafield_tag }}</p>
+                {% endif %}
+              </div>
+            </div>
+            <div class="price">
+              <span class="discounted-price">{{ variant.price | money }}</span>
+              <span class="original-price">{{ variant.compare_at_price | money }}</span>
+            </div>
+          </div>
+        {% endfor %}
+
+        {% unless product.tags contains 'bf_presale' %}
+          {% comment %} <div class="bf-promotion-above-atc-pdp">Use <b>BF25</b> to save 25%!</div> {% endcomment %}
+          <button class="checkout-btn" id="checkoutBtn">
+            Checkout Now <img src="https://muzzlesleep.com/cdn/shop/t/4/assets/icon-checkout-lock.svg" alt="">
+          </button>
+        {% endunless %}
+        {% if product.tags contains 'bf_presale' %}
+          <a class="checkout-btn" id="checkoutBtn" href="/cart/{{ product.selected_or_first_available_variant.id }}:1" style="text-decoration: none;">
+            Checkout Now <img src="https://muzzlesleep.com/cdn/shop/t/4/assets/icon-checkout-lock.svg" alt="">
+          </a>
+        {% endif %}
+
+        <div class="pdp-shipping-txt">
+          <img src="https://cdn.shopify.com/s/files/1/0886/5542/9998/files/fa7-solid_shipping-fast_1.png?v=1787345604">
+          <span id="dynamic-shipping-text">Ships Tomorrow</span>
+        </div>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            // getDay() returns 0 for Sunday, 1 for Monday, etc... 5 is Friday, 6 is Saturday
+            const currentDay = new Date().getDay();
+            const shippingTextEl = document.getElementById("dynamic-shipping-text");
+            
+            // If it's Friday (5) or Saturday (6)
+            if (currentDay === 5 || currentDay === 6) {
+              shippingTextEl.innerText = "Ships Next Monday";
+            } else {
+              // This automatically covers Sunday (0) through Thursday (4)
+              shippingTextEl.innerText = "Ships Tomorrow";
+            }
+          });
+        </script>
+        <div class="guarantee">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 15'%3E%3Crect width='20' height='15' fill='%23B22234'/%3E%3Cpath d='M0,0h20v1H0zM0,2h20v1H0zM0,4h20v1H0zM0,6h20v1H0zM0,8h20v1H0zM0,10h20v1H0zM0,12h20v1H0z' fill='white'/%3E%3Crect width='8' height='8' fill='%233C3B6E'/%3E%3C/svg%3E"
+            alt="US Flag" class="flag">
+          Engineered For Comfort. Crafted For Performance
+        </div>
+
+        <!-- UGC Videos Section -->
+        {%- assign ugc_videos = product.metafields.custom.ugc_videos.value -%}
+        {%- if ugc_videos != blank and ugc_videos.size > 0 -%}
+          <div class="lt-ugc-section">
+            <h2 class="lt-ugc-title">Real Results</h2>
+            <div class="swiper lt-ugc-swiper">
+              <div class="swiper-wrapper">
+                {%- for ugc in ugc_videos -%}
+                  <div class="swiper-slide">
+                    <div class="lt-ugc-card">
+                      <video
+                        class="lt-ugc-video"
+                        playsinline
+                        preload="metadata"
+                        {% if ugc.preview_image != blank %}poster="{{ ugc.preview_image | image_url: width: 540 }}"{% endif %}>
+                        {%- for source in ugc.sources -%}
+                          <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                        {%- endfor -%}
+                      </video>
+                      <button type="button" class="lt-ugc-play" aria-label="Play video">
+                        <span class="lt-ugc-play-circle">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="18" viewBox="0 0 16 18" fill="none" aria-hidden="true">
+                            <path d="M15 8.13397C15.6667 8.51887 15.6667 9.48113 15 9.86603L1.5 17.6603C0.833333 18.0452 0 17.564 0 16.7942V1.20577C0 0.435975 0.833334 -0.0451755 1.5 0.339744L15 8.13397Z" fill="#111111"></path>
+                          </svg>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                {%- endfor -%}
+              </div>
+              <button type="button" class="lt-ugc-arrow lt-ugc-prev" aria-label="Previous videos">
+                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true">
+                  <path d="M6 1L1 6L6 11" stroke="#111111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button type="button" class="lt-ugc-arrow lt-ugc-next" aria-label="Next videos">
+                <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true">
+                  <path d="M1 1L6 6L1 11" stroke="#111111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <!-- Reviews Section -->
+        {% comment %} <div class="reviews-section">
+          <div class="swiper review-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide">
+                <div class="review-slide">
+                  {% unless product.handle == 'sleep-deeply' %}
+                    <div class="review-header">
+                      <img src="https://muzzlesleep.com/cdn/shop/files/content-1243870.webp"
+                        alt="Reviewer" class="reviewer-avatar">
+                    </div>
+                  {% endunless %}                  
+                  <div class="review-text">
+                    <div class="reviewer-info">
+                      {% if product.handle == 'sleep-deeply' %}
+                        <h4>Jessica</h4>
+                      {% else %}
+                        <h4>Isobel</h4>
+                      {% endif %}
+                      <span class="stars">
+                        {% for i in (1..5) %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                          </svg>
+                        {% endfor %}
+                      </span>
+                    </div>
+                    {% if product.handle == 'sleep-deeply' %}
+                      <p>Sleep Deeply is amazing! I wake up feeling genuinely energized and clear-headed, not groggy like with other sleep aids.</p>
+                    {% else %}
+                      <p>Very pleased with this purchase! It's high-quality, easy to use, and reliable.
+                      Highly recommend for its efficiency and convenience.</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="review-slide">
+                  {% unless product.handle == 'sleep-deeply' %}
+                  <div class="review-header">
+                    <img src="https://muzzlesleep.com/cdn/shop/files/content-1252543.webp"
+                      alt="Reviewer" class="reviewer-avatar">
+                  </div>
+                  {% endunless %}
+                  <div class="review-text">
+                    <div class="reviewer-info">
+                      {% if product.handle == 'sleep-deeply' %}
+                        <h4>Michael B.</h4>
+                      {% else %}
+                        <h4>Mishel E.</h4>
+                      {% endif %}
+                      <span class="stars">
+                        {% for i in (1..5) %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                          </svg>
+                        {% endfor %}
+                      </span>
+                    </div>
+                    {% if product.handle == 'sleep-deeply' %}
+                      <p>I was skeptical of the mouth tape, but it’s fantastic. It’s comfortable, and I noticed I sleep much deeper now.</p>
+                    {% else %}
+                      <p>Super easy to use. Kids love it and have been asking about it every night. Easy and painless to remove in the morning</p>
+                    {% endif %}
+                    </div>
+                </div>
+              </div>
+              <div class="swiper-slide">
+                <div class="review-slide">
+                  {% unless product.handle == 'sleep-deeply' %}
+                  <div class="review-header">
+                    <img src="https://muzzlesleep.com/cdn/shop/files/content-1241962.webp?v=1745411841&width=300"
+                      alt="Reviewer" class="reviewer-avatar">
+                  </div>
+                  {% endunless %}
+                  <div class="review-text">
+                    <div class="reviewer-info">
+                      {% if product.handle == 'sleep-deeply' %}
+                        <h4>Sarah K.</h4>
+                      {% else %}
+                        <h4>Brinley M.</h4>
+                      {% endif %}
+                      <span class="stars">
+                        {% for i in (1..5) %}
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                            <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                          </svg>
+                        {% endfor %}
+                      </span>
+                    </div>
+                    {% if product.handle == 'sleep-deeply' %}
+                      <p>I love that Sleep Deeply feels so natural. I get deep, restorative sleep without the brain fog or crash the next day.</p>
+                    {% else %}
+                      <p>Muzzle has made a noticeable difference on how rested I feel, and it is so comfortable and gentle on my skin.</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Add navigation arrows -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div> {% endcomment %}
+
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+          {%- assign atf_reviews = product.metafields.custom.product_abovethefold_reviews.value -%}
+          <div class="swiper review-swiper">
+            <div class="swiper-wrapper">
+              {%- for review_obj in atf_reviews -%}
+                {%- assign star_count  = review_obj.stars | default: 5 | plus: 0 -%}
+                {%- assign author_img  = review_obj.author_image -%}
+                {%- assign author_name = review_obj.author_name -%}
+                {%- assign review_body = review_obj.reviews | metafield_tag -%}
+                <div class="swiper-slide">
+                  <div class="review-slide">
+                    {%- if author_img != blank -%}
+                      <div class="review-header">
+                        <img src="{{ author_img | image_url: width: 72 }}"
+                          alt="{{ author_name | strip_html | escape }}" class="reviewer-avatar">
+                      </div>
+                    {%- endif -%}
+                    <div class="review-text">
+                      <div class="reviewer-info">
+                        {%- if author_name != blank -%}
+                          <h4>{{ author_name | strip_html | escape }}</h4>
+                        {%- endif -%}
+                        <span class="stars">
+                          {%- for i in (1..star_count) -%}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                              <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"></path>
+                            </svg>
+                          {%- endfor -%}
+                        </span>
+                      </div>
+                      {%- if review_body != blank -%}
+                        <p>{{ review_body }}</p>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+            <!-- Add navigation arrows -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>        
+
+        <!-- Accordion Section -->
+        <div class="accordion-section">
+          {% comment %} {% unless product.handle == 'muzzle®-nasal-strips-for-kids' or product.handle == 'adult-nasal-strips' %} {% endcomment %}
+            <div class="accordion-item">
+              <div class="accordion-header">
+                <span>Description</span>
+                <span class="accordion-icon">+</span>
+              </div>
+              <div class="accordion-content">
+                <div class="accordion-body">
+                  {% if product.handle == 'sleep-deeply' %}
+                    <b>Why Sleep Deeply:</b><br>
+                    If you find yourself tossing and turning, waking up through the night, or feeling drained even after a full eight hours. Sleep Deeply is made for you. Its calming herbal blend helps your body naturally wind down, easing tension and quieting the mind so you can fall asleep faster, stay asleep longer, and wake up feeling clear, balanced, and genuinely rested.<br>
+                    <br><b>How to Use:</b><br>
+                    Take two capsules about 30–60 minutes before bedtime. For sensitive users, start with one capsule to gauge your response, then adjust as needed. Consistent nightly use supports a balanced sleep cycle and promotes long-term restorative rest.
+                  {% elsif product.handle == 'adult-nasal-strips' %}
+                    Breathe easier and sleep more comfortably with Muzzle Nasal Strips. Designed to gently lift and open the nasal passages, these flexible strips help improve nasal airflow without sprays, medications, or complicated devices. The comfortable, skin-friendly design stays securely in place throughout the night while flexing naturally with your nose. Whether you’re looking to reduce nighttime mouth breathing, support easier nasal breathing, or simply get more comfortable airflow while you sleep, Muzzle Nasal Strips make better breathing simple. Pair with Muzzle Mouth Tape as part of your nighttime routine to support nasal breathing while you sleep.             
+                  {% elsif product.handle == 'muzzle®-nasal-strips-for-kids' %}
+                    Little noses deserve easier breathing, too. Muzzle Kids Nasal Strips are specially sized for smaller noses and designed to gently lift and open the nasal passages, helping improve airflow without sprays or medications. Soft, flexible, and comfortable for nighttime wear, they provide gentle support for kids who could use a little help breathing more easily through their nose while they sleep. The kid-friendly size provides a better fit for smaller faces while staying comfortably in place throughout the night. Pair with Muzzle Kids Mouth Tape as part of a nighttime routine designed to support healthy nasal breathing.
+                  {% else %}
+                    Our premium mouth tape is designed for optimal comfort and effectiveness. Made with medical-grade
+                    materials, it promotes better sleep quality by encouraging nasal breathing throughout the night.
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% comment %} {% endunless %} {% endcomment %}
+          <div class="accordion-item">
+            <div class="accordion-header">
+              <span>Delivery & Returns</span>
+              <span class="accordion-icon">+</span>
+            </div>
+            <div class="accordion-content">
+              {% if product.handle == 'sleep-deeply' %}
+                <div class="accordion-body">
+                  {% comment %} Free shipping on all orders. Standard delivery takes 3-5 business days. Express shipping available. {% endcomment %}
+                   Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our <a href="/policies/refund-policy">Return Policy</a>.
+                </div>
+              {% else %}
+                <div class="accordion-body">
+                  {% comment %} Free shipping on all orders. Standard delivery takes 3-5 business days. Express shipping available. Easy returns within 30 days of purchase with full refund guarantee. {% endcomment %}
+                   Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our <a href="/policies/refund-policy">Return Policy</a>.
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {% unless product.handle == 'sleep-deeply' or product.handle == 'adult-nasal-strips' %}
+            {% comment %} <div class="accordion-item">
+              <div class="accordion-header">
+                <span>30-Day Money Back Guarantee</span>
+                <span class="accordion-icon">+</span>
+              </div>
+              <div class="accordion-content">
+                <div class="accordion-body">
+                  {% comment %} We're confident you'll love our product. If you're not completely satisfied within 30 days, return it for a full refund. No questions asked, no hassle returns. {% endcomment %}
+                   Please refer to our <a href="/policies/refund-policy">Return Policy</a> for more details.
+                </div>
+              </div>
+            </div> {% endcomment %}
+          {% endunless %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if product.tags contains 'bf_presale' %}
+  <style>
+    #shopify-section-{{ section.id }} .option {
+      display: none;
+    }
+    [data-rebuy-id="244246"] {
+      display: none !important;
+    }
+  </style>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  // Initialize thumbnail swiper first
+  const thumbsSwiper = new Swiper('.lt-pdp-main-widget .thumbs-swiper', {
+    spaceBetween: 10,
+    slidesPerView: 5,
+    freeMode: true,
+    watchSlidesProgress: true,
+    breakpoints: {
+      320: {
+        slidesPerView: 3,
+      },
+      480: {
+        slidesPerView: 4,
+      },
+      768: {
+        slidesPerView: 5,
+      },
+      900: {
+        slidesPerView: 6,
+      },
+      1200: {
+        slidesPerView: 7,
+      }
+    }
+  });
+  // Initialize main swiper
+  const mainSwiper = new Swiper('.lt-pdp-main-widget .main-swiper', {
+    spaceBetween: 10,
+    navigation: {
+      nextEl: '.lt-pdp-main-widget .gallery-section .swiper-button-next',
+      prevEl: '.lt-pdp-main-widget .gallery-section .swiper-button-prev',
+    },
+    thumbs: {
+      swiper: thumbsSwiper,
+    },
+  });
+  // Initialize review swiper
+  const reviewSwiper = new Swiper('.lt-pdp-main-widget .review-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    navigation: {
+      nextEl: '.lt-pdp-main-widget .reviews-section .swiper-button-next',
+      prevEl: '.lt-pdp-main-widget .reviews-section .swiper-button-prev',
+    },
+  });
+
+  // Initialize UGC videos swiper (only runs when the metafield rendered the block)
+  (function () {
+    const ugcEl = document.querySelector('.lt-pdp-main-widget .lt-ugc-swiper');
+    if (!ugcEl) return;
+
+    const ugcSwiper = new Swiper(ugcEl, {
+      slidesPerView: 2,
+      spaceBetween: 10,
+      grabCursor: true,
+      watchOverflow: true,
+      threshold: 3,
+      touchStartForcePreventDefault: true,   // fixes the janky drag
+      noSwiping: true,
+      noSwipingSelector: 'video',            // lets native controls scrub while playing
+      navigation: {
+        nextEl: ugcEl.querySelector('.lt-ugc-next'),
+        prevEl: ugcEl.querySelector('.lt-ugc-prev'),
+      },
+      breakpoints: {
+        480: { slidesPerView: 2.2, spaceBetween: 12 },
+        768: { slidesPerView: 2.5, spaceBetween: 12 }
+      }
+    });
+
+    const ugcCards = ugcEl.querySelectorAll('.lt-ugc-card');
+
+    function pauseAllExcept(currentCard) {
+      ugcCards.forEach(card => {
+        if (card === currentCard) return;
+        const video = card.querySelector('.lt-ugc-video');
+        if (!video) return;
+        video.pause();
+        video.removeAttribute('controls');
+        card.classList.remove('is-playing');
+      });
+    }
+
+    ugcCards.forEach(card => {
+      const video = card.querySelector('.lt-ugc-video');
+      const playBtn = card.querySelector('.lt-ugc-play');
+      if (!video || !playBtn) return;
+
+      playBtn.addEventListener('click', () => {
+        pauseAllExcept(card);
+        video.setAttribute('controls', '');
+        video.play();
+      });
+
+      video.addEventListener('play', () => {
+        pauseAllExcept(card);
+        card.classList.add('is-playing');
+      });
+
+      video.addEventListener('pause', () => {
+        card.classList.remove('is-playing');
+      });
+
+      video.addEventListener('ended', () => {
+        card.classList.remove('is-playing');
+        video.removeAttribute('controls');
+        video.currentTime = 0;
+      });
+    });
+  })();
+
+  // Handle option selection
+  /////////////////////////////////////////////
+// Get all option elements and the checkout button
+  const options = document.querySelectorAll('.option');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  function syncGalleryImage(option) {
+    const imageId = option.dataset.imageId;
+    if (!imageId) return;
+    const slides = document.querySelectorAll('.lt-pdp-main-widget .main-swiper .swiper-slide');
+    slides.forEach((slide, index) => {
+      if (slide.dataset.imageId === imageId) mainSwiper.slideTo(index);
+    });
+  }  
+
+  function updateCheckoutState() {
+    const selectedOption = document.querySelector('.option.selected');
+    if (!selectedOption) return;
+
+    const available = selectedOption.dataset.available === 'true';
+    const inventoryPolicy = selectedOption.dataset.inventoryPolicy;
+    const inventoryQty = parseInt(selectedOption.dataset.inventoryQuantity || '0', 10);
+    const quantity = parseInt(selectedOption.dataset.quantity || '1', 10);
+
+    const enoughStock =
+      available &&
+      (inventoryPolicy !== 'deny' || inventoryQty >= quantity);
+
+    if (enoughStock) {
+      checkoutBtn.classList.remove('disabled');
+      checkoutBtn.innerHTML = 'Checkout Now <img src="https://muzzlesleep.com/cdn/shop/t/4/assets/icon-checkout-lock.svg" alt="">';
+    } else {
+      checkoutBtn.classList.add('disabled');
+      checkoutBtn.innerHTML = 'Sold Out';
+    }
+  }
+
+
+  // Add a click event listener to each option to handle selection
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      // Remove 'selected' class from all options
+      options.forEach(opt => opt.classList.remove('selected'));
+      // Add 'selected' class to the clicked option
+      option.classList.add('selected');
+      updateCheckoutState();
+      syncGalleryImage(option);
+    });
+  });
+
+  updateCheckoutState();
+
+  // Add a click event listener to the main checkout button
+  checkoutBtn.addEventListener('click', () => {
+    const selectedOption = document.querySelector('.option.selected');
+    if (!selectedOption) {
+      alert('Please select a purchase option.');
+      return;
+    }
+
+    const isSubscription = selectedOption.classList.contains('option-subscirption');
+    const variantId = selectedOption.getAttribute('data-variant-id');
+    const sellingPlanId = selectedOption.getAttribute('data-selling-plan-id');
+    const quantity = parseInt(selectedOption.getAttribute('data-quantity') || 1);
+
+    if (isSubscription) {
+      
+      const formData = {
+        'items': [{
+          'id': variantId,
+          'quantity': 1,
+          'selling_plan': sellingPlanId
+        }]
+      };
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Product added as subscription:', data);
+        openCartDrawer();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      
+    } else {
+      // Standard one-time purchase
+      const formData = {
+        'items': [{
+          'id': variantId,
+          'quantity': quantity
+        }]
+      };
+
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Product added as one-time purchase:', data);
+        openCartDrawer();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    }
+  });
+
+  // Function to open the cart drawer
+  function openCartDrawer() {
+    // Dawn theme has a specific event listener to open the cart drawer.
+    document.dispatchEvent(new CustomEvent('cart:open'));
+  }
+
+  ////////////////////////////////////////////
+
+  // Handle accordion functionality
+  const accordionHeaders = document.querySelectorAll('.accordion-header');  
+
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const accordionItem = header.parentElement;
+      const isActive = accordionItem.classList.contains('active');
+
+      // Close all accordion items
+      document.querySelectorAll('.accordion-item').forEach(item => {
+        item.classList.remove('active');
+      });
+
+      // Open clicked item if it wasn't active
+      if (!isActive) {
+        accordionItem.classList.add('active');
+      }
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "PDP Above The Fold",
+  "settings": [
+  ]
+}
+{% endschema %}

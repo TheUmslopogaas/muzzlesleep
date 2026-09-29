@@ -1,0 +1,343 @@
+<style>
+#shopify-section-{{ section.id }} .lt-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+#shopify-section-{{ section.id }} .lt-content-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+#shopify-section-{{ section.id }} .lt-image-container {
+  position: relative;
+  top: 0;
+}
+
+#shopify-section-{{ section.id }} .lt-main-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+#shopify-section-{{ section.id }} .lt-content {
+  padding-left: 20px;
+}
+
+#shopify-section-{{ section.id }} .lt-title {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #27214D;
+  margin: 0 0 20px 0;
+}
+
+#shopify-section-{{ section.id }} .lt-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #0F0F10;
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+
+#shopify-section-{{ section.id }} .lt-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#shopify-section-{{ section.id }} .lt-benefit-item {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-left: 20px;
+  list-item: unset;
+  position: relative;
+}
+#shopify-section-{{ section.id }} .lt-benefit-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  background: #27214D;
+  border-radius: 100px;
+  width: 10px;
+  height: 10px;
+}
+#shopify-section-{{ section.id }} .lt-benefit-icon {
+  width: 8px;
+  height: 8px;
+  background-color: #1a365d;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+#shopify-section-{{ section.id }} .lt-benefit-content h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #27214D;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+#shopify-section-{{ section.id }} .lt-benefit-content p {
+  font-size: 15px;
+  line-height: 1.4;
+  color: #0F0F10;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: 0;
+}
+
+#shopify-section-{{ section.id }} .lt-quote-body {
+  letter-spacing: 0;
+  font-style: italic;
+  line-height: 1.7;
+  margin: 20px 0 10px;
+  color: #27214d;
+}
+
+#shopify-section-{{ section.id }} .lt-quote-author {
+  font-size: 15px;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: #27214d;
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) {
+  #shopify-section-{{ section.id }} .lt-image-container {
+    position: sticky;
+  }
+}
+@media (max-width: 768px) {
+  #shopify-section-{{ section.id }} .lt-container {
+    padding: 40px 16px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-content {
+    padding-left: 0;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-description {
+    margin-bottom: 32px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-benefit-item {
+    margin-bottom: 24px;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  #shopify-section-{{ section.id }} .lt-container {
+    padding: 32px 12px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-content-wrapper {
+    gap: 20px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-description {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-benefit-content h3 {
+    font-size: 15px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-benefit-content p {
+    font-size: 13px;
+  }
+  
+  #shopify-section-{{ section.id }} .lt-benefit-item {
+    margin-bottom: 20px;
+  }
+}
+</style>
+
+<div class="lt-container">
+  <div class="lt-content-wrapper">
+    <!-- Left Side - Image -->
+    <div class="lt-image-container">
+      {% if section.settings.main_image %}
+        <img 
+          src="{{ section.settings.main_image | img_url: '600x600' }}" 
+          alt="{{ section.settings.main_image.alt | default: section.settings.title }}"
+          class="lt-main-image"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="lt-placeholder-image" style="background-color: #f7fafc; height: 400px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #a0aec0;">
+          <span>Add an image</span>
+        </div>
+      {% endif %}
+      {% if section.settings.quote != blank %}
+        <div class="lt-content-quote">
+          <div class="lt-quote-body">{{ section.settings.quote }}</div>
+          <div class="lt-quote-author">{{ section.settings.quote_author }}</div>
+        </div>
+      {% endif %}
+    </div>
+    
+    <!-- Right Side - Content -->
+    <div class="lt-content">
+      {% if section.settings.title != blank %}
+        <h2 class="lt-title">{{ section.settings.title }}</h2>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <div class="lt-description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+      
+      {% if section.blocks.size > 0 %}
+        <ul class="lt-benefits-list">
+          {% for block in section.blocks %}
+            <li class="lt-benefit-item" {{ block.shopify_attributes }}>
+              <div class="lt-benefit-icon"></div>
+              <div class="lt-benefit-content">
+                {% if block.settings.benefit_title != blank %}
+                  <h3>{{ block.settings.benefit_title }}</h3>
+                {% endif %}
+                {% if block.settings.benefit_description != blank %}
+                  <p>{{ block.settings.benefit_description }}</p>
+                {% endif %}
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT Before/After List",
+  "tag": "section",
+  "class": "myofunctional-therapy-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Main Image",
+      "info": "Recommended size: 600x600px"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "The Perfect Aid For Myofunctional Therapy"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Myofunctional therapy is a series of exercises designed to improve the function and coordination of the tongue, mouth, and facial muscles. It helps promote proper oral posture, encouraging nasal breathing, correct tongue placement, and optimal jaw development—especially important for growing children.</p>"
+    },
+    {
+      "type": "text",
+      "id": "quote",
+      "label": "Quote"
+    },
+    {
+      "type": "text",
+      "id": "quote_author",
+      "label": "Author"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "benefit_title",
+          "label": "Benefit Title",
+          "default": "Benefit Title"
+        },
+        {
+          "type": "richtext",
+          "id": "benefit_description",
+          "label": "Benefit Description",
+          "default": "<p>Add your benefit description here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Before/After List",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_title": "Recommended by doctors",
+            "benefit_description": "<p>Muzzle Mouth Tape for Kids is the perfect complement to myofunctional therapy, ensuring your child breathes better, sleeps better, and grows healthier.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_title": "Crucial for Kids",
+            "benefit_description": "<p>At Muzzle, we understand the importance of these developmental milestones, which is why our Muzzle Mouth Tape for Kids is designed to gently encourage nasal breathing during sleep—an essential component of myofunctional therapy.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_title": "Supports Proper Facial Development",
+            "benefit_description": "<p>By reinforcing nasal breathing, Muzzle helps reduce the risk of long-term facial structural issues often linked to chronic mouth breathing.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_title": "Promotes Deeper, More Restorative Sleep",
+            "benefit_description": "<p>Nasal breathing encourages better oxygen exchange and sleep quality—key for mood, memory, and growth in children.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_title": "Reduces Snoring and Sleep Disruptions",
+            "benefit_description": "<p>Muzzle can help minimize nighttime mouth breathing and snoring, leading to more peaceful sleep for both kids and parents.</p>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "benefit_title": "Builds Healthy Habits Early",
+            "benefit_description": "<p>Training proper breathing during childhood builds a strong foundation for lifelong oral health, focus, and immunity.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

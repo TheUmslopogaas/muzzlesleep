@@ -1,0 +1,36 @@
+{% if request.path contains '/products/kids-extra-sensitive-tape' %}
+<script async type="text/javascript" src="https://app.thefrontrowhealth.com/api/widgets/script?presentation_type=sticker&product_id=3875"></script>
+<iframe data-state="max" class="iframe-frontrow-sticker" id="frontrow-sticker" frameborder="0" src="https://app.thefrontrowhealth.com/api/widgets?presentation_type=sticker&product_id=3875"></iframe>
+
+{% elsif request.path contains '/products/adult-extra-sensitive-tape' %}
+<script async type="text/javascript" src="https://app.thefrontrowhealth.com/api/widgets/script?presentation_type=sticker&product_id=3874"></script>
+<iframe data-state="max" class="iframe-frontrow-sticker" id="frontrow-sticker" frameborder="0" src="https://app.thefrontrowhealth.com/api/widgets?presentation_type=sticker&product_id=3874"></iframe>
+
+{% elsif request.path contains '/products/sleep-deeply' %}
+  <script async type="text/javascript" src="https://app.thefrontrowhealth.com/api/widgets/script?presentation_type=sticker&product_id=3228"></script>
+  <iframe data-state="max" class="iframe-frontrow-sticker" id="frontrow-sticker" frameborder="0" src="https://app.thefrontrowhealth.com/api/widgets?presentation_type=sticker&product_id=3228"></iframe>
+  
+{% elsif request.path contains '/products/muzzle-sleeping-strips-for-kids-medium' %}
+  <script async type="text/javascript" src="https://app.thefrontrowhealth.com/api/widgets/script?presentation_type=sticker&product_id=3225"></script>
+  <iframe data-state="max" class="iframe-frontrow-sticker" id="frontrow-sticker" frameborder="0" src="https://app.thefrontrowhealth.com/api/widgets?presentation_type=sticker&product_id=3225"></iframe>
+
+{% elsif request.path contains '/products/muzzle-sleeping-strips-for-adults-strong' %}
+  <script async type="text/javascript" src="https://app.thefrontrowhealth.com/api/widgets/script?presentation_type=sticker&product_id=3227"></script>
+  <iframe data-state="max" class="iframe-frontrow-sticker" id="frontrow-sticker" frameborder="0" src="https://app.thefrontrowhealth.com/api/widgets?presentation_type=sticker&product_id=3227"></iframe>
+
+{% elsif request.path contains '/products/muzzle-sleeping-strips-for-adults-medium' %}
+  <script async type="text/javascript" src="https://app.thefrontrowhealth.com/api/widgets/script?presentation_type=sticker&product_id=3226"></script>
+  <iframe data-state="max" class="iframe-frontrow-sticker" id="frontrow-sticker" frameborder="0" src="https://app.thefrontrowhealth.com/api/widgets?presentation_type=sticker&product_id=3226"></iframe>
+
+{% endif %}
+
+<style>
+  #frontrow-sticker{
+    position:absolute;
+    z-index:2;
+    border-radius: 0 !important;
+
+  }
+
+  .iframe.frontrow{display:none;position:fixed;left:0;top:0;z-index:99999997;right:0;bottom:0;width:100%;height:100%;overflow:hidden}
+</style>

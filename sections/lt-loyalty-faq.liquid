@@ -1,0 +1,529 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+<div class="lt-loyalty-faq" data-lt-allow-multiple="{{ section.settings.allow_multiple }}">
+  <div class="page-width">
+    <div class="lt-loyalty-faq__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <span class="lt-loyalty-faq__eyebrow">{{ section.settings.eyebrow }}</span>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="lt-loyalty-faq__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="lt-loyalty-faq__list">
+        {%- for block in section.blocks -%}
+          {%- assign is_open = false -%}
+          {%- if section.settings.first_open and forloop.first -%}
+            {%- assign is_open = true -%}
+          {%- endif -%}
+          {%- assign panel_id = 'lt-faq-' | append: section.id | append: '-' | append: forloop.index -%}
+          <div
+            class="lt-loyalty-faq__item{% if is_open %} is-open{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            <h3 class="lt-loyalty-faq__question-wrap">
+              <button
+                type="button"
+                class="lt-loyalty-faq__question"
+                aria-expanded="{% if is_open %}true{% else %}false{% endif %}"
+                aria-controls="{{ panel_id }}"
+              >
+                <span class="lt-loyalty-faq__question-text">{{ block.settings.question }}</span>
+                <span class="lt-loyalty-faq__icon" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="lt-loyalty-faq__icon-v" d="M10 4v12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M4 10h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </button>
+            </h3>
+            <div class="lt-loyalty-faq__panel" id="{{ panel_id }}" role="region">
+              <div class="lt-loyalty-faq__answer">{{ block.settings.answer }}</div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__eyebrow {
+    display: inline-block;
+    padding: 7px 16px;
+    margin-bottom: 20px;
+    border-radius: 100px;
+    background-color: {{ section.settings.eyebrow_bg_color }};
+    color: {{ section.settings.eyebrow_text_color }};
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__heading {
+    margin: 0;
+    font-size: 44px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: {{ section.settings.heading_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__list {
+    max-width: {{ section.settings.content_width }}px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__item {
+    border-bottom: 1px solid {{ section.settings.divider_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__question-wrap {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    padding: 22px 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    color: {{ section.settings.question_color }};
+    font-family: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__question-text {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: {{ section.settings.icon_color }};
+    transition: transform 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__icon-v {
+    transform-origin: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__item.is-open .lt-loyalty-faq__icon {
+    transform: rotate(180deg);
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__item.is-open .lt-loyalty-faq__icon-v {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__panel {
+    overflow: hidden;
+    height: 0;
+    transition: height 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__answer {
+    padding: 0 0 22px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: {{ section.settings.answer_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__answer p {
+    margin: 0 0 12px;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__answer p:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-loyalty-faq__answer a {
+    color: {{ section.settings.icon_color }};
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-faq__head {
+      margin-bottom: 32px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-faq__heading {
+      font-size: 30px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-faq__question-text {
+      font-size: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-loyalty-faq__answer {
+      font-size: 15px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-loyalty-faq__heading {
+      font-size: 26px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var sectionId = {{ section.id | json }};
+
+    function openPanel(panel) {
+      panel.style.height = panel.scrollHeight + 'px';
+    }
+
+    function closePanel(panel) {
+      // Set explicit height first so the transition has a start value.
+      panel.style.height = panel.scrollHeight + 'px';
+      // Force reflow, then collapse.
+      void panel.offsetHeight;
+      panel.style.height = '0px';
+    }
+
+    function bindItem(root, item, allowMultiple) {
+      var button = item.querySelector('.lt-loyalty-faq__question');
+      var panel = item.querySelector('.lt-loyalty-faq__panel');
+      if (!button || !panel || button.dataset.ltBound === 'true') return;
+
+      button.dataset.ltBound = 'true';
+
+      // Initialise open state (for first_open).
+      if (item.classList.contains('is-open')) {
+        panel.style.height = 'auto';
+      }
+
+      button.addEventListener('click', function () {
+        var isOpen = item.classList.contains('is-open');
+
+        if (!allowMultiple && !isOpen) {
+          var openItems = root.querySelectorAll('.lt-loyalty-faq__item.is-open');
+          openItems.forEach(function (other) {
+            if (other === item) return;
+            other.classList.remove('is-open');
+            var otherBtn = other.querySelector('.lt-loyalty-faq__question');
+            var otherPanel = other.querySelector('.lt-loyalty-faq__panel');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+            if (otherPanel) closePanel(otherPanel);
+          });
+        }
+
+        if (isOpen) {
+          item.classList.remove('is-open');
+          button.setAttribute('aria-expanded', 'false');
+          closePanel(panel);
+        } else {
+          item.classList.add('is-open');
+          button.setAttribute('aria-expanded', 'true');
+          // If height was 'auto', normalise before animating.
+          if (panel.style.height === 'auto') panel.style.height = panel.scrollHeight + 'px';
+          openPanel(panel);
+        }
+      });
+
+      // After an opening transition, release to auto so content reflows nicely.
+      panel.addEventListener('transitionend', function (e) {
+        if (e.propertyName !== 'height') return;
+        if (item.classList.contains('is-open')) {
+          panel.style.height = 'auto';
+        }
+      });
+    }
+
+    function init() {
+      var root = document.getElementById('shopify-section-' + sectionId);
+      if (!root) return;
+      var faq = root.querySelector('.lt-loyalty-faq');
+      if (!faq) return;
+      var allowMultiple = faq.getAttribute('data-lt-allow-multiple') === 'true';
+      var items = faq.querySelectorAll('.lt-loyalty-faq__item');
+      items.forEach(function (item) {
+        bindItem(faq, item, allowMultiple);
+      });
+    }
+
+    function destroy() {
+      var root = document.getElementById('shopify-section-' + sectionId);
+      if (!root) return;
+      var buttons = root.querySelectorAll('.lt-loyalty-faq__question');
+      buttons.forEach(function (b) { b.dataset.ltBound = ''; });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    document.addEventListener('shopify:section:load', function (e) {
+      if (e.detail && e.detail.sectionId === sectionId) init();
+    });
+    document.addEventListener('shopify:section:unload', function (e) {
+      if (e.detail && e.detail.sectionId === sectionId) destroy();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "LT Loyalty FAQ",
+  "tag": "section",
+  "class": "lt-loyalty-faq-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "FAQ"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_bg_color",
+      "label": "Eyebrow background",
+      "default": "#ECEAFB"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_text_color",
+      "label": "Eyebrow text",
+      "default": "#5B4FCF"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1F1B4D"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 600,
+      "max": 1000,
+      "step": 20,
+      "unit": "px",
+      "default": 900
+    },
+    {
+      "type": "checkbox",
+      "id": "first_open",
+      "label": "Open first item by default",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multiple",
+      "label": "Allow multiple open at once",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question color",
+      "default": "#1F1B4D"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer color",
+      "default": "#6B7280"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon / link color",
+      "default": "#5B4FCF"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#EAEAF0"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question goes here?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Answer goes here.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "LT Loyalty FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How does The Muzzle Sleep Club work?",
+            "answer": "<p>The Muzzle Sleep Club rewards you for shopping, engaging, and building a consistent sleep routine with us. Earn points when you place orders, create an account, leave reviews, follow us on Instagram, add your birthday, and more.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Who can join?",
+            "answer": "<p>Everyone is welcome to join. Create a Muzzle Sleep account to start earning points, track your balance, redeem rewards, and unlock exclusive member perks.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How do I earn points?",
+            "answer": "<p>Earn points by shopping with Muzzle Sleep and completing select rewards activities: creating an account, following us on Instagram, leaving a product review, and adding your birthday.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How do I redeem my points?",
+            "answer": "<p>Log in to your account and open the rewards panel. Select \"Ways to Redeem,\" choose the reward you want, and apply it toward your order at checkout.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do my points apply to subscriptions?",
+            "answer": "<p>Points may be earned and redeemed according to the active rewards program rules shown in your account. Log in to check available rewards before checkout.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I use more than one reward at a time?",
+            "answer": "<p>Reward use may vary depending on the offer, discount, or promotion. Check the details in your rewards account before completing your order.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "When will my points appear?",
+            "answer": "<p>Points are typically added after eligible actions are completed. Purchase points may appear after your order is confirmed or fulfilled, depending on program settings.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What happens when I reach a new VIP tier?",
+            "answer": "<p>Once you reach a new tier, you'll automatically unlock that tier's perks and benefits. The more points you earn, the more exclusive rewards you can enjoy — all the way to Sleep VIP.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

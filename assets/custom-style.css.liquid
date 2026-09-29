@@ -1,0 +1,101 @@
+input, button {
+  font-family: inherit;
+  font-weight: 600;
+}
+.container {
+  max-width: 1340px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+cart-notification {
+  display: none;
+}
+.jdgm-rev__body {
+  color: #111;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+.jdgm-rev__title {
+  font-size: 18px;
+  letter-spacing: 0;
+  color: #333;
+  font-weight: 700;
+}
+#fv-loading-icon {
+  display: none;
+}
+
+/* Featured Collection */
+.grid.product-grid.contains-card.contains-card--product.contains-card--standard {
+  justify-content: center;
+}
+
+/* PDP Styling */
+.product__accordion .accordion__content {
+  font-size: 14px;
+  color: #222;
+  letter-spacing: 0px;
+}
+.product__accordion .metafield-rich_text_field p {
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.product__accordion .metafield-rich_text_field li {
+  font-weight: 500;
+}
+.product__accordion .metafield-rich_text_field ul {
+  margin-top: 0;
+}
+.product__accordion .metafield-rich_text_field h4 {
+  margin-bottom: 5px;
+  font-weight: 700;
+  letter-spacing: 0px;
+}
+.product__description {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: #222;
+  line-height: 1.7;
+}
+
+
+/* VIP Landing Page */
+@media (max-width: 500px) {
+  .template-page-vip-landing-page .grid--2-col-tablet-down .quick-add__submit {
+    padding: 10px;
+    height: auto;
+    min-height: fit-content;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    font-weight: 500;
+  }
+  .template-page-vip-landing-page .grid--2-col-tablet-down .quick-add__submit::before,
+  .template-page-vip-landing-page .grid--2-col-tablet-down .quick-add__submit::after {
+    content: unset;
+  }
+  .template-page-vip-landing-page .grid--2-col-tablet-down .grid__item {
+    padding: 5px 12px;
+    border: 1px solid #eee;
+  }
+  .template-page-vip-landing-page .grid--2-col-tablet-down .card__information a {
+    font-size: 16px;
+    letter-spacing: 0.3px;
+  }
+  .template-page-vip-landing-page .grid--2-col-tablet-down .price--on-sale .price__sale {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+  .template-page-vip-landing-page .grid--2-col-tablet-down span.price-item.price-item--sale.price-item--last {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .template-page-vip-landing-page .grid--2-col-tablet-down s.price-item.price-item--regular {
+    letter-spacing: 0;
+    font-size: 14px;
+  }  
+}

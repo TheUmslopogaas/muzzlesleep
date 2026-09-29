@@ -1,0 +1,679 @@
+{%- assign _ss = section.settings -%}
+{%- assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#sn_' -%}
+{%- assign _this = section.id | prepend: '#shopify-section-' -%}
+
+{%- capture section_content -%}
+<style>
+    {{ _section }} {
+        position: relative;
+        background: {{ _ss.background }};
+        padding-bottom: {{ _ss.padding_bottom }}px;
+    }
+
+    {{ _section }} .section_holder {
+        position: relative;
+        /* max-width: {{ _ss.max_with }}px; */
+        margin: auto;
+        padding: 0px 0px;
+    }
+
+    {{ _section }} .section_banner {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: max(37.6%, 550px);
+    }
+
+    {{ _section }} .section_banner img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    {{ _section }} .section_logo {
+        position: absolute;
+        width: 130px;
+        height: 33px;
+        display: flex;
+        top: 39px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    {{ _section }} .section_text {
+        max-width: 626px;
+        width: 100%;
+    }
+
+    {{ _section }} .section_main {
+        position: absolute;
+        bottom: 50px;
+        right: 9.8vw;
+        left: 9.8vw;
+        max-width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    {{ _section }} .section_text--small-text {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 31.09px; /* 172.722% */
+        letter-spacing: 0.66px;
+        text-transform: capitalize;
+        margin-bottom: 2px;
+        width: 100%;
+    }
+
+    {{ _section }} .section_text--title {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%; /* 48px */
+        letter-spacing: -0.8px;
+        text-transform: capitalize;
+        width: 100%;
+    }
+
+    {{ _section }} .section_text--usp {
+        margin-top: 11px;
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .usp--item {
+        color: #FFF;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0;
+        display: flex;
+        align-items: center;
+        height: 30px;
+        padding: 0 9px;
+        margin-right: 8px;
+        border-radius: 5px;
+        background: rgba(39,33,77,0.1);
+        backdrop-filter: blur(4px);
+    }
+
+    {{ _section }} .usp--item:last-child {
+        margin-right: 0;
+    }
+
+    {{ _section }} .usp--icon {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        margin-left: 4px;
+    }
+
+    {{ _section }} .section_overlay {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: max(407px, 24%);
+        background: linear-gradient(0deg, rgba(39, 33, 77, 0.80) 0%, rgba(39, 33, 77, 0.00) 100%);
+    }
+
+    {{ _section }} .section--button {
+        display: flex;
+        min-width: 204px;
+        color: #27214D;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%; /* 16px */
+        text-decoration: none;
+        letter-spacing: -0.32px;
+        text-transform: capitalize;
+        border-radius: 30px;
+        background: #FFF;
+        box-shadow: -21px 16px 10px 0px rgba(153, 145, 189, 0.04), -12px 9px 9px 0px rgba(153, 145, 189, 0.13), -5px 4px 6px 0px rgba(153, 145, 189, 0.23), -1px 1px 4px 0px rgba(153, 145, 189, 0.25);
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        height: 50px;
+        padding: 0 24px;
+        margin-top: auto;
+    }
+
+    {{ _section }} .section_button {
+        display: flex;
+    }
+
+    {{ _section }} .pulse_rate_item--icon {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        background: #F1E5FF;
+        border-radius: 99px;
+        padding: 6px;
+        mix-blend-mode: screen;
+    }
+
+    {{ _section }} .metrix_item {
+        position: absolute;
+        border-radius: 14px;
+        background: rgba(39,33,77,0.1);
+        backdrop-filter: blur(14px);
+    }
+
+    {{ _section }} .pulse_rate_item {
+        top: 27%;
+        left: 40%;
+    }
+
+    {{ _section }} .pulse_rate_item--icon img {
+        opacity: 0.6;
+    }
+
+    {{ _section }} .pulse_rate_item--title {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 17.28px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.346px;
+        margin-top: 8px;
+    }
+
+    {{ _section }} .pulse_rate_item--big_text {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 23.04px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.461px;
+        margin-right: 3px;
+    }
+
+    {{ _section }} .pulse_rate_item--small_text {
+        color: #F1E5FF;
+        font-family: Manrope;
+        font-size: 11.52px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.23px;
+        text-transform: capitalize;
+    }
+
+    {{ _section }} .pulse_rate_item--score {
+        display: flex;
+        align-items: flex-end;
+        margin-top: 6px;
+    }
+
+    {{ _section }} .pulse_rate_item--text {
+        color: #F1E5FF;
+        font-family: Manrope;
+        font-size: 11.52px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.23px;
+        text-transform: capitalize;
+        margin-top: 3px;
+    }
+
+    {{ _section }} .pulse_rate_item--wrapper {
+        padding: 14px;
+    }
+
+    {{ _section }} .peak_shap_item {
+        right: 35%;
+        bottom: 25%;
+        padding: 23px 0 20px;
+    }
+
+    {{ _section }} .peak_shap_item--icon {
+        width: 183px;
+        height: 52px;
+        display: flex;
+    }
+
+    {{ _section }} .peak_shap_item--icon>* {
+        width: 100%;
+        height: 100%;
+    }
+
+    {{ _section }} .peak_shap_item--score {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 34.56px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.691px;
+        padding-left: 13px;
+        margin-top: 9px;
+    }
+
+    {{ _section }} .peak_shap_item--text {
+        color: #F1E5FF;
+        font-family: Manrope;
+        font-size: 14.4px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.288px;
+        padding-left: 13px;
+        margin-top: 7px;
+    }
+    {{ _section }} .temp-icon-cart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: absolute;
+        right: 9%;
+        top: 45px;
+        z-index: 1;
+    }
+
+    @media screen and (max-width: 900px) {
+        {{ _section }} {
+            padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+        }
+        
+        {{ _section }} .section_holder {
+            padding: 0px 0px;
+        }
+
+        {{ _section }} .section_banner {
+            padding-bottom: min(147%, 570px);
+            min-height: 100vh;
+        }
+
+        {{ _section }} .section_main {
+            bottom: 23px;
+            top: 70px;
+            /* width: calc(100vw - 24px); */
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            right: 0;
+            left: 0;
+        }
+
+        {{ _section }} .temp-icon-cart {
+            right: 22px;
+            top: 22px;
+        }
+
+        {{ _section }} .section_overlay {
+            height: 100%;
+            background: linear-gradient(180deg, rgba(39, 33, 77, 0.80) 0%, rgba(39, 33, 77, 0.00) 47.53%);
+        }
+
+        {{ _section }} .section_logo {
+            width: 90px;
+            height: 23px;
+            top: 23px;
+        }
+
+        {{ _section }} .section_text--title {
+            font-size: 24px;
+            letter-spacing: -0.48px;
+            text-align: center;
+            margin-top: 12px;
+            padding: 0 15px;
+        }
+
+        {{ _section }} .section_text--small-text {
+            font-size: 14px;
+            line-height: 1;
+            letter-spacing: 0.66px;
+            text-align: center;
+        }
+
+        {{ _section }} .section_button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        {{ _section }} .section--button {
+            font-size: 16px;
+            width: 100%;
+            height: 50px;
+            max-width: 300px;
+        }
+
+        {{ _section }} .section_text--usp {
+            margin-top: 7px;
+            width: 100%;
+        }
+
+        {{ _section }} .usp--item {
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 7px;
+            flex-grow: 1;
+            border-radius: 4px;
+            padding: 0 8px;
+            height: 26px;
+        }
+
+        {{ _section }} .usp--item:last-child {
+            margin-right: 0;
+        }
+
+        {{ _section }} .usp--item img {
+            width: 13px;
+            height: 13px;
+        }
+
+        {{ _section }} .metrix_item {
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        {{ _section }} .pulse_rate_item {
+            top: 38%;
+            left: 11%;
+        }
+
+
+        {{ _section }} .pulse_rate_item--wrapper {
+            padding: 10px;
+        }
+
+        {{ _section }} .pulse_rate_item--icon {
+            width: 24px;
+            height: 24px;
+            padding: 5px;
+        }
+
+        {{ _section }} .pulse_rate_item--title {
+            font-size: 12px;
+            letter-spacing: -0.24px;
+            margin-top: 7px;
+        }
+
+        {{ _section }} .pulse_rate_item--score {
+            margin-top: 5px;
+        }
+
+        {{ _section }} .pulse_rate_item--big_text {
+            font-size: 16px;
+            letter-spacing: -0.32px;
+        }
+
+        {{ _section }} .pulse_rate_item--small_text {
+            font-size: 8px;
+            letter-spacing: -0.16px;
+            line-height: 1.5;
+        }
+
+        {{ _section }} .pulse_rate_item--text {
+            font-size: 8px;
+            letter-spacing: -0.16px;
+            margin-top: 2px;
+        }
+
+        {{ _section }} .peak_shap_item {
+            right: 9%;
+            bottom: 34%;
+            padding: 16px 0 13px;
+        }
+
+        {{ _section }} .peak_shap_item--icon {
+            width: 127px;
+            height: 36px;
+        }
+
+        {{ _section }} .peak_shap_item--score {
+            font-size: 24px;
+            letter-spacing: -0.48px;
+            padding-left: 10px;
+            margin-top: 5px;
+        }
+
+        {{ _section }} .peak_shap_item--text {
+            font-size: 10px;
+            letter-spacing: -0.2px;
+            padding-left: 11px;
+            margin-top: 4px;
+        }
+
+        {{ _section }} .for_desktop {
+            display: none !important;
+        }
+    }
+
+    @media screen and (min-width: 901px) {
+        {{ _section }} .for_mobile {
+            display: none !important;
+        }
+    }
+    
+
+</style>
+
+{%- assign usp_items = section.blocks | where: "type", "usp_item" -%}
+
+<div page-banner id="sn_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="section_holder">
+        <div class="section_banner">
+            {%- if _ss.banner_image != blank -%}
+                {%- if _ss.banner_image_mobile != blank -%}
+                    <img class="banner_image_el for_mobile" src="{{ _ss.banner_image_mobile | image_url: width: 700 }}" alt="mobile banner">
+                    <img class="banner_image_el for_desktop" src="{{ _ss.banner_image | image_url: width: 2000 }}" alt="desktop banner">
+                {%- else -%}
+                    <img class="banner_image_el" src="{{ _ss.banner_image | image_url: width: 2000 }}" alt="desktop banner">
+                {%- endif -%}
+            {%- endif -%}
+            <!-- <div class="temp-icon-cart">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.21513 0.950439H1.73913L0.892126 13.7104C0.840859 14.4626 0.944782 15.2173 1.19744 15.9276C1.4501 16.638 1.8461 17.2888 2.36084 17.8396C2.87559 18.3905 3.49809 18.8296 4.18969 19.1297C4.88128 19.4299 5.6272 19.5847 6.38113 19.5844H14.4991C15.2521 19.5846 15.997 19.4301 16.6878 19.1306C17.3786 18.8311 18.0006 18.393 18.5152 17.8434C19.0297 17.2937 19.426 16.6443 19.6794 15.9352C19.9327 15.2262 20.0378 14.4727 19.9881 13.7214L19.1301 0.950439H5.21513ZM5.21513 2.05044H2.77313L1.99213 13.7874C1.95144 14.3888 2.03475 14.9921 2.23688 15.56C2.43902 16.1278 2.75567 16.6481 3.1672 17.0885C3.57873 17.5289 4.07635 17.8801 4.62921 18.1202C5.18207 18.3603 5.77837 18.4843 6.38113 18.4844H14.4991C15.1028 18.4858 15.7003 18.363 16.2545 18.1235C16.8086 17.884 17.3076 17.5331 17.7203 17.0925C18.133 16.652 18.4506 16.1312 18.6534 15.5626C18.8562 14.994 18.9399 14.3897 18.8991 13.7874L18.1071 2.05044H15.6651V2.74344C15.6651 3.4296 15.53 4.10903 15.2674 4.74296C15.0048 5.37689 14.6199 5.95289 14.1348 6.43807C13.6496 6.92326 13.0736 7.30813 12.4396 7.57071C11.8057 7.83329 11.1263 7.96844 10.4401 7.96844C9.75397 7.96844 9.07453 7.83329 8.4406 7.57071C7.80668 7.30813 7.23068 6.92326 6.74549 6.43807C6.26031 5.95289 5.87544 5.37689 5.61286 4.74296C5.35028 4.10903 5.21513 3.4296 5.21513 2.74344V2.05044ZM14.5651 2.05044H6.31513V2.74344C6.31513 3.83746 6.74972 4.88667 7.52331 5.66025C8.2969 6.43384 9.34611 6.86844 10.4401 6.86844C11.5341 6.86844 12.5834 6.43384 13.3569 5.66025C14.1305 4.88667 14.5651 3.83746 14.5651 2.74344V2.05044Z" fill="white"/></svg>
+            </div> -->
+        </div>
+        <div class="section_overlay"> </div>
+        {% comment %}
+          {%- if _ss.logo -%}
+              <div class="section_logo">
+                  <img src="{{ _ss.logo | image_url: width: 500 }}" alt="logo image">
+              </div>
+          {%- endif -%}
+        {% endcomment %}
+        <div class="section_main">
+            <div class="section_text">
+                {%- if _ss.small_text != blank -%}
+                    <div class="section_text--small-text">{{ _ss.small_text }}</div>
+                {%- endif -%}
+                {%- if _ss.title != blank -%}
+                    <div class="section_text--title">{{ _ss.title }}</div>
+                {%- endif -%}
+                {%- if usp_items.size > 0 -%}
+                    <div class="section_text--usp for_desktop">
+                        {%- for usp_item in usp_items -%}
+                            <div class="usp--item">
+                                {{ usp_item.settings.text }}
+                                <img class="usp--icon" src="{{ "icon-check.svg" | asset_url }}" alt="icon-check">
+                            </div>
+                        {%- endfor -%}
+                    </div>
+                {%- endif -%}
+            </div>
+            {%- if _ss.button_text != blank -%}
+                <div class="section_button">
+                    {% comment %}
+                        <a href="{{ _ss.button_link }}" class="section--button">{{ _ss.button_text }}</a>
+                    {% endcomment %}
+                    <a href="#" scroll-id="landing-product-main" class="section--button">{{ _ss.button_text }}</a>
+
+                    {%- if usp_items.size > 0 -%}
+                        <div class="section_text--usp for_mobile">
+                            {%- for usp_item in usp_items -%}
+                                <div class="usp--item">
+                                    {{ usp_item.settings.text }}
+                                    <img class="usp--icon" src="{{ "icon-check.svg" | asset_url }}" alt="icon-check">
+                                </div>
+                            {%- endfor -%}
+                        </div>
+                    {%- endif -%}
+                </div>
+            {%- endif -%}
+        </div>
+        <div class="metrix_item pulse_rate_item" lazy-scroll="15">
+            <div class="pulse_rate_item--wrapper">
+                <div class="pulse_rate_item--icon">
+                    <img src="{{ "icon-zzz.svg" | asset_url }}" alt="Zzz">
+                </div>
+                <div class="pulse_rate_item--title">Up To</div>
+                <div class="pulse_rate_item--score">
+                    <div class="pulse_rate_item--big_text">50% </div>
+                    <div class="pulse_rate_item--small_text">more</div>
+                </div>
+                <div class="pulse_rate_item--text">Oxygen Efficiency</div>
+            </div>
+        </div>
+        <div class="metrix_item peak_shap_item" lazy-scroll="12">
+            <div class="peak_shap_item--icon">
+                <img src="{{ "icon-peak.svg" | asset_url }}" alt="Peak">
+            </div>
+            <div class="peak_shap_item--score">47%</div>
+            <div class="peak_shap_item--text">Fewer Snoring Events</div>
+        </div>
+    </div>
+</div>
+<script>
+    $("{{ _section }} .temp-icon-cart").on("click", function(){
+        sessionStorage.setItem("_previous_page", location.href);
+        location.href = '/checkout';
+    });
+</script>
+<script>
+    window.addEventListener('resize', function() {
+        adjust_zoom_section_{{ section.id |  slice: -5, 5  }}();
+    });
+    function adjust_zoom_section_{{ section.id |  slice: -5, 5  }}() {
+        var scale;
+        if (window.innerWidth > 900) {
+            scale = 1 - (1760 - window.innerWidth) * 5.2 / 10000;
+        } else {
+            scale = 1;
+        }
+        document.querySelector("#shopify-section-{{ section.id }}").style.zoom = scale;
+    }
+
+    adjust_zoom_section_{{ section.id |  slice: -5, 5  }}();
+</script>
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+    {
+        "name": "Full Image Banner",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Main Settings"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner_image",
+                "label": "Banner Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner_image_mobile",
+                "label": "Mobile Banner Image"
+            },
+            {
+                "type": "image_picker",
+                "id": "logo",
+                "label": "Logo"
+            },
+            {
+                "type": "text",
+                "id": "small_text",
+                "label": "Small text above title"
+            },
+            {
+                "type": "textarea",
+                "id": "title",
+                "label": "Title"
+            },
+            {
+                "type": "text",
+                "id": "button_text",
+                "label": "Button text"
+            },
+            {
+                "type": "url",
+                "id": "button_link",
+                "label": "Button link"
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1920
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            }
+        ],
+        "blocks": [
+            {
+                "name": "USP Item",
+                "type": "usp_item",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "text",
+                        "label": "Text"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Full Image Banner"
+        }]
+    }
+{% endschema %}

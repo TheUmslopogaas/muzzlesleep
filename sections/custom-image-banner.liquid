@@ -1,0 +1,56 @@
+<div class="custom_image_banner_container">
+  <div class="custom_image_banner_wrapper">
+    <div class="banner_desktop">
+      {% if section.settings.image %}
+        <a href="{% if section.settings.image_url %} {{ section.settings.image_url }}{% else %} # {% endif %}"><img src="{{ section.settings.image.src | image_url }}" height="auto" width="100%"></a>
+      {% endif %}
+    </div>
+    <div class="banner_mobile">
+      {% if section.settings.mobile_image %}
+        <a href="{% if section.settings.image_url %} {{ section.settings.image_url }} {% else %} # {% endif %}"><img src="{{ section.settings.mobile_image | image_url }}" height="auto" width="100%"></a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<style>
+  .custom_image_banner_wrapper img {
+    display: block;
+  }
+  @media only screen and (max-width: 768px){
+    .banner_desktop{
+      display: none;
+    }
+  }
+  @media only screen and (min-width: 768px){
+    .banner_mobile{
+      display: none;
+    }
+  }
+</style>
+{% schema %}
+  {
+    "name": "Custom Image Banner",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Desktop Banner"
+      },
+      {
+        "type": "image_picker",
+        "id": "mobile_image",
+        "label": "Mobile Banner"
+      },
+      {
+        "type": "url",
+        "id": "image_url",
+        "label": "Anchor Link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom Image Banner"
+      }
+    ]
+  }
+{% endschema %}

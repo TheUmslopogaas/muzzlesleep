@@ -1,0 +1,467 @@
+{%- assign _ss = section.settings -%}
+{%- assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#sn_' -%}
+{%- assign _this = section.id | prepend: '#shopify-section-' -%}
+
+{%- capture section_content -%}
+<style>
+    {{ _section }} {
+        position: relative;
+        background: {{ _ss.background }};
+        padding-top: {{ _ss.padding_top }}px;
+        padding-bottom: {{ _ss.padding_bottom }}px;
+    }
+
+    {{ _section }} .section_holder {
+        position: relative;
+        /* max-width: {{ _ss.max_with }}px; */
+        margin: auto;
+        padding: 0px 0px;
+    }
+
+    /* ======= BEGIN Flowbox style ======= */
+
+    {{ _section }} .flowBox__container:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        z-index: 1;
+        background-image: linear-gradient(90deg, #F6F5FF, rgba(246, 245, 255, 0));
+    }
+    {{ _section }} .flowBox__container:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50px;
+        z-index: 1;
+        background-image: linear-gradient(90deg, rgba(246, 245, 255, 0), #F6F5FF);
+    }
+    {{ _section }} .flowBox__container {
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        position: relative;
+        justify-content: flex-start;
+    }
+    {{ _section }} .flowBox__container:first-child {
+        margin-bottom: 10.4px;
+    }
+
+    {{ _section }} .flowBox__flowContent {
+        flex: none;
+        display: flex;
+        animation-duration: {{ _ss.flow_duration }}s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+    
+    {{ _section }} .flowBox__left-right .flowBox__flowContent {
+        animation-name: left-right;
+    }
+
+    {{ _section }} .flowBox__right-left .flowBox__flowContent {
+        animation-name: right-left;
+    }
+
+    {{ _section }} .flowBox__flowContentWrapper {
+        display: flex;
+    }
+
+    {{ _section }} .flowBox__flowGroup {
+        display: flex;
+        align-items: center;
+    }
+
+    @keyframes right-left {
+        0% {
+            transform: translateX(0%);
+        }  
+
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    @keyframes left-right {
+        0% {
+            transform: translateX(-50%);
+        }
+
+        100% {
+            transform: translateX(0%);
+        }
+    }
+
+    /* =======  BEGIN Flowbox item style ======= */
+
+    {{ _section }} .flowBox__item {
+        display: flex;
+        align-items: center;
+        padding: 10.4px;
+        background: #FFF;
+        border-radius: 10.4px;
+        width: 336px;
+        margin-right: 10px;
+    }
+
+    {{ _section }} .flowBox__item--image {
+        position: relative;
+        width: 84.5px;
+        min-width: 84.5px;
+        height: 135px;
+        border-radius: 7.8px;
+        overflow: hidden;
+        margin-right: 14.3px;
+    }
+
+    {{ _section }} .flowBox__item--imageEl {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    {{ _section }} .flowBox__item--content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    {{ _section }} .flowBox__item--star {
+        width: 16px;
+        height: 16px;
+        display: flex;
+    }
+
+    {{ _section }} .flowBox__item--stars {
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .flowBox__item--text {
+        margin-top: 9px;
+        color: #26214E;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%; /* 16.8px */
+        letter-spacing: -0.28px;
+    }
+
+    {{ _section }} .flowBox__item--footer {
+        margin-top: 7px;
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .flowBox__item--title {
+        color: #26214E;
+        font-family: Manrope;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%; /* 13.2px */
+        letter-spacing: -0.22px;
+    }
+
+    {{ _section }} .flowBox__item--tagIcon {
+        width: 13px;
+        height: 13px;
+        display: flex;
+        margin-left: 8px;
+        margin-right: 4px;
+    }
+
+    {{ _section }} .flowBox__item--tag {
+        color: #26214E;
+        font-family: Manrope;
+        font-size: 11px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%; /* 13.2px */
+        letter-spacing: -0.22px;
+    }
+
+    /* =======  END Flowbox item style ======= */
+
+    @media screen and (max-width: 900px) {
+        {{ _section }} {
+            padding-top: {{ _ss.padding_top_mobile }}px;
+            padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+        }
+        
+        {{ _section }} .section_holder {
+            padding: 0px 0px;
+        }
+
+        /* ====== BEGIN Flowbox ====== */
+
+        {{ _section }} .flowBox__flowContent {
+            animation-duration: {{ _ss.flow_duration_mobile }}s;
+        }
+
+        {{ _section }} .flowBox__container:first-child {
+            margin-bottom: 8px;
+        }
+
+        /* ====== BEGIN Flowbox Item ====== */
+
+        {{ _section }} .flowBox__item {
+            padding: 8px;
+            border-radius: 8px;
+            width: 270px;
+            margin-right: 8px;
+        }
+
+        {{ _section }} .flowBox__item--image {
+            width: 65px;
+            min-width: 65px;
+            height: 104px;
+            border-radius: 6px;
+            margin-right: 11px;
+        }
+
+        {{ _section }} .flowBox__item--star {
+            width: 13px;
+            height: 13px;
+        }
+
+        {{ _section }} .flowBox__item--text {
+            margin-top: 5px;
+            font-size: 11px;
+            letter-spacing: -0.22px;
+        }
+
+        {{ _section }} .flowBox__item--title {
+            font-size: 8px;
+            letter-spacing: -0.16px;
+        }
+
+        {{ _section }} .flowBox__item--tagIcon {
+            width: 10px;
+            height: 10px;
+            margin-left: 6px;
+            margin-right: 3px;
+        }
+
+        {{ _section }} .flowBox__item--tag {
+            font-size: 8px;
+            letter-spacing: -0.16px;
+        }
+
+        /* ====== END Flowbox Item ====== */
+
+        {{ _section }} .for_desktop {
+            display: none !important;
+        }
+    }
+
+    @media screen and (min-width: 901px) {
+        {{ _section }} .for_mobile {
+            display: none !important;
+        }
+    }
+    
+
+</style>
+
+{% capture flow_items %}
+    {%- liquid
+        if section.blocks.size > 0
+            if section.blocks.size < 6
+                assign repeat_count = 6 | divided_by: section.blocks.size | plus: 1
+            else
+                assign repeat_count = 1
+            endif
+        endif
+    -%}
+
+    {%- for i in (1..repeat_count) -%}
+        {%- for block in section.blocks -%}
+            {%- assign _block = block.settings -%}
+            <div class="flowBox__item" data-index="{{ forloop.index0 }}">
+                <div class="flowBox__item--image">
+                    <img src="{{ _block.image | image_url: width: 300 }}" alt="{{ _block.title }}-image" class="flowBox__item--imageEl">
+                </div>
+                <div class="flowBox__item--content">
+                    <div class="flowBox__item--stars">
+                        {%- assign start_count = _block.review_score | plus: 0 -%}
+                        {%- for i in (1..start_count) -%}
+                            <img src="{{ 'icon-star-gold.svg' | asset_url }}" alt="star" class="flowBox__item--star">
+                        {%- endfor -%}
+                    </div>
+                    <div class="flowBox__item--text">{{ _block.text }}</div>
+                    <div class="flowBox__item--footer">
+                        <div class="flowBox__item--title">{{ _block.title }}</div>
+                        {%- if _block.tag != blank -%}
+                            <img src="{{ "icon-mark.svg" | asset_url }}" alt="tag icon" class="flowBox__item--tagIcon">
+                            <div class="flowBox__item--tag">{{ _block.tag }}</div>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        {%- endfor -%}
+    {%- endfor -%}
+{% endcapture %}
+
+<div landing-review-flow id="sn_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="section_holder">
+        <div class="flowBox__container flowBox__left-right">
+            <div class="flowBox__flowContent">
+                <div class="flowBox__flowContentWrapper">
+                    <div class="flowBox__flowGroup">
+                        {{ flow_items }}
+                    </div>
+                    <div class="flowBox__flowGroup">
+                        {{ flow_items }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flowBox__container flowBox__right-left">
+            <div class="flowBox__flowContent">
+                <div class="flowBox__flowContentWrapper">
+                    <div class="flowBox__flowGroup">
+                        {{ flow_items }}
+                    </div>
+                    <div class="flowBox__flowGroup">
+                        {{ flow_items }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+    {
+        "name": "Review flow",
+        "settings": [
+            {
+                "type": "range",
+                "id": "flow_duration",
+                "label": "Flow speed (s)",
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "flow_duration_mobile",
+                "label": "Mobile flow speed (s)",
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "default": 50
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1920
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "label": "Desktop padding top",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_top_mobile",
+                "label": "Mobile padding top",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            }
+        ],
+        "blocks": [
+            {
+                "name": "Review Block",
+                "type": "review_block",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Author image",
+                    },
+                    {
+                        "type": "select",
+                        "id": "review_score",
+                        "label": "Review score",
+                        "default": "5",
+                        "options": [
+                            {"label": "5", "value": "5"},
+                            {"label": "4", "value": "4"},
+                            {"label": "3", "value": "3"},
+                            {"label": "2", "value": "2"},
+                            {"label": "1", "value": "1"}
+                        ]
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "text",
+                        "label": "Text"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Author"
+                    },
+                    {
+                        "type": "text",
+                        "id": "tag",
+                        "label": "Author position"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Review flow"
+        }]
+    }
+{% endschema %}

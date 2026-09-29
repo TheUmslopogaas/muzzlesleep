@@ -1,0 +1,380 @@
+{%- assign _ss = section.settings -%}
+{%- assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#sn_' -%}
+{%- assign _this = section.id | prepend: '#shopify-section-' -%}
+
+{%- capture section_content -%}
+<style>
+    {{ _section }} {
+        position: relative;
+        background: {{ _ss.background }};
+        padding-top: {{ _ss.padding_top }}px;
+        padding-bottom: {{ _ss.padding_bottom }}px;
+        background-image: url('{{ _ss.banner_image | image_url: width: 1500 }}');
+        background-position: center right;
+        background-repeat: no-repeat;
+        background-size: 50%;
+    }
+
+    {{ _section }} .section_holder {
+        position: relative;
+        max-width: {{ _ss.max_with }}px;
+        margin: auto;
+        padding: 0px 40px;
+    }
+
+    {{ _section }} .section_part {
+        position: relative;
+        width: 50%;
+        height: 100%;
+        max-width: 649px;
+    }
+
+    {{ _section }} .review_part {
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .review_icon {
+        height: auto;
+        width: 87px;
+        height: 35px;
+        display: flex;
+        margin-right: 8px;
+    }
+
+    {{ _section }} .review_icon>* {
+        width: 100%;
+        height: auto;
+    }
+
+    {{ _section }} .review_title {
+        color: #27214D;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: 0;
+    }
+
+    {{ _section }} .content_wrapper {
+        color: #27214D;
+        font-family: Manrope;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 130%; /* 39px */
+        letter-spacing: -0.6px;
+    }
+
+    {{ _section }} .section_banner {position: relative;min-height: 340px;overflow: hidden;}
+
+    {{ _section }} .section_banner img {
+        position: absolute;
+        height: 480px;
+        top: 50%;
+        right: -20px;
+        transform: translateY(-50%);
+    }
+
+    {{ _section }} .section_content {
+        margin-top: 22px;
+    }
+
+    {{ _section }} .tags_wrapper {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    {{ _section }} .tag_item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4.667px;
+        border: 1.167px solid #E9E6FF;
+        background: #F6F5FF;
+        color: #27214D;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: 0;
+        height: 29px;
+        padding: 0 9px;
+        margin-right: 4px;
+        margin-bottom: 4px;
+    }
+
+    {{ _section }} .tags_part {
+        margin-top: 22px;
+    }
+
+    
+    {{ _section }} .main_button {
+        min-width: 236px;
+        padding: 0 40px;
+        display: flex;
+        height: 50px;
+        color: #FFF;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%; /* 16px */
+        letter-spacing: -0.32px;
+        text-transform: capitalize;
+        border-radius: 30px;
+        background: #27214D;
+        box-shadow: -21px 16px 10px 0px rgba(153, 145, 189, 0.04), -12px 9px 9px 0px rgba(153, 145, 189, 0.13), -5px 4px 6px 0px rgba(153, 145, 189, 0.23), -1px 1px 4px 0px rgba(153, 145, 189, 0.25);
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    {{ _section }} .main_button_arrow {
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+    }
+
+
+    @media screen and (max-width: 900px) {
+        {{ _this }} {
+            margin-bottom: 50px;
+        }
+
+        {{ _section }} {
+            padding-top: {{ _ss.padding_top_mobile }}px;
+            padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+            background-image: url('{{ _ss.banner_image_mobile | image_url: width: 700 }}');
+            background-position: bottom 20px right;
+            background-size: contain;
+        }
+        
+        {{ _section }} .section_holder {
+            padding: 0px 24px;
+        }
+
+        {{ _section }} .section_part {
+            width: 100%;
+            max-width: 100%;
+            padding-bottom: max(70%, 250px);
+        }
+
+        {{ _section }} .review_icon {
+            width: 74px;
+            height: 30px;
+            margin-right: 7px;
+        }
+
+        {{ _section }} .review_title {
+            font-size: 12px;
+        }
+        
+        {{ _section }} .section_content {
+            margin-top: 12px;
+        }
+        
+        {{ _section }} .content_wrapper {
+            font-size: 18px;
+        }
+
+        {{ _section }} .tags_part {
+            margin-top: 14px;
+        }
+
+        {{ _section }} .tag_item {
+            border: 1px solid #E9E6FF;
+            font-size: 12px;
+            border-radius: 4px;
+            height: 25px;
+            padding: 0 8px;
+        }
+
+        {{ _section }} .section_main_button {
+            margin: 0;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        {{ _section }} .main_button {
+            width: fit-content;
+            margin: auto;
+        }
+
+        {{ _section }} .for_desktop {
+            display: none !important;
+        }
+    }
+
+    @media screen and (min-width: 901px) {
+        {{ _section }} .for_mobile {
+            display: none !important;
+        }
+    }
+    
+
+</style>
+
+
+<div landing-review-text id="sn_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="section_holder">
+        <div class="section_part">
+            <div class="review_part">
+                <div class="review_icon">
+                    <img src="{{ _ss.review_icon | image_url: width: 500 }}" alt="review icon">
+                </div>
+                <div class="review_title">{{ _ss.review_title }}</div>
+            </div>
+            <div class="section_content">
+                <div class="content_wrapper">{{ _ss.text }}</div>
+            </div>
+            <div class="tags_part">
+                <div class="tags_wrapper">
+                    {%- for tag in section.blocks -%}
+                        {%- assign _tag = tag.settings -%}
+                        <div class="tag_item">{{ _tag.text }}</div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+    {%- if _ss.button_text != blank -%}
+        <div class="section_main_button for_mobile">
+            <a href="{{ _ss.button_link }}" class="main_button"{% if _ss.scroll_id != blank %} scroll-id="{{ _ss.scroll_id }}"{% endif %}>{{ _ss.button_text }}
+                <img class="main_button_arrow" src="{{ "icon-down-arrow.svg" | asset_url }}" alt="down arrow">
+            </a>
+        </div>
+    {%- endif -%}
+</div>
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+    {
+        "name": "Introduce with tags",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "review_icon",
+                "label": "Review icon"
+            },
+            {
+                "type": "text",
+                "id": "review_title",
+                "label": "Review title",
+                "default": "Over 4,500+ Happier Sleepers"
+            },
+            {
+                "type": "textarea",
+                "id": "text",
+                "label": "Text"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner_image",
+                "label": "Banner image"
+            },
+            {
+                "type": "image_picker",
+                "id": "banner_image_mobile",
+                "label": "Mobile banner image"
+            },
+            {
+                "type": "header",
+                "content": "Button Settings"
+            },
+            {
+                "type": "text",
+                "id": "button_text",
+                "label": "Button text",
+                "default": "Try Muzzle Sleep"
+            },
+            {
+                "type": "url",
+                "id": "button_link",
+                "label": "Button link"
+            },
+            {
+                "type": "text",
+                "id": "scroll_id",
+                "label": "Scroll to custom ID"
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1500
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "label": "Desktop padding top",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_top_mobile",
+                "label": "Mobile padding top",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            }
+        ],
+        "blocks": [
+            {
+                "name": "Tag",
+                "type": "tag",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "text",
+                        "label": "Tag"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Introduce with tags"
+        }]
+    }
+{% endschema %}

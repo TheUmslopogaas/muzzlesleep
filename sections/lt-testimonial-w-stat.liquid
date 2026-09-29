@@ -1,0 +1,470 @@
+<style>
+  #shopify-section-{{section.id}} .testimonial-section {
+    padding: 80px 0;
+    background-color: #ffffff;
+  }
+  
+  #shopify-section-{{section.id}} .hide {
+    display: none!important;
+  }
+
+  #shopify-section-{{section.id}} .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  #shopify-section-{{section.id}} .lt-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  
+  #shopify-section-{{section.id}} .lt-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #27214D;
+    margin: 0 0 16px 0;
+    line-height: 1.2;
+  }
+  
+  #shopify-section-{{section.id}} .lt-subtitle {
+    font-size: 16px;
+    color: #0F0F10;
+    letter-spacing: 0px;
+    margin: 0;
+    line-height: 1;
+  }
+  
+  #shopify-section-{{section.id}} .testimonials-wrapper {
+    position: relative;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 60px;
+  }
+  
+  #shopify-section-{{section.id}} .testimonials-swiper {
+    /* padding: 0 60px; */
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-card {
+    background: #F6F5FF;
+    padding: 30px;
+    border-radius: 12px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  #shopify-section-{{section.id}} .swiper-slide {
+    height: auto !important;
+  }
+  
+  #shopify-section-{{section.id}} .stars {
+    margin-bottom: 24px;
+  }
+  
+  #shopify-section-{{section.id}} .star {
+    color: #FACC15;
+    font-size: 20px;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-text {
+    font-size: 24px;
+    line-height: 1.6;
+    color: #0F0F10;
+    margin: 0 0 24px 0;
+    flex-grow: 1;
+    letter-spacing: -0.5px;
+  }
+  
+  #shopify-section-{{section.id}} .customer-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: auto;
+  }
+  
+  #shopify-section-{{section.id}} .customer-name {
+    font-weight: 600;
+    color: #0F0F10;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
+  
+  #shopify-section-{{section.id}} .verified-badge {
+    font-size: 14px;
+    line-height: 1;
+    color: #059669;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-prev,
+  #shopify-section-{{section.id}} .testimonial-next {
+    background: #2d3748 !important;
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 50% !important;
+    color: white !important;
+    margin-top: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-prev:after,
+  #shopify-section-{{section.id}} .testimonial-next:after {
+    display: none !important;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-prev {
+    left: 0 !important;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-next {
+    right: 0 !important;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-prev:hover,
+  #shopify-section-{{section.id}} .testimonial-next:hover {
+    background: #1a202c !important;
+  }
+  
+  #shopify-section-{{section.id}} .stats-section {
+    background: #F6F5FF;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  
+  #shopify-section-{{section.id}} .stats-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0 0 40px 0;
+  }
+  
+  #shopify-section-{{section.id}} .stats-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  #shopify-section-{{section.id}} .stat-item {
+    flex: 1;
+  }
+  
+  #shopify-section-{{section.id}} .stat-number {
+    font-size: 75px;
+    font-weight: 700;
+    color: #27214D;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  
+  #shopify-section-{{section.id}} .stat-description {
+    font-size: 16px;
+    color: #0F0F10;
+    margin: 0;
+    letter-spacing: 0;
+    padding:  10px;
+    line-height: 1.4;
+  }
+  
+  @media (max-width: 768px) {
+    #shopify-section-{{section.id}} .testimonial-section {
+      padding: 60px 0;
+    }
+  
+    #shopify-section-{{section.id}} .container {
+      padding: 0 16px;
+    }
+  
+    #shopify-section-{{section.id}} .lt-title {
+      font-size: 32px;
+    }
+  
+    #shopify-section-{{section.id}} .lt-subtitle {
+      font-size: 16px;
+    }
+  
+    #shopify-section-{{section.id}} .testimonials-swiper {
+      padding: 0 20px;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-prev {
+      left: -10px !important;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-next {
+      right: -10px !important;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-card {
+      padding: 24px;
+    }
+  
+    #shopify-section-{{section.id}} .stats-section {
+      padding: 40px 20px;
+    }
+  
+    #shopify-section-{{section.id}} .stats-grid {
+      flex-direction: column;
+      gap: 32px;
+    }
+  
+    #shopify-section-{{section.id}} .stat-number {
+      font-size: 48px;
+    }
+  
+    #shopify-section-{{section.id}} .stat-description {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #shopify-section-{{section.id}} .testimonials-wrapper {
+      padding: 0;
+    }
+    #shopify-section-{{section.id}} .lt-title {
+      font-size: 28px;
+    }
+  
+    #shopify-section-{{section.id}} .testimonials-swiper {
+      padding: 0;
+    }
+
+    #shopify-section-{{section.id}} .stars {
+      margin-bottom: 15px;
+    }    
+  
+    #shopify-section-{{section.id}} .testimonial-prev,
+    #shopify-section-{{section.id}} .testimonial-next {
+      width: 20px !important;
+      height: 20px !important;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-prev {
+      left: -5px !important;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-next {
+      right: -5px !important;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-card {
+      padding: 20px;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-text {
+      font-size: 15px;
+    }
+
+    #shopify-section-{{section.id}} .stats-grid {
+      gap: 20px;
+      flex-direction: row;
+    }
+    
+    #shopify-section-{{section.id}} .stat-item {
+      width: calc(50% - 10px);
+    }    
+  
+    #shopify-section-{{section.id}} .stat-number {
+      font-size: 40px;
+    }
+  }  
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<div class="testimonial-section">
+  <div class="container">
+    <div class="lt-header">
+      <h2 class="lt-title">{{ section.settings.title | default: 'Real Results from Real People' }}</h2>
+      <p class="lt-subtitle">{{ section.settings.subtitle | default: 'See Why 50,000+ Customers Choose Muzzle Sleep' }}</p>
+    </div>
+
+    <div class="testimonials-wrapper">
+      <div class="swiper testimonials-swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'testimonial' %}
+              <div class="swiper-slide">
+                <div class="testimonial-card">
+                  <div class="stars">
+                    {% for i in (1..5) %}
+                      <span class="star">★</span>
+                    {% endfor %}
+                  </div>
+                  <p class="testimonial-text">"{{ block.settings.text }}"</p>
+                  <div class="customer-info">
+                    <span class="customer-name">{{ block.settings.customer_name }}</span>
+                    <span class="verified-badge">✓ Verified purchase</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="swiper-button-prev testimonial-prev">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="swiper-button-next testimonial-next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    {%- assign statistic_blocks = section.blocks | where: 'type', 'statistic' -%}
+    <div class="stats-section{% if statistic_blocks.size == 0 %} hide{% endif %}">
+      <h3 class="stats-title">{{ section.settings.stats_title | default: 'The Numbers' }}</h3>
+      <div class="stats-grid">
+        {%- for block in statistic_blocks -%}
+          <div class="stat-item">
+            <div class="stat-number">{{ block.settings.percentage }}%</div>
+            <p class="stat-description">{{ block.settings.description }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const swiper = new Swiper('#shopify-section-{{ section.id }} .testimonials-swiper', {
+    slidesPerView: 1,
+    spaceBetween: 40,
+    loop: true,
+    autoplay: false,
+    navigation: {
+      nextEl: '#shopify-section-{{ section.id }} .testimonial-next',
+      prevEl: '#shopify-section-{{ section.id }} .testimonial-prev',
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 30,
+      }
+    }
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "LT Testimonial with Stats",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Real Results from Real People"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "See Why 50,000+ Customers Choose Muzzle Sleep"
+    },
+    {
+      "type": "text",
+      "id": "stats_title",
+      "label": "Stats Section Title",
+      "default": "The Numbers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Testimonial Text"
+        },
+        {
+          "type": "text",
+          "id": "customer_name",
+          "label": "Customer Name"
+        }
+      ]
+    },
+    {
+      "type": "statistic",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "percentage",
+          "label": "Percentage (without % symbol)"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Testimonial with Stats",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "As someone with extremely sensitive skin, I was worried about irritation. These strips are incredibly gentle. I've been using them for 3 months with no skin issues and dramatically improved sleep.",
+            "customer_name": "Michael R."
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "text": "My husband says I don't snore anymore, and I wake up feeling actually rested for the first time in years. The strips are so gentle - I barely feel them.",
+            "customer_name": "Sarah M."
+          }
+        },
+        {
+          "type": "statistic",
+          "settings": {
+            "percentage": "94",
+            "description": "report reduced snoring within first week"
+          }
+        },
+        {
+          "type": "statistic",
+          "settings": {
+            "percentage": "89",
+            "description": "experienced improved sleep quality"
+          }
+        },
+        {
+          "type": "statistic",
+          "settings": {
+            "percentage": "92",
+            "description": "would recommend to friends"
+          }
+        },
+        {
+          "type": "statistic",
+          "settings": {
+            "percentage": "35",
+            "description": "average improvement in sleep scores"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

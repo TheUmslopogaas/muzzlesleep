@@ -1,0 +1,435 @@
+{%- liquid
+  assign pt     = section.settings.padding_top
+  assign pb     = section.settings.padding_bottom
+  assign mt     = section.settings.margin_top
+  assign mb     = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+-%}
+
+<div
+  class="lt-comparison"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <div class="page-width">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="lt-comparison__heading" style="color: {{ section.settings.heading_color }};">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    <div class="lt-comparison__table-wrap">
+      <table class="lt-comparison__table" role="table">
+
+        {%- comment -%}── Header row ──{%- endcomment -%}
+        <thead>
+          <tr
+            class="lt-comparison__header-row"
+            style="background-color: {{ section.settings.header_bg }};"
+          >
+            <th class="lt-comparison__th lt-comparison__th--feature" style="color: {{ section.settings.header_text_color }};" scope="col">
+              {{ section.settings.col_feature_label }}
+            </th>
+            <th class="lt-comparison__th lt-comparison__th--ours" style="color: {{ section.settings.header_text_color }};" scope="col">
+              {{ section.settings.col_ours_label }}
+            </th>
+            <th class="lt-comparison__th lt-comparison__th--theirs" style="color: {{ section.settings.header_text_color }};" scope="col">
+              {{ section.settings.col_theirs_label }}
+            </th>
+          </tr>
+        </thead>
+
+        {%- comment -%}── Data rows (blocks) ──{%- endcomment -%}
+        <tbody>
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'row' -%}
+              <tr
+                class="lt-comparison__row"
+                style="background-color: {% cycle '#f4f4f7', '#ffffff' %};"
+                {{ block.shopify_attributes }}
+              >
+                <td class="lt-comparison__td lt-comparison__td--feature" style="color: {{ section.settings.feature_text_color }};">
+                  {{ block.settings.feature }}
+                </td>
+
+                <td class="lt-comparison__td lt-comparison__td--icon">
+                  {%- if block.settings.ours == 'yes' -%}
+                    <span class="lt-comparison__icon lt-comparison__icon--yes" aria-label="Yes">
+                      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="14" cy="14" r="14" fill="{{ section.settings.yes_color }}"/>
+                        <path d="M8 14.5L12 18.5L20 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  {%- elsif block.settings.ours == 'no' -%}
+                    <span class="lt-comparison__icon lt-comparison__icon--no" aria-label="No">
+                      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="14" cy="14" r="14" fill="{{ section.settings.no_color }}"/>
+                        <path d="M9 9L19 19M19 9L9 19" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                  {%- else -%}
+                    <span class="lt-comparison__icon lt-comparison__icon--neutral" aria-label="{{ block.settings.ours_custom | escape }}">
+                      <span class="lt-comparison__custom-val" style="color: {{ section.settings.feature_text_color }};">{{ block.settings.ours_custom }}</span>
+                    </span>
+                  {%- endif -%}
+                </td>
+
+                <td class="lt-comparison__td lt-comparison__td--icon">
+                  {%- if block.settings.theirs == 'yes' -%}
+                    <span class="lt-comparison__icon lt-comparison__icon--yes" aria-label="Yes">
+                      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="14" cy="14" r="14" fill="{{ section.settings.yes_color }}"/>
+                        <path d="M8 14.5L12 18.5L20 10" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  {%- elsif block.settings.theirs == 'no' -%}
+                    <span class="lt-comparison__icon lt-comparison__icon--no" aria-label="No">
+                      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="14" cy="14" r="14" fill="{{ section.settings.no_color }}"/>
+                        <path d="M9 9L19 19M19 9L9 19" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                  {%- else -%}
+                    <span class="lt-comparison__icon lt-comparison__icon--neutral" aria-label="{{ block.settings.theirs_custom | escape }}">
+                      <span class="lt-comparison__custom-val" style="color: {{ section.settings.feature_text_color }};">{{ block.settings.theirs_custom }}</span>
+                    </span>
+                  {%- endif -%}
+                </td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* ── Section heading ─────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comparison__heading {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.15;
+    text-align: center;
+    margin: 0 0 40px;
+    letter-spacing: -0.3px;
+  }
+
+  /* ── Table wrapper ───────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comparison__table-wrap {
+    border-radius: {{ section.settings.table_radius }}px;
+    overflow: hidden;
+    border: 1px solid {{ section.settings.border_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  /* ── Header row ──────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comparison__header-row {
+    /* bg set inline */
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__th {
+    padding: 18px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+    letter-spacing: 0.1px;
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__th--feature {
+    width: 45%;
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__th--ours,
+  #shopify-section-{{ section.id }} .lt-comparison__th--theirs {
+    width: 27.5%;
+    text-align: center;
+  }
+
+  /* ── Data rows ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comparison__row {
+    border-top: 1px solid {{ section.settings.border_color }};
+    transition: background 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__td {
+    padding: 18px 24px;
+    font-size: 18px;
+    vertical-align: middle;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__td--feature {
+    font-weight: 600;
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__td--icon {
+    text-align: center;
+  }
+
+  /* ── Icons ───────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-comparison__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-comparison__custom-val {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* ── Responsive 767px ────────────────────────── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-comparison {
+      padding-top: {{ pt_mob }}px !important;
+      padding-bottom: {{ pb_mob }}px !important;
+      margin-top: {{ mt_mob }}px !important;
+      margin-bottom: {{ mb_mob }}px !important;
+    }
+    #shopify-section-{{ section.id }} .lt-comparison__heading {
+      font-size: 26px;
+      margin-bottom: 28px;
+    }
+    #shopify-section-{{ section.id }} .lt-comparison__th,
+    #shopify-section-{{ section.id }} .lt-comparison__td {
+      padding: 14px 14px;
+      font-size: 14px;
+    }
+    #shopify-section-{{ section.id }} .lt-comparison__th--feature {
+      width: 40%;
+    }
+    #shopify-section-{{ section.id }} .lt-comparison__th--ours,
+    #shopify-section-{{ section.id }} .lt-comparison__th--theirs {
+      width: 30%;
+    }
+  }
+
+  /* ── Responsive 480px ────────────────────────── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-comparison__heading {
+      font-size: 20px;
+    }
+    #shopify-section-{{ section.id }} .lt-comparison__th,
+    #shopify-section-{{ section.id }} .lt-comparison__td {
+      padding: 12px 10px;
+      font-size: 13px;
+    }
+    #shopify-section-{{ section.id }} .lt-comparison__icon svg {
+      width: 22px;
+      height: 22px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Comparison Table",
+  "class": "lt-section-comparison",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "header_bg",
+      "label": "Table header background",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "header_text_color",
+      "label": "Table header text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "feature_text_color",
+      "label": "Feature cell text color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Table border color",
+      "default": "#e4e4ec"
+    },
+    {
+      "type": "color",
+      "id": "yes_color",
+      "label": "✓ Yes icon color",
+      "default": "#22c55e"
+    },
+    {
+      "type": "color",
+      "id": "no_color",
+      "label": "✗ No icon color",
+      "default": "#ef4444"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Muzzle Snooze™ vs. Traditional Foam Earplugs"
+    },
+    {
+      "type": "text",
+      "id": "col_feature_label",
+      "label": "Feature column label",
+      "default": "Feature"
+    },
+    {
+      "type": "text",
+      "id": "col_ours_label",
+      "label": "Our product column label",
+      "default": "Muzzle Snooze™"
+    },
+    {
+      "type": "text",
+      "id": "col_theirs_label",
+      "label": "Competitor column label",
+      "default": "Foam Earplugs"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "table_radius",
+      "label": "Table corner radius (px)",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Comparison Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "label": "Feature label",
+          "default": "Designed for sleep"
+        },
+        {
+          "type": "select",
+          "id": "ours",
+          "label": "Our product",
+          "options": [
+            { "value": "yes",    "label": "✓ Yes"   },
+            { "value": "no",     "label": "✗ No"    },
+            { "value": "custom", "label": "Custom text" }
+          ],
+          "default": "yes"
+        },
+        {
+          "type": "text",
+          "id": "ours_custom",
+          "label": "Our product — custom text",
+          "info": "Used when 'Our product' is set to Custom text"
+        },
+        {
+          "type": "select",
+          "id": "theirs",
+          "label": "Competitor",
+          "options": [
+            { "value": "yes",    "label": "✓ Yes"   },
+            { "value": "no",     "label": "✗ No"    },
+            { "value": "custom", "label": "Custom text" }
+          ],
+          "default": "no"
+        },
+        {
+          "type": "text",
+          "id": "theirs_custom",
+          "label": "Competitor — custom text",
+          "info": "Used when 'Competitor' is set to Custom text"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "LT Comparison Table",
+      "category": "LT Sections",
+      "blocks": [
+        { "type": "row", "settings": { "feature": "Designed for sleep",    "ours": "yes", "theirs": "no" } },
+        { "type": "row", "settings": { "feature": "Side-sleeper friendly", "ours": "yes", "theirs": "no" } },
+        { "type": "row", "settings": { "feature": "Secure fit",            "ours": "yes", "theirs": "no" } },
+        { "type": "row", "settings": { "feature": "Reusable",              "ours": "yes", "theirs": "no" } },
+        { "type": "row", "settings": { "feature": "All-night comfort",     "ours": "yes", "theirs": "no" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,215 @@
+<style>
+  #shopify-section-{{section.id}} .text-bg-section {
+    position: relative;
+    min-height: 400px;
+    overflow: hidden;
+  }
+  
+  #shopify-section-{{section.id}} .background-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  #shopify-section-{{section.id}} .background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  #shopify-section-{{section.id}} .background-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  #shopify-section-{{section.id}} .container {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+  
+  #shopify-section-{{section.id}} .content-wrapper {
+    min-height: 400px;
+    padding: 70px 20px 20px;
+    position: relative;
+    z-index: 9;
+  }
+  
+  #shopify-section-{{section.id}} .testimonial-quote {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #2d3748;
+    margin: 0 0 32px 0;
+    font-style: normal;
+    padding-right: 200px;
+    letter-spacing: 0;
+  }
+  
+  #shopify-section-{{section.id}} .author-info {
+    margin-top: 32px;
+  }
+  
+  #shopify-section-{{section.id}} .author-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: #27214D;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+  
+  #shopify-section-{{section.id}} .author-title {
+    font-size: 16px;
+    color: #4a5568;
+    margin: 0 0 16px 0;
+    font-weight: 500;
+  }
+  
+  #shopify-section-{{section.id}} .star-rating {
+    display: flex;
+    gap: 4px;
+  }
+  
+  #shopify-section-{{section.id}} .star {
+    color: #2d3748;
+    font-size: 24px;
+    line-height: 1;
+  }
+  
+  @media (max-width: 768px) {
+    #shopify-section-{{section.id}} .container {
+      padding: 40px 16px;
+    }
+  
+    #shopify-section-{{section.id}} .content-wrapper {
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+      min-height: auto;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-quote {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+  
+    #shopify-section-{{section.id}} .author-name {
+      font-size: 24px;
+    }
+  
+    #shopify-section-{{section.id}} .author-title {
+      font-size: 14px;
+    }
+  
+    #shopify-section-{{section.id}} .star-rating {
+    }
+  
+    #shopify-section-{{section.id}} .star {
+      font-size: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #shopify-section-{{section.id}} .container {
+      padding: 30px 16px;
+    }
+  
+    #shopify-section-{{section.id}} .content-wrapper {
+      gap: 30px;
+      padding: 30px 10px 300px 10px;
+      text-align: left;
+    }
+  
+    #shopify-section-{{section.id}} .testimonial-quote {
+      font-size: 15px;
+      line-height: 1.5;
+      padding: 0;
+    }
+  
+    #shopify-section-{{section.id}} .author-name {
+      font-size: 20px;
+    }
+  }
+</style>
+<div class="text-bg-section">
+  <div class="container">
+    <div class="background-wrapper">
+      <picture class="background-image">
+        <source media="(max-width: 768px)" srcset="{{ section.settings.mobile_background_image | image_url }}">
+        <img src="{{ section.settings.background_image | image_url }}" alt="Background" loading="lazy">
+      </picture>
+
+      <div class="content-wrapper">
+        <div class="testimonial-quote">"{{ section.settings.testimonial_text }}"</div>
+        
+        <div class="author-info">
+          <h3 class="author-name">{{ section.settings.author_name }}</h3>
+          <p class="author-title">{{ section.settings.author_title }}</p>
+          
+          {% if section.settings.show_stars %}
+            <div class="star-rating">
+              {% for i in (1..5) %}
+                <span class="star">★</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT Text with Background",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_background_image",
+      "label": "Background Image (Mobile)"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_text",
+      "label": "Testimonial Text",
+      "default": "Muzzle offers a simple yet effective solution to support healthier breathing during sleep, promoting enhanced sleep quality, reduced snoring, and better management of sleep-related issues such as sleep apnea. By encouraging nasal breathing, it promotes healthier, more restful nights. I highly recommend Muzzle to anyone seeking to improve their sleep."
+    },
+    {
+      "type": "text",
+      "id": "author_name",
+      "label": "Author Name",
+      "default": "DR. NICOLETTE NATALE"
+    },
+    {
+      "type": "text",
+      "id": "author_title",
+      "label": "Author Title",
+      "default": "Doctor of Osteopathy"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show Star Rating",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Text with Background"
+    }
+  ]
+}
+{% endschema %}

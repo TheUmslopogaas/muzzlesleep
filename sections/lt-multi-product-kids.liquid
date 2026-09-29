@@ -1,0 +1,1497 @@
+{% comment %} Fork of the existing section {% endcomment %}
+{% assign _ss = section.settings %}
+{% assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#product_main_' %}
+{% assign mother_product = settings.mother_product %}
+
+
+
+{% if template.name == 'product' %}
+    {% assign main_variant = product.selected_or_first_available_variant %}
+    {% for product_by_age in mother_product.products_by_age.value %}
+        {% if main_variant.product.title contains product_by_age.age.value %}
+            {% assign first_product_by_age = product_by_age %}
+        {% endif %}
+    {% endfor %}
+
+{% else %}
+    {% assign first_product_by_age = mother_product.products_by_age.value | first %}
+    {% assign first_product_by_medium = first_product_by_age.products_by_strength.value | first %}
+    {% assign main_variant = first_product_by_medium.variant.value %}
+{% endif %}
+
+{% assign review_blocks = section.blocks | where: 'type', 'review' %}
+{% assign dropdown_blocks = section.blocks | where: 'type', 'dropdown' %}
+
+{%- capture section_content -%}
+    <style>
+        {{ _section }} {
+            position: relative;
+            padding-top: {{ _ss.padding_top }}px;
+            padding-bottom: {{ _ss.padding_bottom }}px;
+            background: {{ _ss.background }};
+        }
+    
+        {{ _section }} .section_holder {
+            position: relative;
+            max-width: 1440px;
+            margin: auto;
+            padding: 0px 40px;
+        }
+    
+        {{ _section }} .product_main_part {
+            display: flex;
+            justify-content: space-between;
+        }
+    
+        {{ _section }} .product_info_part {
+            /* max-width: 500px; */
+            width: 43%;
+            margin-left: 6%;
+        }
+    
+        {{ _section }} .product_swiper_part {
+            display: flex;
+            flex-direction: column;
+            width: 51%;
+            height: fit-content;
+            position: sticky;
+            top: 40px;
+        }
+    
+        {{ _section }} .product_main_swiper {
+            position: relative;
+        }
+    
+        {{ _section }} .image_wrapper {
+            position: relative;
+            padding-bottom: 100%;
+        }
+    
+        {{ _section }} .main_image_el {
+            border-radius: 12px;
+        }
+    
+        {{ _section }} .product_thumb_swiper .swiper-slide {
+            width: 74px;
+            margin: 1px;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            overflow: hidden;
+        }
+    
+        {{ _section }} .product_thumb_swiper {
+            margin-top: 8px;
+        }
+    
+        {{ _section }} .swiper-slide.swiper-slide-thumb-active {
+            opacity: 1;
+            border: 1px solid #8E8BA6;
+        }
+    
+        {{ _section }} .image_wrapper img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #F6F5FF;
+        }
+
+        {{ _section }} .image_wrapper video {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #F6F5FF;
+        }
+    
+        {{ _section }} .product_main_swiper .swiper_ctrl_part {
+            display: flex;
+            position: absolute;
+            z-index: 1;
+            bottom: 20px;
+            right: 20px;
+        }
+    
+        {{ _section }} .product_main_swiper .swiper_ctrl {
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+        }
+    
+        {{ _section }} .product_main_swiper .swiper_ctrl img {
+            width: 100%;
+            height: 100%;
+        }
+    
+        {{ _section }} .product_main_swiper .swiper_ctrl.next_button {
+            margin-left: 6px;
+        }
+    
+        {{ _section }} .product_summary_part {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            grid-template-rows: repeat(3, auto);
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+        }
+
+        {{ _section }} .product_top_badge {
+          grid-area: 1 / 1 / 2 / 2;
+          font-size: 14px;
+          line-height: 1;
+          background-color: #5C4CCC;
+          padding: 7px 15px;
+          border-radius: 100px;
+          display: inline-block;
+          max-width: fit-content;
+          color: #fff;
+          margin-bottom: 10px;
+          font-weight: 400;          
+        }
+        {{ _section }} .product_review_part {grid-area: 3 / 1 / 4 / 2;display: flex;flex-direction: row;align-items: center;}
+        {{ _section }} .product_title {grid-area: 2 / 1 / 3 / 2;color: #27214D;font-family: Manrope;font-size: 30px;font-style: normal;font-weight: 700;line-height: 120%; /* 36px */letter-spacing: -0.6px;margin-bottom: 10px;}
+        {{ _section }} .product_subtitle {grid-area: 4 / 1 / 5 / 2;color: #27214D;font-family: Manrope;font-size: 16px;font-style: normal;font-weight: 400;line-height: 1.5; /* 19.2px */letter-spacing: 0px;margin-top: 15px;padding-top: 10px;border-top: 2px solid #ddd;}
+        {{ _section }} .product_badge {grid-area: 1 / 2 / 4 / 3;width: 80px;display: flex;align-items: flex-end;margin-left: 10px;}
+    
+        {{ _section }} .product_badge img {
+            width: 100%;
+            object-fit: contain;
+            object-position: bottom;
+        }
+    
+        {{ _section }} .review_star {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        {{ _section }} .review_star svg {
+            width: 16px;
+            height: 16px;
+        }
+    
+        {{ _section }} .review_score {
+            margin-left: 7px;
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+        }
+    
+        {{ _section }} .product_tag_part {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+    
+        {{ _section }} .product_tag {
+            border-radius: 5px;
+            border: 1px solid #E9E6FF;
+            background: #F6F5FF;
+            padding: 0 8px;
+            height: 28px;
+            color: #27214D;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 1;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            letter-spacing: 0.2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        {{ _section }} .dynamic_part {
+            margin-top: 50px;
+        }
+    
+        {{ _section }} .dynamic_part_divider {
+            color: #000;
+            font-family: Manrope;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 14px */
+            letter-spacing: -0.28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+    
+        {{ _section }} .dynamic_part_divider:before {
+            position: absolute;
+            content: "";
+            height: 1.5px;
+            background: #E3DAEF;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-1px);
+        }
+    
+        {{ _section }} .dynamic_part_divider span {
+            background: #FFF;
+            z-index: 1;
+            padding: 0 16px;
+        }
+    
+        {{ _section }} .age_selector_wrapper {
+            display: flex;
+            flex-direction: row;
+            margin-top: 10px;
+        }
+    
+        {{ _section }} .age_selector_single {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(50% - 4px);
+            height: 50px;
+            border-radius: 10px;
+            border: 1px solid #E3DAEF;
+            background: #FFF;
+            margin-right: 8px;
+            color: #000;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 16px; /* 100% */
+            letter-spacing: -0.32px;
+            cursor: pointer;
+        }
+    
+        {{ _section }} .age_selector_single:last-child {
+            margin-right: 0;
+        }
+    
+        {{ _section }} .age_selector_single.selected {
+            border: 1px solid #27214D;
+            background: #F6F5FF;
+        }
+
+        {{ _section }} .age_selector_single.disabled_choice {
+            cursor: not-allowed;
+            background: #EEEEEE;
+        }
+    
+        {{ _section }} .strength_part {
+            margin-top: 35px;
+        }
+    
+        {{ _section }} .strength_selector_wrapper {
+            margin-top: 10px;
+            display: flex;
+        }
+    
+        {{ _section }} .strength_selector_single {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(50% - 4px);
+            border-radius: 10px;
+            border: 1px solid #E3DAEF;
+            background: #FFF;
+            margin-right: 8px;
+            color: #000;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 16px; /* 100% */
+            letter-spacing: -0.32px;
+            cursor: pointer;
+            flex-direction: column;
+            padding: 18px 30px;
+        }
+    
+        {{ _section }} .strength_selector_single img {
+            width: 50%;
+        }
+    
+        {{ _section }} .strength_el_heading {
+            color: #000;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 16px */
+            letter-spacing: -0.32px;
+            margin-top: 10px;
+        }
+    
+        {{ _section }} .strength_el_subheading {
+            color: #9793B0;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 120%; /* 15.6px */
+            letter-spacing: -0.26px;
+            margin-top: 5px;
+            max-width: 150px;
+        }
+    
+        {{ _section }} .strength_selector_single:last-child {
+            margin-right: 0;
+        }
+    
+        {{ _section }} .strength_selector_single.selected {
+            border: 1px solid #27214D;
+            background: #F6F5FF;
+        }
+    
+        {{ _section }} .purchase_part {
+            margin-top: 35px;
+        }
+    
+        {{ _section }} .selling_plan_single {
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid #E3DAEF;
+            padding: 10px 13px;
+        }
+        
+        {{ _section }} .selling_plan_single_header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin: 10px 0;            
+        }
+    
+        {{ _section }} .radio_btn {
+            border: 1px solid #E3DAEF;
+            width: 20px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 100%;
+            position: relative;
+        }
+    
+        {{ _section }} .selling_plan_name {
+            margin: 0 12px;
+        }
+
+        {{ _section }} .selling_plan_heading {
+            color: #000;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 16px */
+            letter-spacing: -0.32px;
+        }
+
+        {{ _section }} .selling_plan_desc {
+            color: #9793B0;
+            font-family: Manrope;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 12px */
+            letter-spacing: -0.24px;
+            margin-top: 7px;
+        }
+
+        .selling_plan_saving_badge {
+            color: #FFF;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 12px */
+            letter-spacing: -0.24px;
+            border-radius: 5px;
+            background: #27214D;
+            padding: 0 9px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            margin: 0 12px auto 0;
+        }
+
+        {{ _section }} .selling_plan_price_el {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            margin-left: auto;
+        }
+    
+        {{ _section }} .selling_plan_r_price {
+            color: #27214D;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 20px */
+            letter-spacing: -0.4px;
+        }
+    
+        {{ _section }} .selling_plan_c_price {
+            color: #9793B0;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 12px */
+            letter-spacing: -0.24px;
+            margin-top: 7px;
+            text-decoration: line-through;
+        }
+    
+        {{ _section }} .selling_plan_single.selected {
+            border: 1px solid #27214D;
+            background: #F6F5FF;
+        }
+    
+        {{ _section }} .selling_plan_single.selected .radio_btn {
+            border: 1px solid #000;
+            background: #27214D;
+            box-shadow: inset 0 0 0 3px #FFF;
+        }
+    
+        {{ _section }} .selling_plan_usp_wrapper {
+            display: none;
+        }
+        {{ _section }} .selling_plan_single.selected .selling_plan_usp_wrapper {
+            margin-top: 15px;
+            background: #FFF;
+            border-radius: 12px;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-row-gap: 4px;
+        }
+
+        {{ _section }} .sub_usp_single {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        {{ _section }} .sub_usp_single img {
+            width: 26px;
+            height: 26px;
+            display: block;
+            margin-right: 5px;
+        }
+
+        {{ _section }} .sub_usp_text {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 14px */
+            letter-spacing: -0.28px;
+            text-transform: capitalize;
+        }
+    
+        {{ _section }} .checkout_btn {
+            border-radius: 34.286px;
+            background: #27214D;
+            box-shadow: -24px 18.286px 11.429px 0px rgba(153, 145, 189, 0.04), -13.714px 10.286px 10.286px 0px rgba(153, 145, 189, 0.13), -5.714px 4.571px 6.857px 0px rgba(153, 145, 189, 0.23), -1.143px 1.143px 4.571px 0px rgba(153, 145, 189, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 58px;
+            margin-top: 35px;
+            cursor: pointer;
+        }
+    
+        {{ _section }} .checkout_btn span {
+            color: #FFF;
+            text-align: center;
+            font-family: Manrope;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 100%; /* 18px */
+            letter-spacing: -0.36px;
+            text-transform: capitalize;
+            margin-right: 10px;
+        }
+    
+        {{ _section }} .checkout_btn_caption {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
+            margin-top: 10px;
+        }
+    
+        {{ _section }} .checkout_btn_caption span {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 14px */
+            letter-spacing: -0.28px;
+            text-transform: capitalize;
+            margin-left: 8px;
+        }
+    
+        {{ _section }} .checkout_btn_caption img {
+            width: 24px;
+            height: 18px;
+        }
+    
+        {{ _section }} .review_wrapper {
+            border-radius: 9px;
+            border: 1px solid #E3DAEF;
+            padding: 13px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+        }
+    
+        {{ _section }} .review_img_wrapper {
+            min-width: 70px;
+            width: 70px;
+            height: 80px;
+            position: relative;
+            margin-right: 13px;
+            border-radius: 9px;
+            overflow: hidden;
+        }
+    
+        {{ _section }} .review_img_wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    
+        {{ _section }} .review_heading {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+        }
+    
+        {{ _section }} .review_heading span {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 16px */
+            letter-spacing: -0.32px;
+            margin-right: 7px;
+        }
+    
+        {{ _section }} .review_content {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 130%; /* 16.9px */
+            letter-spacing: -0.26px;
+            margin-top: 7px;
+        }
+    
+        {{ _section }} .product_review_slider .swiper_ctrl {
+            width: 27px;
+            height: 27px;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F6F5FF;
+            position: absolute;
+            top: calc(50% - 13px);
+            z-index: 2;
+            cursor: pointer;
+        }
+    
+        {{ _section }} .product_review_slider .swiper_ctrl.prev_button {
+            left: -13px;
+        }
+    
+        {{ _section }} .product_review_slider .swiper_ctrl.next_button {
+            right: -13px;
+        }
+    
+        {{ _section }} .product_review_slider .swiper_ctrl.swiper-button-disabled {
+            display: none;
+        }
+    
+        {{ _section }} .product_review_slider {
+            position: relative;
+            margin-top: 50px;
+        }
+    
+        {{ _section }} .accordian_item {
+            border-bottom: 1px solid #E3DAEF;
+            padding-bottom: 20px;
+            padding-top: 20px;
+        }
+    
+        {{ _section }} .accordian_item:last-child {
+            border-bottom: unset;
+        }
+    
+        {{ _section }} .accordian_item_header {
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+    
+        {{ _section }} .product_accordian {
+            margin-top: 15px;
+        }
+    
+        {{ _section }} .accordian_item_title {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 100%; /* 16px */
+            letter-spacing: -0.32px;
+        }
+    
+        {{ _section }} .arrow_down {
+            width: 18px;
+            height: 18px;
+            transition: all 0.3s linear;
+        }
+    
+        {{ _section }} .arrow_down img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    
+        {{ _section }} .accordian_item_body_wrapper {
+            color: #27214D;
+            font-family: Manrope;
+            font-size: 13px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 130%;
+            letter-spacing: -0.26px;
+            padding-left: 10px;
+            margin: 20px 0 0;
+        }
+    
+        {{ _section }} .accordian_item_body_wrapper p {
+            margin: 5px 0;
+        }
+    
+        {{ _section }} .accordian_item.opened .arrow_down {
+            transform: rotate(135deg);
+        }
+
+        {{ _section }} .always__hidden {
+            display: none !important;
+        }
+        #shopify-section-{{ section.id }} .product_review_part {
+            display: flex;
+            font-size: 14px;
+            letter-spacing: 0.2px;
+            gap: 2px 5px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+        #shopify-section-{{ section.id }} .review_text {
+            width: 100%;
+        }        
+    
+        @media screen and (max-width: 900px) {
+            {{ _section }} {
+                padding-top: {{ _ss.padding_top_mobile }}px;
+                padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+            }
+            
+            {{ _section }} .section_holder {
+                padding: 0 24px;
+            }
+    
+            {{ _section }} .product_main_part {
+                flex-direction: column;
+            }
+    
+            {{ _section }} .product_swiper_part {
+                width: 100%;
+                margin-top: 25px;
+                position: static;
+            }
+    
+            {{ _section }} .product_thumb_swiper {
+                margin: 6px -24px 0 -24px;
+            }
+
+            {{ _section }} .product_main_swiper .swiper_ctrl_part {
+                display: none;
+            }
+    
+            {{ _section }} .product_info_part {
+                width: 100%;
+                max-width: 100%;
+                margin-left: 0;
+            }
+    
+            {{ _section }} .review_score {
+                font-size: 12px;
+                margin-left: 6px;
+            }
+    
+            {{ _section }} .product_badge {
+                width: 70px;
+            }
+    
+            {{ _section }} .product_subtitle {
+                font-size: 14px;
+                letter-spacing: -0.28px;
+            }
+    
+            {{ _section }} .product_title {
+                font-size: 24px;
+            }
+    
+            {{ _section }} .product_tag {
+                font-size: 12px;
+                height: 25px;
+                border-radius: 4px;
+            }
+    
+            {{ _section }} .product_tag_part {
+                margin-top: 15px;
+            }
+    
+            {{ _section }} .product_thumb_swiper .swiper-slide {
+                border-radius: 6px;
+                width: 60px;
+            }
+    
+            {{ _section }} .product_main_swiper .swiper_ctrl {
+                width: 25px;
+                height: 25px;
+            }
+    
+            {{ _section }} .dynamic_part {
+                margin-top: 27px;
+            }
+    
+            {{ _section }} .dynamic_part_divider {
+                font-size: 13px;
+            }
+    
+            {{ _section }} .age_selector_single {
+                height: 44px;
+                font-size: 14px;
+            }
+    
+            {{ _section }} .strength_part {
+                margin-top: 30px;
+            }
+    
+            {{ _section }} .strength_selector_single {
+                border-radius: 8px;
+                padding: 16px 20px;
+            }
+
+            {{ _section }} .strength_selector_single img {
+                width: 75%;
+            }
+    
+            {{ _section }} .strength_el_heading {
+                font-size: 14px;
+            }
+    
+            {{ _section }} .strength_el_subheading {
+                font-size: 11px;
+            }
+    
+            {{ _section }} .purchase_part {
+                margin-top: 30px;
+            }
+
+            {{ _section }} .selling_plan_r_price {
+                font-size: 16px;
+            }
+
+            {{ _section }} .selling_plan_c_price {
+                font-size: 10px;
+                margin-top: 5px;
+            }
+
+            {{ _section }} .selling_plan_name {
+                font-size: 14px;
+            }
+
+            {{ _section }} .selling_plan_usp_wrapper {
+                border-radius: 10px;
+                padding: 10px;
+            }
+
+            {{ _section }} .sub_usp_single img {
+                width: 22px;
+                height: 22px;
+            }
+
+            {{ _section }} .sub_usp_text {
+                font-size: 12px;
+            }
+    
+            {{ _section }} .checkout_btn {
+                margin-top: 30px;
+                height: 50px;
+            }
+    
+            {{ _section }} .checkout_btn span {
+                font-size: 16px;
+            }
+    
+            {{ _section }} .checkout_btn img {
+                width: 20px;
+                height: 20px;
+            }
+    
+            {{ _section }} .checkout_btn_caption span {
+                font-size: 12px;
+            }
+    
+            {{ _section }} .product_review_slider {
+                margin-top: 44px;
+            }
+    
+            {{ _section }} .product_review_slider .swiper_ctrl {
+                width: 24px;
+                height: 24px;
+            }
+    
+            {{ _section }} .product_review_slider .swiper_ctrl.next_button {
+                right: -12px;
+            }
+    
+            {{ _section }} .product_review_slider .swiper_ctrl.prev_button {
+                left: -12px;
+            }
+    
+            {{ _section }} .review_wrapper {
+                padding: 12px;
+                border-radius: 8px;
+            }
+    
+            {{ _section }} .review_img_wrapper {
+                min-width: 60px;
+                width: 60px;
+                height: 70px;
+                border-radius: 8px;
+            }
+    
+            {{ _section }} .review_heading span {
+                font-size: 14px;
+            }
+    
+            {{ _section }} .review_content {
+                font-size: 11px;
+            }
+    
+            {{ _section }} .product_accordian {
+                margin-top: 10px;
+            }
+    
+            {{ _section }} .accordian_item_title {
+                font-size: 14px;
+            }
+    
+            {{ _section }} .arrow_down {
+                width: 16px;
+                height: 16px;
+            }
+    
+            {{ _section }} .accordian_item_body_wrapper {
+                font-size: 12px;
+            }
+    
+            {{ _section }} .mobile__hidden {
+                display: none !important;
+            }
+
+            {{ _section }} .product_thumb_swiper .swiper-wrapper {
+                padding-left: 24px;
+            }
+
+            {{ _section }} .product_thumb_swiper .swiper-slide:last-child {
+                margin-right: 42px;
+            }
+    
+        }
+    
+        @media screen and (min-width: 901px) {
+            {{ _section }} .desktop__hidden {
+                display: none !important;
+            }
+        }
+    
+    
+    </style>
+
+    <div muzzle-sleep-main class="buy_area_section" id="product_main_{{ section.id | split: '__' | last | slice: -4, 4 }}"{% if _ss.custom_id != blank %} cs-id="{{ _ss.custom_id }}"{% endif %} data-age="{{ main_variant.product.metafields.custom.age.value | handleize }}" data-strength="{{ main_variant.product.metafields.custom.strength.value | handleize }}">
+        <div class="section_holder">
+            <div class="product_main_part">
+                <div class="desktop__hidden">
+                    <div class="product_summary_part">
+                        <div class="product_top_badge">Doctor Recommended</div>
+                        <div class="product_review_part">
+                            <div class="review_star">
+                                {%- for item in (1..5) -%}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                        <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"/>
+                                    </svg>
+                                {%- endfor -%}
+                            </div>
+                            <div class="review_score">4.94/5 Overall Rating</div>
+                            <div class="review_text">Trusted by 11,000+ Customers</div>
+                        </div>
+                        <div class="product_title">Muzzle Mouth Tape</div>
+                      {% comment %}<div class="product_subtitle">{{ mother_product.subtitle.value }}</div>{% endcomment %}
+                      <div class="product_subtitle">Experience the gentle, effective solution for peaceful sleep with Muzzle Sleep Strips. Our doctor-recommended, hypoallergenic strips are designed to reduce snoring by promoting natural nasal breathing throughout the night. </div>
+                        <div class="product_badge"><img src="{{ mother_product.badge.value | image_url: width: 300 }}" alt="product badge image"></div>
+                    </div>
+
+                    <div class="product_tag_part">
+                        {% for p_tag in mother_product.tags.value %}
+                            <div class="product_tag">{{ p_tag }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% for product_by_age in mother_product.products_by_age.value %}
+                    {% for product_by_strength in product_by_age.products_by_strength.value %}
+                        {% if product_by_strength.variant.value %}
+                            {% assign target_product = product_by_strength.variant.value.product %}
+
+                            {% assign isMainVariant = false %}
+                            {% if main_variant.product.id == target_product.id %}
+                                {% assign isMainVariant = true %}
+                            {% endif %}
+                            
+                            <div class="product_swiper_part{% unless isMainVariant %} always__hidden{% endunless %}" data-age="{{ target_product.metafields.custom.age.value | handleize }}" data-strength="{{ target_product.metafields.custom.strength.value | handleize }}" data-product="{{ target_product.id }}">
+                                <div class="product_main_swiper">
+                                    <div class="swiper">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide">
+                                              <div class="image_wrapper">
+                                                <img src="https://muzzlesleep.com/cdn/shop/files/0_6a738dff-32dd-4720-bf4a-9da78dd7350e.webp" alt="image" class="main_image_el">
+                                              </div>
+                                            </div>
+                                            {%- for media in target_product.media -%}
+                                                <div class="swiper-slide">
+                                                    <div class="image_wrapper">
+                                                        {% if media.media_type == 'image' %}
+                                                            {% if forloop.index == 1 %}
+                                                              <img src="https://muzzlesleep.com/cdn/shop/files/0_6a738dff-32dd-4720-bf4a-9da78dd7350e.webp" alt="image" class="main_image_el idxcount-{{ forloop.index }}"">
+                                                            {% else %}
+                                                              <img src="{{ media | image_url: width: 1000 }}" alt="image" class="main_image_el idxcount-{{ forloop.index }}">
+                                                            {% endif %}
+                                                        {% elsif media.media_type == 'video' %}
+                                                            {{ media | media_tag: image_size: "2048x", class: "main_image_el", autoplay: true, loop: true, controls: true, preload: "none" }}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                {% if forloop.last %}
+                                                    <div class="last_gap"> </div>
+                                                {% endif %}
+                                            {%- endfor -%}
+                                        </div>
+                                    </div>
+                                    <div class="swiper_ctrl_part">
+                                        <div class="swiper_ctrl prev_button">
+                                            <img src="{{ 'icon-caret-left.svg' | asset_url }}" alt="prev button">
+                                        </div>
+                                        <div class="swiper_ctrl next_button">
+                                            <img src="{{ 'icon-caret-right.svg' | asset_url }}" alt="next button">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product_thumb_swiper">
+                                    <div class="swiper">
+                                        <div class="swiper-wrapper">
+                                            {%- for image in target_product.media -%}
+                                                <div class="swiper-slide">
+                                                    <div class="image_wrapper">
+                                                        <img src="{{ image | image_url: width: 1000 }}" alt="image" class="thumb_image_el">
+                                                    </div>
+                                                </div>
+                                            {%- endfor -%}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                var thumbSwiper_{{ target_product.id }} = new Swiper(`{{ _section }} .product_swiper_part[data-product="{{ target_product.id }}"] .product_thumb_swiper .swiper`, {
+                                    spaceBetween: 6,
+                                    slidesPerView: "auto",
+                                    loop: false,
+                                    breakpoints: {
+                                        768: {
+                                            spaceBetween: 8,
+                                        },
+                                    }
+                                });
+
+                                var mainSwiper_{{ target_product.id }} = new Swiper('{{ _section }} .product_swiper_part[data-product="{{ target_product.id }}"] .product_main_swiper .swiper', {
+                                    spaceBetween: 10,
+                                    slidesPerView: 1,
+                                    loop: true,
+                                    navigation: {
+                                        nextEl: '{{ _section }} .product_swiper_part[data-product="{{ target_product.id }}"] .product_main_swiper .next_button',
+                                        prevEl: '{{ _section }} .product_swiper_part[data-product="{{ target_product.id }}"] .product_main_swiper .prev_button',
+                                    },
+                                    thumbs: {
+                                        swiper: thumbSwiper_{{ target_product.id }},
+                                        autoScrollOffset: 3,
+                                    }
+                                });
+                            </script>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+        
+                <div class="product_info_part" style="">
+                    <div class="product_summary_part mobile__hidden">
+                        <div class="product_top_badge">Doctor Recommended</div>
+                        <div class="product_review_part">
+                            <div class="review_star">
+                                {%- for item in (1..5) -%}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                        <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"/>
+                                    </svg>
+                                {%- endfor -%}
+                            </div>
+                            <div class="review_score">4.94/5 Overall Rating</div>
+                            <div class="review_text">Trusted by 11,000+ Customers</div>
+                        </div>
+                        <div class="product_title">Muzzle Mouth Tape</div>
+                        {% comment %}<div class="product_subtitle">{{ mother_product.subtitle.value }}</div>{% endcomment %}
+                        <div class="product_subtitle">Experience the gentle, effective solution for peaceful sleep with Muzzle Sleep Strips. Our doctor-recommended, hypoallergenic strips are designed to reduce snoring by promoting natural nasal breathing throughout the night. </div>
+                        <div class="product_badge"><img src="{{ mother_product.badge.value | image_url: width: 300 }}" alt="product badge image"></div>
+                    </div>
+
+                    <div class="product_tag_part mobile__hidden">
+                        {% for p_tag in mother_product.tags.value %}
+                            <div class="product_tag">{{ p_tag }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="dynamic_part" style="">
+                        <div class="age_part">
+                            <div class="dynamic_part_divider"><span>Select Age</span></div>
+                            <div class="age_selector_wrapper">
+                                {% for product_by_age in mother_product.products_by_age.value %}
+                                    {% assign selected_strength = main_variant.product.metafields.custom.strength.value %}
+                                    {% for product_by_strength in product_by_age.products_by_strength.value %}
+                                        {% if product_by_strength.strength.value == selected_strength %}
+                                            <div class="age_selector_single{% if main_variant.product.title contains product_by_age.age.value %} selected{% endif %}{% unless product_by_strength.variant.value %} disabled_choice{% endunless %}"{% if product_by_strength.variant.value %} onclick="reRenderDynamicPart('{{ product_by_strength.variant.value.product.handle }}')"{% endif %} data-age="{{ product_by_age.age.value | handleize }}">{{ product_by_age.age.value }}</div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="strength_part">
+                            <div class="dynamic_part_divider"><span>Select Strength</span></div>
+                            <div class="strength_selector_wrapper">
+                                {% for product_by_strength in first_product_by_age.products_by_strength.value %}
+                                    {% if product_by_strength.variant.value %}
+                                        <div class="strength_selector_single{% if main_variant.product.title contains product_by_strength.strength.value %} selected{% endif %}" onclick="reRenderDynamicPart('{{ product_by_strength.variant.value.product.handle }}')" data-strength="{{ product_by_strength.heading.value | handleize }}">
+                                            <img src="{{ product_by_strength.variant.value.product.featured_image | image_url: width: 300 }}" alt="{{ product_by_strength.variant.value.product.title | append: 'image' }}">
+                                            <div class="strength_el_heading">{{ product_by_strength.heading.value }}</div>
+                                            <div class="strength_el_subheading">{{ product_by_strength.subheading.value }}</div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="purchase_part">
+                            <div class="dynamic_part_divider"><span>Select Purchase Type</span></div>
+
+                            {% assign alreadySubscription = false %}
+                            {% for _variant in main_variant.product.variants %}
+                                {% for selling_plan_allocation in _variant.selling_plan_allocations %}
+                                    {% assign selling_plan = selling_plan_allocation.selling_plan %}
+                                    <div class="selling_plan_single{% unless alreadySubscription %} selected{% endunless %}" sel_id="{{ selling_plan.id }}" vt_id="{{ _variant.id }}">
+                                        <div class="selling_plan_single_header">
+                                            <div class="radio_btn"> </div>
+                                            <div class="selling_plan_name">
+                                                <div class="selling_plan_heading">Subscribe & Save</div>
+                                                <div class="selling_plan_desc">{{ selling_plan.name }}</div>
+                                            </div>
+                                            {% if selling_plan_allocation.compare_at_price > selling_plan_allocation.price %}
+                                                <div class="selling_plan_saving_badge">Save {{ selling_plan_allocation.compare_at_price | minus: selling_plan_allocation.price | times: 100 | divided_by: selling_plan_allocation.compare_at_price }}%</div>
+                                            {% endif %}
+                                            <div class="selling_plan_price_el">
+                                                <div class="selling_plan_r_price">{{ selling_plan_allocation.price | money }}</div>
+                                                {% if selling_plan_allocation.compare_at_price > selling_plan_allocation.price %}
+                                                    <div class="selling_plan_c_price">{{ selling_plan_allocation.compare_at_price | money }}</div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="selling_plan_usp_wrapper">
+                                            {% for sub_usp in mother_product.subscription_usps.value %}
+                                                <div class="sub_usp_single">
+                                                    <img src="{{ sub_usp.icon.value | image_url: width: 200 }}" alt="{{ sub_usp.text | append: 'icon' }}">
+                                                    <div class="sub_usp_text">{{ sub_usp.text.value }}</div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% unless alreadySubscription %}
+                                        {% assign selected_selling_plan_id = selling_plan.id %}
+                                        {% assign alreadySubscription = true %}
+                                    {% endunless %}
+                                {% endfor %}
+    
+                                <div class="selling_plan_single{% unless alreadySubscription %} selected{% endunless %}" sel_id="" vt_id="{{ _variant.id }}">
+                                    <div class="selling_plan_single_header">
+                                        <div class="radio_btn"> </div>
+                                        <div class="selling_plan_name">
+                                            <div class="selling_plan_heading">{{ _variant.title }}</div>
+                                            <div class="selling_plan_desc">{{ _variant.metafields.custom.description }}</div>
+                                        </div>
+                                        {% if _variant.metafields.custom.badge %}
+                                            <div class="selling_plan_saving_badge">{{ _variant.metafields.custom.badge.value }}</div>
+                                        {% endif %}
+                                        <div class="selling_plan_price_el">
+                                            <div class="selling_plan_r_price">{{ _variant.price | money }}</div>
+                                            {% if _variant.compare_at_price > _variant.price %}
+                                                <div class="selling_plan_c_price">{{ _variant.compare_at_price | money }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="checkout_btn" vt_id="{{ main_variant.id }}" sel_id="{{ selected_selling_plan_id }}" onclick="add_to_cart($(this));">
+                            <span>Checkout Now</span>
+                            <img src="{{ 'icon-checkout-lock.svg' | asset_url }}" alt="icon checkout lock">
+                        </div>
+                        <div class="checkout_btn_caption">
+                            <img src="{{ 'us.svg' | asset_url }}" alt="US flag">
+                            <span>Engineered for Comfort, Crafted for Performance</span>
+                        </div>
+                    </div>
+
+                    <div class="product_review_slider">
+                        <div class="swiper">
+                            <div class="swiper-wrapper">
+                                {% for review_block in review_blocks %}
+                                    <div class="swiper-slide">
+                                        <div class="review_wrapper">
+                                            <div class="review_img_wrapper"><img src="{{ review_block.settings.image | image_url: width: 300 }}" alt=""></div>
+
+                                            <div class="review_main">
+                                                <div class="review_heading">
+                                                    <span>{{ review_block.settings.name }}</span>
+                                                    <div class="review_star">
+                                                        {%- for item in (1..5) -%}
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                                                <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"/>
+                                                            </svg>
+                                                        {%- endfor -%}
+                                                    </div>
+                                                </div>
+                                                <div class="review_content">{{ review_block.settings.content }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="swiper_ctrl prev_button">
+                            <img src="{{ 'icon-left.svg' | asset_url }}" alt="prev button">
+                        </div>
+                        <div class="swiper_ctrl next_button">
+                            <img src="{{ 'icon-right.svg' | asset_url }}" alt="next button">
+                        </div>
+                    </div>
+
+                    <div class="product_description_part">
+                        <div class="product_accordian">
+                            <div class="accordian_item">
+                                <div class="accordian_item_header">
+                                    <div class="accordian_item_title">Description</div>
+                                    <div class="arrow_down">
+                                        <img src="{{ 'faq-icon-plus.svg' | asset_url }}" alt="arrow down">
+                                    </div>
+                                </div>
+                                <div class="accordian_item_body" style="display: none;">
+                                    <div class="accordian_item_body_wrapper">{{ mother_product.description | metafield_tag }}</div>
+                                </div>
+                            </div>
+                            {% for dropdown_block in dropdown_blocks %}
+                                <div class="accordian_item">
+                                    <div class="accordian_item_header">
+                                        <div class="accordian_item_title">{{ dropdown_block.settings.heading }}</div>
+                                        <div class="arrow_down">
+                                            <img src="{{ 'faq-icon-plus.svg' | asset_url }}" alt="arrow down">
+                                        </div>
+                                    </div>
+                                    <div class="accordian_item_body" style="display: none;">
+                                        <div class="accordian_item_body_wrapper">{{ dropdown_block.settings.content }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var reviewSwiper = new Swiper('{{ _section }} .product_review_slider .swiper', {
+            spaceBetween: 10,
+            slidesPerView: 1,
+            navigation: {
+                nextEl: '{{ _section }} .product_review_slider .next_button',
+                prevEl: '{{ _section }} .product_review_slider .prev_button',
+            },
+        });
+
+        $('{{ _section }} .accordian_item_header').on('click', function() {
+            $(this).siblings('.accordian_item_body').slideToggle('fast');
+            $(this).parent().toggleClass('opened');
+        });
+
+        $('.dynamic_part').on('click', '.selling_plan_single', function() {
+            if (!$(this).hasClass('selected')) {
+                $('.selling_plan_single').removeClass('selected');
+                $(this).addClass('selected');
+            }
+
+            $('.checkout_btn').attr('sel_id', $(this).attr('sel_id'));
+            $('.checkout_btn').attr('vt_id', $(this).attr('vt_id'));
+        })
+
+        function add_to_cart(el) {
+            let vt_id = el.attr('vt_id');
+            let sel_id = el.attr('sel_id');
+
+            let addData = {
+                    "id": vt_id,
+                    "quantity": 1,
+                };
+            if (sel_id != '') {
+                addData['selling_plan'] = sel_id;
+            }
+            $.ajax({
+                type: 'POST', 
+                url: '/cart/add.js',
+                dataType: 'json', 
+                data: addData,
+                success: function(cart) {
+                    console.log(`%c Added item to cart`, "background: green;color:#fff;font-size: 14px;", cart);
+                    setTimeout(() => {
+                        go_to_cart();
+                    }, 500);
+                },
+                error: function (e) {
+                    console.log(`%c Error whiling adding item to cart`, "background: red;color:#fff;font-size: 14px;", e);
+                }
+            });
+        }
+
+        function go_to_cart() {
+            location.href = '/cart';
+        }
+
+        function reRenderDynamicPart(p_handle) {
+            $.ajax({ 
+                url: `/products/${p_handle}/?section_id=product-main`,
+                type: 'GET',
+            }).then(res => {
+                var dynamic_part = $(res).find('.dynamic_part').children();
+                $('.dynamic_part').empty();
+                $('.dynamic_part').append(dynamic_part);
+                console.log('%c Dynamic Part refreshed', "background:#d5e6c5;color:red;");
+
+                let selectedAge = $('.age_selector_single.selected').attr('data-age');
+                let selectedStrength = $('.strength_selector_single.selected').attr('data-strength');
+                $('.buy_area_section').attr('data-age', selectedAge);
+                $('.buy_area_section').attr('data-strength', selectedStrength);
+
+                $('.product_swiper_part').addClass('always__hidden');
+                $(`.product_swiper_part[data-strength="${selectedStrength}"][data-age="${selectedAge}"]`).removeClass('always__hidden');
+            });
+        }
+    </script>
+
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+<script>
+  {% if section.settings.youth_selected %}
+    window.addEventListener('load', () => {
+      document.querySelector('.age_selector_single[data-age="youth"]')?.click();
+    });
+  {% endif %}
+</script>
+
+                                                                  
+{% schema %}
+    {
+        "name": "LT Multi Product Kids",
+        "settings": [
+            {
+                "type": "metaobject",
+                "id": "mother_product",
+                "label": "Mother Product",
+                "metaobject_type": "integrated_product"
+            },            
+            {
+                "type": "richtext",
+                "id": "delivery_content",
+                "label": "Delivery Content",
+                "default": "<p>Some Text Here...</p>"
+            },
+            {
+                "type": "richtext",
+                "id": "warranty_content",
+                "label": "Warranty Content",
+                "default": "<p>Some Text Here...</p>"
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "text",
+                "id": "custom_id",
+                "label": "Custom ID"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color"
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "label": "Desktop padding top",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_top_mobile",
+                "label": "Mobile padding top",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "checkbox",
+                "id": "youth_selected",
+                "label": "Auto-select Youth option",
+                "default": false
+            }          
+        ],
+        "blocks": [
+            {
+                "type": "@app"
+            },
+            {
+                "type": "review",
+                "name": "Review",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Image"
+                    },
+                    {
+                        "type": "text",
+                        "id": "name",
+                        "label": "Name",
+                        "default": "Isobel"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "content",
+                        "label": "Content",
+                        "default": "Very pleased with this purchase! It's high-quality, easy to use, and reliable. Highly recommend for its efficiency and convenience."
+                    }
+                ]
+            },
+            {
+                "type": "dropdown",
+                "name": "Dropdown",
+                "settings": [
+                    {
+                        "type": "text",
+                        "id": "heading",
+                        "label": "Heading",
+                        "default": "Delivery & Returns"
+                    },
+                    {
+                        "type": "richtext",
+                        "id": "content",
+                        "label": "Content"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "LT Multi Product Kids"
+        }]
+    }
+{% endschema %}
+

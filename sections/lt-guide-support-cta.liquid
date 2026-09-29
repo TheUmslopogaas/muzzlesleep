@@ -1,0 +1,257 @@
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.txt_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-inner {
+    width: calc(100% - 40px);
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+    background-color: {{ section.settings.card_bg_color }};
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lt-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-card {
+    color: #ffffff;
+    padding: 60px 40px;
+    min-height: 260px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-content {
+    position: relative;
+    z-index: 3;
+    max-width: 480px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-title {
+    font-size: 40px;
+    margin: 0 0 16px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-text {
+    margin: 0 0 24px;
+    font-size: 18px;
+    line-height: 1.7;
+    letter-spacing: 0.2px;
+    font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-btn {
+    display: inline-block;
+    background: #ffffff;
+    color: #1f1a4a;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-media {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    z-index: 2;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-card.lt-pos-right .lt-guide-support-cta-media {
+    right: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-card.lt-pos-left .lt-guide-support-cta-media {
+    left: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-support-cta-media img {
+    height: 110%;
+    right: -5%;
+    top: 50%;
+    transform: translateY(-50%);  
+    position: absolute;
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+  }
+
+  @media(max-width:900px) {
+    #shopify-section-{{ section.id }} .lt-guide-support-cta-card {
+      padding: 40px 24px 350px;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-support-cta-media {
+      width: 100%;
+      height: auto;
+      margin-top: 24px;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-support-cta-text {
+      font-size: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-support-cta-media img {
+      width: 120%;
+      height: auto;
+      right: 0;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 20%);
+      top: unset;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-support-cta-content {
+      max-width: 100%;
+      text-align: center;
+    }
+    #shopify-section-{{ section.id }} .lt-guide-support-cta-title {
+      font-size: 28px;
+    }
+  }
+</style>
+
+<section class="lt-guide-support-cta">
+  <div class="lt-guide-support-cta-inner">
+    <div class="lt-container">
+      <div class="lt-guide-support-cta-card lt-pos-{{ section.settings.image_position }}">
+        <div class="lt-guide-support-cta-content">
+          <h2 class="lt-guide-support-cta-title">{{ section.settings.title }}</h2>
+          <p class="lt-guide-support-cta-text">{{ section.settings.text }}</p>
+
+        {% if section.settings.btn_label != blank %}
+          <a
+            href="{% if section.settings.use_klaviyo_popup %}#{% else %}{{ section.settings.btn_url }}{% endif %}"
+            class="lt-guide-support-cta-btn{% if section.settings.use_klaviyo_popup %} js-klaviyo-cta{% endif %}"
+            {% if section.settings.use_klaviyo_popup and section.settings.klaviyo_form_id != blank %}
+              data-klaviyo-form-id="{{ section.settings.klaviyo_form_id }}"
+            {% endif %}
+          >
+            {{ section.settings.btn_label }}
+          </a>
+        {% endif %}
+
+        </div>
+
+        <div class="lt-guide-support-cta-media">
+          <img class="lt-img-desktop" src="{{ section.settings.image | img_url: '1200x' }}" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Find the button inside this section that has the special class
+    var btn = document.querySelector('#shopify-section-{{ section.id }} .js-klaviyo-cta');
+
+    if (!btn) return;
+
+    btn.addEventListener('click', function (event) {
+      event.preventDefault(); // stop the page from jumping
+
+      var formId = btn.getAttribute('data-klaviyo-form-id');
+      if (!formId) return;
+
+      // Klaviyo magic: open that form
+      window._klOnsite = window._klOnsite || [];
+      window._klOnsite.push(['openForm', formId]);
+    });
+  });
+</script>
+
+
+{% schema %}
+{
+  "name": "LT Guide Support CTA",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background Color",
+      "default": "#F6F5FF"
+    },
+    {
+      "type": "color",
+      "id": "txt_color",
+      "label": "Section Text Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Section Background Color",
+      "default": "#27214D"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "Still Struggling?"
+    },
+    {
+      "id": "text",
+      "type": "textarea",
+      "label": "Description",
+      "default": "It’s totally normal. Feel free to reach out via customer support — we’re here to guide you through the adjustment process."
+    },
+    {
+      "id": "btn_label",
+      "type": "text",
+      "label": "Button label",
+      "default": "Contact Customer Support →"
+    },
+    {
+      "id": "btn_url",
+      "type": "url",
+      "label": "Button link"
+    },
+    {
+      "id": "use_klaviyo_popup",
+      "type": "checkbox",
+      "label": "Open Klaviyo popup instead of link",
+      "default": false
+    },
+    {
+      "id": "klaviyo_form_id",
+      "type": "text",
+      "label": "Klaviyo form ID",
+      "visible_if": "{{section.settings.use_klaviyo_popup == true}}",
+      "default": "Wyk2Ms"
+    },    
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "Desktop image"
+    },
+    {
+      "id": "image_position",
+      "type": "select",
+      "label": "Image position (desktop)",
+      "default": "right",
+      "options": [
+        { "value": "right", "label": "Right side" },
+        { "value": "left",  "label": "Left side" }
+      ]
+    },
+    {
+      "id": "padding_top",
+      "type": "range",
+      "label": "Padding top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "padding_bottom",
+      "type": "range",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    }
+  ],
+  "presets": [
+    { "name": "LT Guide Support CTA" }
+  ]
+}
+{% endschema %}

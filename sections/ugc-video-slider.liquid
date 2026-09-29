@@ -1,0 +1,604 @@
+{%- assign _ss = section.settings -%}
+{%- assign _section = section.id | split: '__' | last | slice: -4, 4 | prepend: '#sn_' -%}
+{%- assign _this = section.id | prepend: '#shopify-section-' -%}
+
+{%- capture section_content -%}
+<style>
+    {{ _section }} {
+        position: relative;
+        background: {{ _ss.background }};
+        padding-top: {{ _ss.padding_top }}px;
+        padding-bottom: {{ _ss.padding_bottom }}px;
+    }
+
+    {{ _section }} .section_holder {
+        position: relative;
+        max-width: {{ _ss.max_with }}px;
+        margin: auto;
+        padding: 0px 40px;
+    }
+
+    {{ _section }} .section_title__text {
+        color: #26214E;
+        font-family: Manrope;
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%;
+        letter-spacing: -0.6px;
+    }
+
+    {{ _section }} .section_title__text span {
+        color: #9487DF;
+    }
+
+    {{ _section }} .review_image {
+        width: 87px;
+        height: 35px;
+        display: flex;
+        height: auto;
+        margin-right: 17px;
+    }
+
+    {{ _section }} .review_image img {
+        width: 100%;
+        height: auto;
+    }
+
+    {{ _section }} .review_badge {
+        display: flex;
+        align-items: center;
+    }
+
+    {{ _section }} .review_text {
+        color: #27214D;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: 0;
+    }
+
+    {{ _section }} .section_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    {{ _section }} .section_title {
+        margin-top: 10px;
+    }
+    
+    {{ _section }} .main_button {
+        min-width: 236px;
+        padding: 0 40px;
+        display: flex;
+        height: 50px;
+        color: #FFF;
+        text-align: center;
+        font-family: Manrope;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%; /* 16px */
+        letter-spacing: -0.32px;
+        text-transform: capitalize;
+        border-radius: 30px;
+        background: #27214D;
+        box-shadow: -21px 16px 10px 0px rgba(153, 145, 189, 0.04), -12px 9px 9px 0px rgba(153, 145, 189, 0.13), -5px 4px 6px 0px rgba(153, 145, 189, 0.23), -1px 1px 4px 0px rgba(153, 145, 189, 0.25);
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+    {{ _section }} .main_button_arrow {
+        width: 16px;
+        height: 16px;
+        margin-left: 10px;
+    }
+
+    {{ _section }} .section_body {
+        margin-top: 50px;
+    }
+
+    {{ _section }} .swiper {
+        padding: 0 24px;
+    }
+
+    {{ _section }} .slide_wrapper {
+        position: relative;
+    }
+
+    {{ _section }} .media_wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 174%;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    {{ _section }} .media_wrapper>* {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    {{ _section }} .media_wrapper .product_link {
+        display: none;
+    }
+
+    {{ _section }} .slide_overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(39, 33, 77, 0.00) 69.82%, #27214D 100%);
+    }
+
+    {{ _section }} .video_play_btn {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        fill: rgba(39, 33, 77, 0.04);
+        backdrop-filter: blur(10.25px);
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+    {{ _section }} .video_footer_icon {
+        width: 19px;
+        display: flex;
+        color: #FFF;
+        flex: none;
+        margin-left: 15px;
+    }
+
+    {{ _section }} .video_footer_text {
+        color: #FFF;
+        font-family: Manrope;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 120%; /* 16.8px */
+    }
+
+    {{ _section }} .video_footer {
+        display: flex;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 14px 16px;
+    }
+
+    {{ _section }} .video_preview_part {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 3;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
+        padding: 20px;
+    }
+
+    body.video_preview_open {
+        overflow: hidden;
+    }
+
+    {{ _section }} .video_preview_wrapper {
+        position: relative;
+        margin: auto;
+        width: fit-content;
+        height: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    {{ _section }} .video_preview_wrapper>* {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    {{ _section }} .video_preview_wrapper .product_link {
+        position: absolute;
+        width: 300px;
+        bottom: 30px;
+        background-color: #27214D;
+        color: #FFF;
+        line-height: 1.2;
+        padding: 8px 32px;
+        border-radius: 99px;
+        text-align: center;
+        box-shadow: -21px 16px 10px 0px rgba(153, 145, 189, 0.04), -12px 9px 9px 0px rgba(153, 145, 189, 0.13), -5px 4px 6px 0px rgba(153, 145, 189, 0.23), -1px 1px 4px 0px rgba(153, 145, 189, 0.25);
+        cursor: pointer;
+    }
+
+    {{ _section }} .video_preview_close {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        background: #FFF;
+        border-radius: 99px;
+        display: flex;
+        padding: 8px;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+    }
+
+    @media screen and (max-width: 900px) {
+        {{ _section }} {
+            padding-top: {{ _ss.padding_top_mobile }}px;
+            padding-bottom: {{ _ss.padding_bottom_mobile }}px;
+        }
+        
+        {{ _section }} .section_holder {
+            padding: 0px 0px;
+        }
+
+        {{ _section }} .section_header {
+            padding: 0 24px;
+        }
+
+        {{ _section }} .review_image {
+            width: 74px;
+            height: 30px;
+            margin-right: 7px;
+        }
+
+        {{ _section }} .review_text {
+            font-size: 12px;
+        }
+
+        {{ _section }} .section_title {
+            margin-top: 8px;
+        }
+
+        {{ _section }} .section_title__text {
+            font-size: 24px;
+        }
+
+        {{ _section }} .main_button {
+            width: fit-content;
+            margin: auto;
+        }
+
+        {{ _section }} .section_body {
+            margin-top: 21px;
+        }
+
+        {{ _section }} .video_play_btn {
+            width: 38px;
+            height: 38px;
+        }
+
+        {{ _section }} .video_footer_text {
+            font-size: 12px;
+        }
+
+        {{ _section }} .video_footer_icon {
+            width: 13px;
+        }
+
+        {{ _section }} .for_desktop {
+            display: none !important;
+        }
+    }
+
+    @media screen and (min-width: 901px) {
+        {{ _section }} .for_mobile {
+            display: none !important;
+        }
+    }
+    
+
+</style>
+
+
+<div id="sn_{{ section.id | split: '__' | last | slice: -4, 4 }}">
+    <div class="section_holder">
+        <div class="section_header">
+            <div class="section_headerItem">
+                <div class="review_badge">
+                    <div class="review_image">
+                        <img src="{{ _ss.review_badge_image | image_url: width: 300 }}" alt="review icon">
+                    </div>
+                    <div class="review_text">{{ _ss.review_text }}</div>
+                </div>
+                <div class="section_title">
+                    <div class="section_title__text">{{ _ss.title }}</div>
+                </div>
+            </div>
+            <div class="section_headerItem">
+                {%- if _ss.button_text != blank -%}
+                    <div class="section_main_button for_desktop">
+                        <a href="{{ _ss.button_link }}" class="main_button"{% if _ss.scroll_id != blank %} scroll-id="{{ _ss.scroll_id }}"{% endif %}>{{ _ss.button_text }}
+                            <img class="main_button_arrow" src="{{ "icon-down-arrow.svg" | asset_url }}" alt="down arrow"{% if _ss.button_arrow_direction == "up" %}style="transform: rotate(180deg);"{% endif %}>
+                        </a>
+                    </div>
+                {%- endif -%}
+            </div>
+        </div> 
+
+        <div class="section_body">
+            <div id="video_location_top"> </div>
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    {%- for video_item in section.blocks -%}
+                        {%- assign video_object = video_item.settings.video.sources | last -%}
+                        <div class="swiper-slide">
+                            <div class="slide_wrapper" data-source="{{ video_object.url }}">
+                                <div class="media_wrapper" style="background-color: #222;" {{ video_item.shopify_attributes }}>
+                                    {{ video_item.settings.video | video_tag: autoplay: false, loop: true, muted: true, controls: false, image_size: '500x' }}
+
+                                    <div class="product_link" onclick="scrollToTarget('{{ video_item.settings.scroll_id }}', '{{ video_item.settings.target_product.handle }}');">
+                                        {{- video_item.settings.target_product.title -}}
+                                        <img src="{{ "icon-down-arrow.svg" | asset_url }}" class="main_button_arrow" alt="down arrow" style="transform: rotate(180deg);">
+                                    </div>
+                                </div>
+                                <div class="slide_overlay"> </div>
+                                {%- if video_item.settings.text != blank -%}
+                                    <div class="video_footer">
+                                        <div class="video_footer_text">{{ video_item.settings.text }}</div>
+                                        <div class="video_footer_icon">
+                                            {{ "icon-tiktok.svg" | inline_asset_content }}
+                                        </div>
+                                    </div>
+                                {%- endif -%}
+                                <div class="video_play_btn">
+                                    <img src="{{ "icon-play-white.svg" | asset_url }}" alt="play button">
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+            <div id="video_location_bottom"> </div>
+        </div>
+    </div>
+
+    <div class="video_preview_part" style="display: none;">
+        <div class="video_preview_wrapper">
+
+        </div>
+        <div class="video_preview_close" onclick="closeVideoPreview();">
+            <img src="{{ "icon-close.svg" | asset_url }}" alt="close button">
+        </div>
+    </div>
+</div>
+
+<script>
+    var videoSwiper = new Swiper("{{ _section }} .swiper", {
+        slidesPerView: 1.6,
+        spaceBetween: 9,
+        breakpoints: {
+            900: {
+                slidesPerView: 5,
+                spaceBetween: 16
+            }
+        },
+    });
+
+    $(".video_play_btn").on("click", function() {
+        var videoComponent = $(this).closest(".slide_wrapper").find('.media_wrapper').children().clone();
+        var video_preview_part = $("{{ _section }} .video_preview_part");
+        video_preview_part.fadeIn();
+        $('{{ _section }} .video_preview_wrapper').empty().append(videoComponent);
+        $("body").addClass("video_preview_open");
+        $('{{ _section }} .video_preview_wrapper video')[0].play();
+    });
+
+    function closeVideoPreview() {
+        $("{{ _section }} .video_preview_part").fadeOut();
+        $("body").removeClass("video_preview_open");
+    }
+
+    function checkVideoVisibility() {
+        if ($('#video_location_top')[0].getBoundingClientRect().top > 0 && $('#video_location_bottom')[0].getBoundingClientRect().bottom - window.innerHeight < 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function playAllVideos() {
+        $('{{ _section }} .media_wrapper video').each((index, el) => {
+            el.play();
+        })
+    }
+
+    function pauseAllVideos() {
+        $('{{ _section }} .media_wrapper video').each((index, el) => {
+            el.pause();
+        })
+    }
+
+    $(window).on('scroll', function() {
+        if (checkVideoVisibility()) {
+            playAllVideos()
+        } else (
+            pauseAllVideos()
+        )
+    })
+
+    function scrollToTarget(scroll_id, p_handle) {
+        closeVideoPreview();
+        reRenderDynamicPart(p_handle);
+        if(scroll_id) {
+            document.querySelector(`[cs-id="${scroll_id}"]`)?.scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+    }
+</script>
+
+{%- endcapture -%}
+
+{{- section_content -}}
+
+{% schema %}
+    {
+        "name": "UGC Video slider",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Review settings"
+            },
+            {
+                "type": "image_picker",
+                "id": "review_badge_image",
+                "label": "Review badge image"
+            },
+            {
+                "type": "text",
+                "id": "review_text",
+                "label": "Review text",
+                "default": "Over 4,500+ Happier Sleepers"
+            },
+            {
+                "type": "textarea",
+                "id": "title",
+                "label": "Title",
+                "default": "<span>subtitle</span>Title",
+                "info": "Use <span> tag for subtitle style"
+            },
+            {
+                "type": "header",
+                "content": "Button Settings"
+            },
+            {
+                "type": "text",
+                "id": "button_text",
+                "label": "Button text",
+                "default": "Try Muzzle Sleep"
+            },
+            {
+                "type": "url",
+                "id": "button_link",
+                "label": "Button link"
+            },
+            {
+                "type": "text",
+                "id": "scroll_id",
+                "label": "Scroll to custom ID"
+            },
+            {
+                "type": "select",
+                "id": "button_arrow_direction",
+                "label": "Button arrow direction",
+                "default": "down",
+                "options": [
+                    {
+                        "label": "Up",
+                        "value": "up"
+                    },
+                    {
+                        "label": "Down",
+                        "value": "down"
+                    }
+                ]
+            },
+            {
+                "type": "header",
+                "content": "General Settings"
+            },
+            {
+                "type": "color_background",
+                "id": "background",
+                "label": "Background color",
+                "default": "#FFFFFF00"
+            },
+            {
+                "type": "number",
+                "id": "max_with",
+                "label": "Max width",
+                "default": 1500
+            },
+            {
+                "type": "range",
+                "id": "padding_top",
+                "label": "Desktop padding top",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom",
+                "label": "Desktop padding bottom",
+                "min": 0,
+                "max": 300,
+                "step": 5,
+                "default": 100
+            },
+            {
+                "type": "range",
+                "id": "padding_top_mobile",
+                "label": "Mobile padding top",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            },
+            {
+                "type": "range",
+                "id": "padding_bottom_mobile",
+                "label": "Mobile padding bottom",
+                "min": 0,
+                "max": 200,
+                "step": 5,
+                "default": 50
+            }
+        ],
+        "blocks": [
+            {
+                "name": "Video item",
+                "type": "ugc_video_item",
+                "limit": 5,
+                "settings": [
+                    {
+                        "type": "video",
+                        "id": "video",
+                        "label": "Video"
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "text",
+                        "label": "Text",
+                        "default": "Sleeping with Muzzle Sleep"
+                    },
+                    {
+                        "type": "product",
+                        "id": "target_product",
+                        "label": "Product"
+                    },
+                    {
+                        "type": "text",
+                        "id": "scroll_id",
+                        "label": "Scroll Id"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "UGC Video slider"
+        }]
+    }
+{% endschema %}

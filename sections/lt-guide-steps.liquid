@@ -1,0 +1,505 @@
+
+<style>
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    --lt-step-duration: {{ section.settings.step_delay }}s;
+  }
+  #shopify-section-{{ section.id }} .lt-container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-header {
+    margin-bottom: 32px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-title {
+    font-size: 40px;
+    line-height: 1.2;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-body {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-left {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-right {
+    flex: 1 1 0;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-image-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-image {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 300ms ease, transform 300ms ease;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-image.is-active {
+    opacity: 1;
+    transform: scale(1);
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-image img {
+    width: 100%;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-note {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #e5f3ff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1;
+    letter-spacing: 0.2px;
+    color: #121212;
+    border-left: 5px solid #2A9BE2;    
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-note-icon img {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-note-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-steps {
+    border-radius: 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step {
+    padding: 12px 0;
+    cursor: pointer;
+    transition: color 200ms ease;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step-label {
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 4px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #aaa;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #aaa;
+    letter-spacing: 0px;
+    font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step.is-active .lt-guide-steps-slide-step-text,
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step.is-active .lt-guide-steps-slide-step-label,
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-step.is-active .lt-guide-steps-slide-step-title {
+    color: #121212;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-divider {
+    height: 2px;
+    background: #e5e5e5;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    border-radius: 2px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-divider-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background: #2A9BE2;
+    transform-origin: left center;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-divider-bar.is-animating {
+    animation: lt-guide-steps-slide-divider-fill var(--lt-step-duration) linear forwards;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-btn {
+    margin-top: 16px;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: none;
+    background: #27214D;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-icon-inner {
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid #27214D;
+    margin-left: 2px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-label {
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+    z-index: 999;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-overlay.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-dialog {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-inner {
+    margin-top: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-inner video,
+  #shopify-section-{{ section.id }} .lt-guide-steps-slide-video-inner iframe {
+    width: 100%;
+    max-height: 450px;
+  }
+
+  @keyframes lt-guide-steps-slide-divider-fill {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  @media(max-width:900px){
+    #shopify-section-{{ section.id }} .lt-guide-steps-slide {
+      padding-top: calc({{ section.settings.padding_top }}px * 0.6);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * 0.6);
+    }
+    #shopify-section-{{ section.id }} .lt-guide-steps-slide-body {
+      flex-direction: column;
+    }
+  }
+  @media(max-width:600px){
+    #shopify-section-{{ section.id }} .lt-guide-steps-slide-title {
+      font-size: 28px;
+    }
+  }
+</style>
+<section class="lt-guide-steps-slide">
+  <div class="lt-container">
+    <div class="lt-guide-steps-slide-header">
+      <h2 class="lt-guide-steps-slide-title">{{ section.settings.title }}</h2>
+    </div>
+
+    <div class="lt-guide-steps-slide-body">
+      <div class="lt-guide-steps-slide-left">
+        <div class="lt-guide-steps-slide-image-wrap">
+          {% for block in section.blocks %}
+            {% if block.type == 'step' %}
+              <div class="lt-guide-steps-slide-image{% if forloop.first %} is-active{% endif %}" data-step-index="{{ forloop.index0 }}">
+                {% if block.settings.image != blank %}
+                  <img src="{{ block.settings.image | img_url: '900x' }}" alt="{{ block.settings.step_title | escape }}">
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if section.settings.note_text != blank %}
+          <div class="lt-guide-steps-slide-note">
+            {% if section.settings.note_icon != blank %}
+              <span class="lt-guide-steps-slide-note-icon">
+                <img src="{{ section.settings.note_icon | img_url: '40x' }}" alt="">
+              </span>
+            {% endif %}
+            <p class="lt-guide-steps-slide-note-text">{{ section.settings.note_text }}</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="lt-guide-steps-slide-right">
+        <div class="lt-guide-steps-slide-steps">
+          {% for block in section.blocks %}
+            {% if block.type == 'step' %}
+              <div class="lt-guide-steps-slide-step{% if forloop.first %} is-active{% endif %}" data-step-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                <div class="lt-guide-steps-slide-step-label">STEP {{ forloop.index }}</div>
+                {% if block.settings.step_title != blank %}
+                  <div class="lt-guide-steps-slide-step-title">{{ block.settings.step_title }}</div>
+                {% endif %}
+                {% if block.settings.step_text != blank %}
+                  <div class="lt-guide-steps-slide-step-text">{{ block.settings.step_text }}</div>
+                {% endif %}
+              </div>
+              <div class="lt-guide-steps-slide-divider" data-step-index="{{ forloop.index0 }}">
+                <span class="lt-guide-steps-slide-divider-bar"></span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {% if section.settings.video_button_label != blank %}
+          <button type="button" class="lt-guide-steps-slide-video-btn">
+            <span class="lt-guide-steps-slide-video-icon">
+              <span class="lt-guide-steps-slide-video-icon-inner"></span>
+            </span>
+            <span class="lt-guide-steps-slide-video-label">{{ section.settings.video_button_label }}</span>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="lt-guide-steps-slide-video-overlay">
+    <div class="lt-guide-steps-slide-video-dialog">
+      <button type="button" class="lt-guide-steps-slide-video-close" aria-label="Close video">&times;</button>
+      <div class="lt-guide-steps-slide-video-inner">
+        {% if section.settings.video_embed != blank %}
+          {{ section.settings.video_embed }}
+        {% elsif section.settings.video_mp4 != blank %}
+          <video controls playsinline>
+            {% if section.settings.video_mp4.sources != blank %}
+              <source src="{{ section.settings.video_mp4.sources[0].url }}" type="video/mp4">
+            {% endif %}
+          </video>
+        {% else %}
+          <p>No video configured.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "LT Guide Steps",
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Section title",
+      "default": "Step-by-Step Application"
+    },
+    {
+      "id": "note_icon",
+      "type": "image_picker",
+      "label": "Note icon"
+    },
+    {
+      "id": "note_text",
+      "type": "textarea",
+      "label": "Note text",
+      "default": "Cool sleeping environment helps adhesion. Sweating may cause lifting."
+    },
+    {
+      "id": "video_mp4",
+      "type": "video",
+      "label": "MP4 video"
+    },
+    {
+      "id": "video_embed",
+      "type": "html",
+      "label": "Embed code (YouTube, Vimeo, etc.)"
+    },
+    {
+      "id": "video_button_label",
+      "type": "text",
+      "label": "Video button label",
+      "default": "Watch Application Video"
+    },
+    {
+      "id": "step_delay",
+      "type": "range",
+      "label": "Step delay (seconds)",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "id": "padding_top",
+      "type": "range",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "padding_bottom",
+      "type": "range",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Step image"
+        },
+        {
+          "id": "step_title",
+          "type": "text",
+          "label": "Step title",
+          "default": "Make sure your child's face and lips are completely dry"
+        },
+        {
+          "id": "step_text",
+          "type": "textarea",
+          "label": "Step description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Guide Steps",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+  (function() {
+    var section = document.querySelector('#shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    var steps = section.querySelectorAll('.lt-guide-steps-slide-step');
+    var images = section.querySelectorAll('.lt-guide-steps-slide-image');
+    var dividers = section.querySelectorAll('.lt-guide-steps-slide-divider');
+    if (!steps.length || !images.length) return;
+
+    var currentIndex = 0;
+    var intervalTime = {{ section.settings.step_delay | default: 4 }} * 1000;
+    var intervalId;
+
+    function updateDivider(index) {
+      if (!dividers.length) return;
+      dividers.forEach(function(divider) {
+        var bar = divider.querySelector('.lt-guide-steps-slide-divider-bar');
+        if (!bar) return;
+        bar.classList.remove('is-animating');
+        bar.style.animation = 'none';
+        // force reflow to restart animation
+        void bar.offsetWidth;
+        if (Number(divider.getAttribute('data-step-index')) === index) {
+          bar.style.animation = '';
+          bar.classList.add('is-animating');
+        }
+      });
+    }
+
+    function setActive(index) {
+      currentIndex = index;
+      steps.forEach(function(step) {
+        step.classList.toggle('is-active', Number(step.getAttribute('data-step-index')) === index);
+      });
+      images.forEach(function(img) {
+        img.classList.toggle('is-active', Number(img.getAttribute('data-step-index')) === index);
+      });
+      updateDivider(index);
+    }
+
+    function nextStep() {
+      var nextIndex = currentIndex + 1;
+      if (nextIndex >= steps.length) nextIndex = 0;
+      setActive(nextIndex);
+    }
+
+    function startAuto() {
+      clearInterval(intervalId);
+      intervalId = setInterval(nextStep, intervalTime);
+    }
+
+    steps.forEach(function(step) {
+      step.addEventListener('click', function() {
+        var index = Number(step.getAttribute('data-step-index'));
+        setActive(index);
+        startAuto();
+      });
+    });
+
+    setActive(0);
+    startAuto();
+
+    var overlay = section.querySelector('.lt-guide-steps-slide-video-overlay');
+    var videoBtn = section.querySelector('.lt-guide-steps-slide-video-btn');
+    var closeBtn = section.querySelector('.lt-guide-steps-slide-video-close');
+
+    if (videoBtn && overlay) {
+      videoBtn.addEventListener('click', function() {
+        overlay.classList.add('is-open');
+      });
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          overlay.classList.remove('is-open');
+        }
+      });
+    }
+    if (closeBtn && overlay) {
+      closeBtn.addEventListener('click', function() {
+        overlay.classList.remove('is-open');
+      });
+    }
+  })();
+</script>

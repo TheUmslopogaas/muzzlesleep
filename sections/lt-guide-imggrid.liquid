@@ -1,0 +1,135 @@
+<style>
+  #shopify-section-{{ section.id }} .lt-guide-imggrid {
+    padding: 32px 24px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-item {
+    display: block;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Columns */
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-cols-2 .lt-guide-imggrid-item {
+    flex: 0 0 calc(50% - 8px);
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-cols-3 .lt-guide-imggrid-item {
+    flex: 0 0 calc(33.333% - 10.67px);
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-cols-4 .lt-guide-imggrid-item {
+    flex: 0 0 calc(25% - 12px);
+  }
+
+  #shopify-section-{{ section.id }} .lt-guide-imggrid-cols-5 .lt-guide-imggrid-item {
+    flex: 0 0 calc(20% - 12.8px);
+  }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-guide-imggrid {
+      padding: 24px 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-guide-imggrid-inner {
+      gap: 12px;
+      flex-direction: column;
+    }
+
+    #shopify-section-{{ section.id }} .lt-guide-imggrid-item {
+      flex: 0 0 calc(50% - 6px);
+    }
+  }
+</style>
+
+<section class="lt-guide-imggrid">
+  <div class="lt-guide-imggrid-inner lt-guide-imggrid-cols-{{ section.settings.columns }}">
+    {% for block in section.blocks %}
+      {% if block.type == 'image_item' %}
+        {% assign img = block.settings.image %}
+        {% if img != blank %}
+          {% if block.settings.link != blank %}
+            <a class="lt-guide-imggrid-item" href="{{ block.settings.link }}" {{ block.shopify_attributes }} >
+              <img src="{{ img | img_url: '800x' }}" alt="{{ block.settings.alt | escape }}" class="lt-guide-imggrid-img">
+            </a>
+          {% else %}
+            <div class="lt-guide-imggrid-item" {{ block.shopify_attributes }}>
+              <img src="{{ img | img_url: '800x' }}" alt="{{ block.settings.alt | escape }}" class="lt-guide-imggrid-img">
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="lt-guide-imggrid-item" {{ block.shopify_attributes }}>
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="{{ block.settings.alt | escape }}" class="lt-guide-imggrid-img" >
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "LT Guide Image Grid",
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Images per row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_item",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Image link"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Guide Image Grid",
+      "blocks": [
+        { "type": "image_item" },
+        { "type": "image_item" },
+        { "type": "image_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

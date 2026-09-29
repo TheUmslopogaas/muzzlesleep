@@ -1,0 +1,686 @@
+<style>
+{% if section.settings.bordered == true %}
+  #shopify-section-{{ section.id }} .lt-container {
+    border: 4px solid #26204C;
+    padding: 60px;
+    border-radius: 10px;
+  }
+{% endif %}
+#shopify-section-{{ section.id }} .lt-product-section {
+  padding: 60px 0;
+  background: #fff;
+}
+#shopify-section-{{ section.id }} .lt-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+#shopify-section-{{ section.id }} .lt-product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+#shopify-section-{{ section.id }} .lt-image-column {
+  display: flex;
+  justify-content: center;
+}
+#shopify-section-{{ section.id }} .lt-product-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  object-fit: contain;
+}
+#shopify-section-{{ section.id }} .lt-details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#shopify-section-{{ section.id }} .lt-rating-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#shopify-section-{{ section.id }} .lt-stars {
+  display: flex;
+  gap: 2px;
+}
+#shopify-section-{{ section.id }} .lt-star {
+  color: #FACC15;
+  font-size: 20px;
+}
+#shopify-section-{{ section.id }} .lt-rating-text {
+  color: #27214D;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+#shopify-section-{{ section.id }} .lt-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: #27214D;
+  margin: 0 0 5px 0;
+  line-height: 1.2;
+}
+#shopify-section-{{ section.id }} .lt-description {
+  font-size: 18px;
+  color: #27214D;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: 0px;
+  margin: 0 0 10px 0;
+}
+#shopify-section-{{ section.id }} .lt-pricing {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  line-height: 1;
+  margin-bottom: 10px;
+  letter-spacing: 0;
+}
+#shopify-section-{{ section.id }} .lt-sale-price {
+  font-size: 32px;
+  font-weight: 800;
+  color: #27214D;
+}
+#shopify-section-{{ section.id }} .lt-regular-price {
+  font-size: 22px;
+  color: #8681A4;
+  text-decoration: line-through;
+}
+#shopify-section-{{ section.id }} .lt-variant-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+#shopify-section-{{ section.id }} .lt-variant-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #27214D;
+  letter-spacing: 0px;
+}
+#shopify-section-{{ section.id }} .lt-age-buttons {
+  display: flex;
+  gap: 12px;
+}
+#shopify-section-{{ section.id }} .lt-age-btn {
+  font-family: inherit;
+  flex: 1;
+  padding: 12px 24px;
+  border: 2px solid #e0e0e0;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0;
+}
+#shopify-section-{{ section.id }} .lt-age-btn:hover {
+  border-color: #4a4a7a;
+}
+#shopify-section-{{ section.id }} .lt-age-btn.lt-active {
+  border-color: #27214D;
+  background: #F6F5FF;
+  color: #27214D;
+}
+#shopify-section-{{ section.id }} .lt-strength-options {
+  display: flex;
+  gap: 16px;
+}
+#shopify-section-{{ section.id }} .lt-strength-card {
+  flex: 1;
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
+  max-width: calc(50% - 8px);
+}
+#shopify-section-{{ section.id }} .lt-strength-card:hover {
+  border-color: #4a4a7a;
+}
+#shopify-section-{{ section.id }} .lt-strength-card.lt-active {
+  border-color: #4a4a7a;
+  background: #f8f8ff;
+}
+#shopify-section-{{ section.id }} .lt-strength-image img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+#shopify-section-{{ section.id }} .lt-strength-info h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #27214D;
+  margin: 0 0 5px 0;
+  letter-spacing: 0;
+}
+#shopify-section-{{ section.id }} .lt-strength-info p {
+  font-size: 12px;
+  color: #9793B0;
+  line-height: 1.2;
+  margin: 0;
+}
+#shopify-section-{{ section.id }} .lt-cta-button {
+  display: block;
+  width: 100%;
+  padding: 18px 24px;
+  background: #27214D;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 100px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  margin: 10px 0 15px 0;
+}
+#shopify-section-{{ section.id }} .lt-cta-button:hover {
+  background: #3a3a6a;
+  transform: translateY(-2px);
+}
+#shopify-section-{{ section.id }} .lt-features {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+#shopify-section-{{ section.id }} .lt-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#shopify-section-{{ section.id }} .lt-feature-icon {
+  width: 24px;
+  height: 24px;
+  background: #27214D;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+}
+#shopify-section-{{ section.id }} .lt-feature-text {
+  font-size: 14px;
+  color: #27214D;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+{% if section.settings.youth_first == true %}
+  #shopify-section-{{ section.id }} .lt-age-buttons {
+    flex-direction: row-reverse;
+  }
+{% endif %}
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  #shopify-section-{{ section.id }} .lt-product-section {
+    padding: 20px 16px;
+  }  
+  #shopify-section-{{ section.id }} .lt-product-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }  
+  #shopify-section-{{ section.id }} .lt-title {
+    font-size: 28px;
+  }  
+  #shopify-section-{{ section.id }} .lt-sale-price {
+    font-size: 28px;
+  }  
+  #shopify-section-{{ section.id }} .lt-regular-price {
+    font-size: 20px;
+  }  
+  #shopify-section-{{ section.id }} .lt-strength-options {
+    /* flex-direction: column; */
+  }  
+  #shopify-section-{{ section.id }} .lt-strength-card {
+    /* flex-direction: row;
+    text-align: left; */
+  }
+}
+
+@media (max-width: 550px) {
+  {% if section.settings.bordered == true %}
+    #shopify-section-{{ section.id }} .lt-product-section {
+      padding: 20px 5px;
+    }
+    #shopify-section-{{ section.id }} .lt-container {
+      border-width: 2px;
+      padding: 15px;
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .lt-title {
+    font-size: 35px;
+    font-weight: 800;
+  }  
+  #shopify-section-{{ section.id }} .lt-age-buttons {
+    /* flex-direction: column; */
+  }  
+  #shopify-section-{{ section.id }} .lt-cta-button {
+    font-size: 16px;
+    padding: 16px 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-product-image {
+    max-width: 250px;
+  }  
+  #shopify-section-{{ section.id }} .lt-features {
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .lt-feature-text {
+    font-size: 12px;
+  }
+  #shopify-section-{{ section.id }} .lt-feature-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+</style>
+
+<div class="lt-product-section">
+  <div class="lt-container">
+    <div class="lt-product-grid">
+      <!-- Left Column - Product Image -->
+<div class="lt-image-column">
+  <img src="{{ section.settings.product_image | img_url: '600x600' }}" 
+       alt="{{ section.settings.product_image.alt | default: 'Product Image' }}" 
+       class="lt-product-image" 
+       data-product-image>
+</div>
+      <!-- Right Column - Product Details -->
+      <div class="lt-details-column">
+        <!-- Star Rating -->
+        <div class="lt-rating-section">
+          <div class="lt-stars">
+            {% for i in (1..5) %}
+              <span class="lt-star">★</span>
+            {% endfor %}
+          </div>
+          <span class="lt-rating-text">{{ section.settings.rating_text | default: '50,000+ Quiet Sleepers' }}</span>
+        </div>
+        <!-- Title and Description -->
+        <h2 class="lt-title">{{ section.settings.title | default: 'Buy 2 Get 1 FREE' }}</h2>
+        <p class="lt-description">{{ section.settings.description | default: '3 Month supply of strips' }}</p>
+
+        <!-- Pricing -->
+        <div class="lt-pricing">
+          <span class="lt-sale-price" data-sale-price>{{ section.settings.sale_price | default: '$49.99' }}</span>
+          <span class="lt-regular-price" data-regular-price>{{ section.settings.regular_price | default: '$75.00' }}</span>
+        </div>
+
+        <!-- Age Selection -->
+        <div class="lt-variant-section">
+          <label class="lt-variant-label">Select Age</label>
+          <div class="lt-age-buttons">
+            <button class="lt-age-btn lt-active" data-age="adult">Adult</button>
+            <button class="lt-age-btn" data-age="youth">Youth</button>
+          </div>
+        </div>
+
+        <!-- Strength Selection -->
+        <div class="lt-variant-section">
+          <label class="lt-variant-label">Select Strength</label>
+          <div class="lt-strength-options">
+            <div class="lt-strength-card lt-active" data-strength="medium">
+              <div class="lt-strength-image">
+                <img src="{{ section.settings.ad_medium_image | img_url: 'master' }}" alt="Medium Hold">
+              </div>
+              <div class="lt-strength-info">
+                <h4>Medium Hold</h4>
+                <p>Snorers & Restless Sleepers</p>
+              </div>
+            </div>
+            <div class="lt-strength-card" data-strength="strong">
+              <div class="lt-strength-image">
+                <img src="{{ section.settings.ad_strong_image | img_url: 'master' }}" alt="Strong Hold">
+              </div>
+              <div class="lt-strength-info">
+                <h4>Strong Hold</h4>
+                <p>Heavier Snorers & Restless Sleepers</p>
+              </div>
+            </div>
+            <div class="lt-strength-card" data-strength="yt-medium" style="display: none;">
+              <div class="lt-strength-image">
+                <img src="{{ section.settings.yt_medium_image | img_url: 'master' }}" alt="Strong Hold">
+              </div>
+              <div class="lt-strength-info">
+                <h4>Medium Hold</h4>
+                <p>Snorers & Restless Sleepers</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CTA Button -->
+        <a href="{{ section.settings.default_url }}" class="lt-cta-button" data-cta-url>
+          {{ section.settings.cta_text | default: 'SLEEP QUIET NOW - 33% OFF' }}
+        </a>
+
+        <!-- Features -->
+        <div class="lt-features">
+          {% comment %} <div class="lt-feature">
+            <span class="lt-feature-icon">$</span>
+            <span class="lt-feature-text" data-guarantee-text>{{ section.settings.guarantee_text | default: '30-Day Money Back Guarantee' }}</span>
+          </div> {% endcomment %}
+          <div class="lt-feature">
+            <span class="lt-feature-icon">✓</span>
+            <span class="lt-feature-text" data-hsa-text>{{ section.settings.hsa_text | default: 'HSA/FSA Eligible' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sectionId = '{{ section.id }}';
+  const sectionSelector = `#shopify-section-${sectionId}`;
+  
+  // Variant data - you can customize these based on your actual product variants
+  const variantData = {
+    'adult-medium': {
+      salePrice: '{{ section.settings.adult_medium_sale_price | default: "$49.99" }}',
+      regularPrice: '{{ section.settings.adult_medium_regular_price | default: "$75.00" }}',
+      url: '{{ section.settings.adult_medium_url | default: section.settings.default_url }}',
+      image: '{{ section.settings.adult_medium_image | img_url: "master" }}',
+      imageAlt: '{{ section.settings.adult_medium_image.alt | default: "Adult Medium Product Image" }}'
+    },
+    'adult-strong': {
+      salePrice: '{{ section.settings.adult_strong_sale_price | default: "$54.99" }}',
+      regularPrice: '{{ section.settings.adult_strong_regular_price | default: "$80.00" }}',
+      url: '{{ section.settings.adult_strong_url | default: section.settings.default_url }}',
+      image: '{{ section.settings.adult_strong_image | img_url: "master" }}',
+      imageAlt: '{{ section.settings.adult_strong_image.alt | default: "Adult Strong Product Image" }}'
+    },
+    'youth-yt-medium': {
+      salePrice: '{{ section.settings.youth_medium_sale_price | default: "$39.99" }}',
+      regularPrice: '{{ section.settings.youth_medium_regular_price | default: "$65.00" }}',
+      url: '{{ section.settings.youth_medium_url | default: section.settings.default_url }}',
+      image: '{{ section.settings.youth_medium_image | img_url: "master" }}',
+      imageAlt: '{{ section.settings.youth_medium_image.alt | default: "Youth Medium Product Image" }}'
+    }
+  };
+  
+  let currentAge = 'adult';
+  let currentStrength = 'medium';
+  
+  // Age button handlers
+  const ageButtons = document.querySelectorAll(`${sectionSelector} .lt-age-btn`);
+  ageButtons.forEach(btn => {
+    btn.addEventListener('click', function() {
+      ageButtons.forEach(b => b.classList.remove('lt-active'));
+      this.classList.add('lt-active');
+      currentAge = this.dataset.age;
+  
+      // Show/hide strength cards based on age
+      const strengthCards = document.querySelectorAll(`${sectionSelector} .lt-strength-card`);
+      strengthCards.forEach(card => {
+        if (currentAge === 'adult') {
+          if (card.dataset.strength === 'medium' || card.dataset.strength === 'strong') {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        } else if (currentAge === 'youth') {
+          if (card.dataset.strength === 'yt-medium') {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        }
+      });
+  
+      // Reset strength to default for the selected age
+      currentStrength = currentAge === 'adult' ? 'medium' : 'yt-medium';
+      
+      // Update active strength card
+      strengthCards.forEach(c => c.classList.remove('lt-active'));
+      const activeCard = document.querySelector(`${sectionSelector} .lt-strength-card[data-strength="${currentStrength}"]`);
+      if (activeCard) activeCard.classList.add('lt-active');
+  
+      updateVariant();
+    });
+  });
+  
+  // Strength card handlers
+  const strengthCards = document.querySelectorAll(`${sectionSelector} .lt-strength-card`);
+  strengthCards.forEach(card => {
+    card.addEventListener('click', function() {
+      if (this.style.display !== 'none') { // Only allow clicks on visible cards
+        strengthCards.forEach(c => c.classList.remove('lt-active'));
+        this.classList.add('lt-active');
+        currentStrength = this.dataset.strength;
+        updateVariant();
+      }
+    });
+  });
+  function updateVariant() {
+    const variantKey = `${currentAge}-${currentStrength}`;
+    const variant = variantData[variantKey];
+    const productImageEl = document.querySelector(`${sectionSelector} [data-product-image]`);
+    
+    if (variant) {
+      // Update pricing
+      const salePriceEl = document.querySelector(`${sectionSelector} [data-sale-price]`);
+      const regularPriceEl = document.querySelector(`${sectionSelector} [data-regular-price]`);
+      const ctaUrlEl = document.querySelector(`${sectionSelector} [data-cta-url]`);
+      
+      if (salePriceEl) salePriceEl.textContent = variant.salePrice;
+      if (regularPriceEl) regularPriceEl.textContent = variant.regularPrice;
+      if (ctaUrlEl) ctaUrlEl.href = variant.url;
+  
+      // Update product image
+      if (productImageEl && variant.image) {
+        productImageEl.src = variant.image;
+        productImageEl.alt = variant.imageAlt;
+      } else if (productImageEl) {
+        productImageEl.src = '{{ section.settings.product_image | img_url: "master" }}';
+        productImageEl.alt = '{{ section.settings.product_image.alt | default: "Product Image" }}';
+      }
+      // console.warn(`This is the variant key ${variantKey}`);
+    } else {
+      // Fallback for invalid variant
+      console.warn(`Variant not found for key: ${variantKey}`);
+      // console.warn(`current age ${currentAge}`);
+      // console.warn(`current strength ${currentStrength}`);
+      if (productImageEl) {
+        productImageEl.src = '{{ section.settings.product_image | img_url: "master" }}';
+        productImageEl.alt = '{{ section.settings.product_image.alt | default: "Product Image" }}';
+      }
+    }
+  }
+
+  {% if section.settings.youth_first == true %}
+    document.querySelector(`${sectionSelector} .lt-age-btn[data-age="youth"]`)?.click();
+  {% endif %}
+});
+</script>
+
+{% schema %}
+{
+  "name": "LT Featured Product",
+  "tag": "section",
+  "class": "lt-ft-prd",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Default Product Image"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating Text",
+      "default": "50,000+ Quiet Sleepers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Buy 2 Get 1 FREE"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "3 Month supply of strips"
+    },
+    {
+      "type": "text",
+      "id": "sale_price",
+      "label": "Default Sale Price",
+      "default": "$49.99"
+    },
+    {
+      "type": "text",
+      "id": "regular_price",
+      "label": "Default Regular Price",
+      "default": "$75.00"
+    },
+    {
+      "type": "image_picker",
+      "id": "ad_medium_image",
+      "label": "Adult Medium Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "ad_strong_image",
+      "label": "Adult Strong Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "yt_medium_image",
+      "label": "Youth Medium Image"
+    },
+    {
+      "type": "url",
+      "id": "default_url",
+      "label": "Default Button URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Text",
+      "default": "SLEEP QUIET NOW - 33% OFF"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_text",
+      "label": "Guarantee Text",
+      "default": "30-Day Money Back Guarantee"
+    },
+    {
+      "type": "text",
+      "id": "hsa_text",
+      "label": "HSA/FSA Text",
+      "default": "HSA/FSA Eligible"
+    },
+    {
+      "type": "checkbox",
+      "id": "youth_first",
+      "label": "Youth As Default",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "bordered",
+      "label": "Bordered Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Adult Medium Variant"
+    },
+    {
+      "type": "text",
+      "id": "adult_medium_sale_price",
+      "label": "Adult Medium Sale Price",
+      "default": "$49.99"
+    },
+    {
+      "type": "text",
+      "id": "adult_medium_regular_price",
+      "label": "Adult Medium Regular Price",
+      "default": "$75.00"
+    },
+    {
+      "type": "url",
+      "id": "adult_medium_url",
+      "label": "Adult Medium URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "adult_medium_image",
+      "label": "Adult Medium Image"
+    },
+    {
+      "type": "header",
+      "content": "Adult Strong Variant"
+    },
+    {
+      "type": "text",
+      "id": "adult_strong_sale_price",
+      "label": "Adult Strong Sale Price",
+      "default": "$54.99"
+    },
+    {
+      "type": "text",
+      "id": "adult_strong_regular_price",
+      "label": "Adult Strong Regular Price",
+      "default": "$80.00"
+    },
+    {
+      "type": "url",
+      "id": "adult_strong_url",
+      "label": "Adult Strong URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "adult_strong_image",
+      "label": "Adult Strong Image"
+    },
+    {
+      "type": "header",
+      "content": "Youth Medium Variant"
+    },
+    {
+      "type": "text",
+      "id": "youth_medium_sale_price",
+      "label": "Youth Medium Sale Price",
+      "default": "$39.99"
+    },
+    {
+      "type": "text",
+      "id": "youth_medium_regular_price",
+      "label": "Youth Medium Regular Price",
+      "default": "$65.00"
+    },
+    {
+      "type": "url",
+      "id": "youth_medium_url",
+      "label": "Youth Medium URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "youth_medium_image",
+      "label": "Youth Medium Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Featured Product",
+      "category": "LT Sections"
+    }
+  ]
+}
+{% endschema %}

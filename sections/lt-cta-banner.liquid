@@ -1,0 +1,722 @@
+{%- liquid
+  assign pt     = section.settings.padding_top
+  assign pb     = section.settings.padding_bottom
+  assign mt     = section.settings.margin_top
+  assign mb     = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+
+  assign current_variant = product.selected_or_first_available_variant
+
+  assign section_bg = section.settings.outer_bg
+  if section.settings.bg_gradient != blank
+    assign section_bg = section.settings.bg_gradient
+  endif
+-%}
+
+<div
+  class="lt-cta-banner"
+  data-section-id="{{ section.id }}"
+  style="
+    background: {{ section_bg }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <div class="page-width">
+    <div
+      class="lt-cta-banner__card"
+      style="
+        border-radius: {{ section.settings.card_radius }}px;
+        background-color: {{ section.settings.card_bg }};
+        {%- if section.settings.bg_image != blank -%}
+          background-image: url('{{ section.settings.bg_image | img_url: 'master' }}');
+        {%- endif -%}
+        background-size: cover;
+        background-position: {{ section.settings.bg_position }};
+      "
+    >
+      {%- comment -%} White angled overlay — covers the left content area {%- endcomment -%}
+      <div class="lt-cta-banner__overlay" style="background-color: {{ section.settings.card_bg }};"></div>
+
+      {%- comment -%} Content {%- endcomment -%}
+      <div class="lt-cta-banner__content">
+
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-cta-banner__eyebrow" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.eyebrow }}
+          </p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-cta-banner__heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.heading }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.subtext != blank -%}
+          <p class="lt-cta-banner__subtext" style="color: {{ section.settings.text_color }};">
+            {{ section.settings.subtext }}
+          </p>
+        {%- endif -%}
+
+        {%- comment -%} ATC / CTA button {%- endcomment -%}
+        <div class="lt-cta-banner__btn-wrap">
+          {%- if product != blank -%}
+            <button
+              type="button"
+              class="lt-cta-banner__btn"
+              data-atc-btn
+              data-variant-id="{{ current_variant.id }}"
+              {% unless current_variant.available %}disabled{% endunless %}
+              style="background-color: {{ section.settings.btn_bg }}; color: {{ section.settings.btn_fg }};"
+            >
+              <span class="lt-cta-banner__btn-text" data-btn-text>
+                {%- if current_variant.available -%}
+                  {{ section.settings.btn_text }}
+                {%- else -%}
+                  {{ section.settings.btn_sold_out }}
+                {%- endif -%}
+              </span>
+              <span class="lt-cta-banner__spinner" data-btn-spinner aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="38" stroke-dashoffset="10"/>
+                </svg>
+              </span>
+            </button>
+            <p class="lt-cta-banner__atc-msg" data-atc-msg aria-live="polite" hidden></p>
+          {%- elsif section.settings.btn_text != blank and section.settings.btn_url != blank -%}
+            <a
+              href="{{ section.settings.btn_url }}"
+              class="lt-cta-banner__btn"
+              style="background-color: {{ section.settings.btn_bg }}; color: {{ section.settings.btn_fg }};"
+            >{{ section.settings.btn_text }}</a>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Trust micro-copy (blocks) {%- endcomment -%}
+        {%- assign trust_blocks = section.blocks | where: 'type', 'trust' -%}
+        {%- if trust_blocks.size > 0 -%}
+          <p class="lt-cta-banner__trust" style="color: {{ section.settings.trust_color }};" aria-label="Product highlights">
+            {%- for block in trust_blocks -%}
+              {%- if block.settings.label != blank -%}
+                <span class="lt-cta-banner__trust-item" {{ block.shopify_attributes }}>{{ block.settings.label }}</span>
+                {%- unless forloop.last -%}
+                  <span class="lt-cta-banner__trust-dot" aria-hidden="true"> • </span>
+                {%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </p>
+        {%- endif -%}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Outer wrapper ─────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  {% if section.settings.enable_custom_height %}
+    #shopify-section-{{ section.id }} .lt-cta-banner__card {
+      min-height: {{ section.settings.min_height }}px;
+    }
+  {% else %}
+    #shopify-section-{{ section.id }} .lt-cta-banner__card {
+      min-height: 320px;
+    }
+  {% endif %}
+
+  /* ── Angled white overlay (left panel) ─────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__overlay {
+    position: absolute;
+    inset: 0 0 0 0;
+    /* diagonal clip: solid white left → angled cut ~60% across */
+    clip-path: polygon(0 0, {{ section.settings.overlay_width }}% 0, {{ section.settings.overlay_skew }}% 100%, 0 100%);
+    z-index: 0;
+  }
+
+  /* ── Content ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Eyebrow ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    opacity: 0.65;
+  }
+
+  /* ── Heading ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.5px;
+    margin: 0 0 18px;
+  }
+
+  /* ── Subtext ───────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__subtext {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.6;
+    margin: 0 0 28px;
+    max-width: 550px;
+    color: {{ section.settings.text_color }};
+  }
+
+  /* ── Button ────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 260px;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    letter-spacing: 0.1px;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn:active:not(:disabled) {
+    transform: translateY(0);
+    opacity: 0.76;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Spinner */
+  #shopify-section-{{ section.id }} .lt-cta-banner__spinner {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__spinner svg {
+    animation: lt-cta-spin 0.75s linear infinite;
+  }
+
+  @keyframes lt-cta-spin { to { transform: rotate(360deg); } }
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn--loading .lt-cta-banner__btn-text { opacity: 0; }
+  #shopify-section-{{ section.id }} .lt-cta-banner__btn--loading .lt-cta-banner__spinner { display: flex; }
+
+  /* ATC message */
+  #shopify-section-{{ section.id }} .lt-cta-banner__atc-msg {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+    padding: 6px 14px;
+    border-radius: 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__atc-msg--success { background: rgba(34,197,94,0.1); color: #15803d; }
+  #shopify-section-{{ section.id }} .lt-cta-banner__atc-msg--error   { background: rgba(239,68,68,0.1);  color: #b91c1c; }
+
+  /* ── Trust micro-copy ──────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-banner__trust {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-banner__trust-dot {
+    opacity: 0.5;
+  }
+
+  /* ── Responsive 767px ──────────────────────── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} .lt-cta-banner {
+      padding-top: {{ pt_mob }}px !important;
+      padding-bottom: {{ pb_mob }}px !important;
+      margin-top: {{ mt_mob }}px !important;
+      margin-bottom: {{ mb_mob }}px !important;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__card {
+      {% if section.settings.mobile_bg_image != blank %}
+        background-image: url('{{ section.settings.mobile_bg_image | img_url: "master" }}') !important;
+      {% endif %}
+      {% if section.settings.enable_custom_height %}
+        min-height: {{ section.settings.mobile_min_height }}px !important;
+      {% else %}
+        min-height: 384px !important;
+      {% endif %}
+      background-position: center top;
+      align-items: {{ section.settings.mobile_content_align }};
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__overlay {
+      {% if section.settings.mobile_content_align == 'flex-start' %}
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+      {% else %}
+        clip-path: polygon(0 25%, 100% 10%, 100% 100%, 0 100%);
+      {% endif %}
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__content {
+      max-width: 100%;
+      padding: 36px 28px 48px;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__heading {
+      font-size: {{ section.settings.heading_size | times: 0.6 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__btn {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+
+  /* ── Responsive 480px ──────────────────────── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-cta-banner__heading {
+      font-size: {{ section.settings.heading_size | times: 0.5 | round }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__subtext {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-cta-banner__content {
+      padding: 28px 20px 36px;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  function initCtaBanner(sectionEl) {
+    if (!sectionEl) return;
+
+    var btn    = sectionEl.querySelector('[data-atc-btn]');
+    var msgEl  = sectionEl.querySelector('[data-atc-msg]');
+    var textEl = sectionEl.querySelector('[data-btn-text]');
+    var msgTimer;
+
+    if (!btn) return;
+
+    function setLoading(on) {
+      btn.classList.toggle('lt-cta-banner__btn--loading', on);
+      btn.disabled = on;
+    }
+
+    function showMsg(text, type) {
+      if (!msgEl) return;
+      clearTimeout(msgTimer);
+      msgEl.textContent = text;
+      msgEl.className = 'lt-cta-banner__atc-msg lt-cta-banner__atc-msg--' + type;
+      msgEl.hidden = false;
+      msgTimer = setTimeout(function () {
+        msgEl.hidden = true;
+        msgEl.className = 'lt-cta-banner__atc-msg';
+      }, 3500);
+    }
+
+    function getVariantId() {
+      var liveInput = document.querySelector('input[name="id"], select[name="id"]');
+      return (liveInput && liveInput.value) ? liveInput.value : btn.dataset.variantId;
+    }
+
+    function handleClick() {
+      var variantId = getVariantId();
+      if (!variantId) return;
+      setLoading(true);
+      if (msgEl) msgEl.hidden = true;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ id: parseInt(variantId, 10), quantity: 1 })
+      })
+      .then(function (r) {
+        if (!r.ok) return r.json().then(function (d) { throw new Error(d.description || 'Error'); });
+        return r.json();
+      })
+      .then(function () {
+        setLoading(false);
+        showMsg('Added to cart!', 'success');
+        ['cart:refresh','cart:updated'].forEach(function (ev) {
+          document.dispatchEvent(new CustomEvent(ev, { bubbles: true }));
+        });
+        fetch('/cart.js').then(function (r) { return r.json(); }).then(function (cart) {
+          document.dispatchEvent(new CustomEvent('cart:item-added', { bubbles: true, detail: { cart: cart } }));
+        });
+      })
+      .catch(function (err) {
+        setLoading(false);
+        showMsg(err.message || 'Could not add to cart.', 'error');
+      });
+    }
+
+    btn.addEventListener('click', handleClick);
+
+    document.addEventListener('variant:changed', function (e) {
+      if (!e.detail || !e.detail.variant) return;
+      var v = e.detail.variant;
+      btn.dataset.variantId = v.id;
+      btn.disabled = !v.available;
+      if (textEl) {
+        textEl.textContent = v.available
+          ? '{{ section.settings.btn_text | escape }}'
+          : '{{ section.settings.btn_sold_out | escape }}';
+      }
+    });
+
+    sectionEl._ltCtaCleanup = function () {
+      btn.removeEventListener('click', handleClick);
+      clearTimeout(msgTimer);
+    };
+  }
+
+  function teardown(sectionEl) {
+    if (sectionEl && typeof sectionEl._ltCtaCleanup === 'function') {
+      sectionEl._ltCtaCleanup();
+      delete sectionEl._ltCtaCleanup;
+    }
+  }
+
+  document.querySelectorAll('[data-section-id="{{ section.id }}"]').forEach(initCtaBanner);
+
+  document.addEventListener('shopify:section:load', function (e) {
+    var el = e.target.querySelector('[data-section-id="{{ section.id }}"]') || e.target;
+    initCtaBanner(el);
+  });
+  document.addEventListener('shopify:section:unload', function (e) {
+    var el = e.target.querySelector('[data-section-id="{{ section.id }}"]') || e.target;
+    teardown(el);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "LT CTA Banner",
+  "class": "lt-section-cta-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Outer background"
+    },
+    {
+      "type": "color",
+      "id": "outer_bg",
+      "label": "Outer background color",
+      "default": "#ede8f5"
+    },
+    {
+      "type": "color_background",
+      "id": "bg_gradient",
+      "label": "Background gradient",
+      "default": "linear-gradient(0deg, #FFFFFF 0%, #F8F6FE 25%, #F9F3FB 50%, #F6E8F7 75%, #E6DFFB 100%)"
+    },
+    {
+      "type": "header",
+      "content": "Card colors"
+    },
+    {
+      "type": "color",
+      "id": "card_bg",
+      "label": "Card / overlay color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#2d2d3a"
+    },
+    {
+      "type": "color",
+      "id": "trust_color",
+      "label": "Trust text color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "header",
+      "content": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image",
+      "info": "Displayed on the right side of the card"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_bg_image",
+      "label": "Mobile background image"
+    },
+    {
+      "type": "select",
+      "id": "bg_position",
+      "label": "Image position",
+      "options": [
+        { "value": "center center", "label": "Center"      },
+        { "value": "right center",  "label": "Right"       },
+        { "value": "right top",     "label": "Right top"   },
+        { "value": "right bottom",  "label": "Right bottom" },
+        { "value": "center top",    "label": "Top"         }
+      ],
+      "default": "right center"
+    },
+    {
+      "type": "header",
+      "content": "Overlay shape"
+    },
+    {
+      "type": "range",
+      "id": "overlay_width",
+      "label": "Overlay width — top edge (%)",
+      "min": 30,
+      "max": 80,
+      "step": 2,
+      "default": 58,
+      "info": "How far right the white overlay extends at the top"
+    },
+    {
+      "type": "range",
+      "id": "overlay_skew",
+      "label": "Overlay width — bottom edge (%)",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "default": 50,
+      "info": "Controls the diagonal angle — set lower than top for a left-slant"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Better Sleep Starts Tonight."
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading font size (px)",
+      "min": 28,
+      "max": 72,
+      "step": 2,
+      "default": 52
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Stop letting noise control your nights. Experience quieter, more comfortable sleep with Muzzle Snooze™ Sleep Earplugs."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button label",
+      "default": "Add To Cart"
+    },
+    {
+      "type": "text",
+      "id": "btn_sold_out",
+      "label": "Sold out label",
+      "default": "Sold Out"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL",
+      "info": "Used only when no product context exists"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button background",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "btn_fg",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_custom_height",
+      "label": "Enable custom height",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Desktop min-height (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 320,
+      "visible_if": "{{ section.settings.enable_custom_height == true }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_min_height",
+      "label": "Mobile min-height (px)",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 380,
+      "visible_if": "{{ section.settings.enable_custom_height == true }}"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius (px)",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max-width (px)",
+      "min": 280,
+      "max": 680,
+      "step": 10,
+      "default": 480
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_align",
+      "label": "Mobile vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust",
+      "name": "Trust Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Ships fast"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "LT CTA Banner",
+      "category": "LT Sections",
+      "blocks": [
+        { "type": "trust", "settings": { "label": "Ships fast" } },
+        { "type": "trust", "settings": { "label": "Designed for sleep" } },
+        { "type": "trust", "settings": { "label": "Reusable comfort" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

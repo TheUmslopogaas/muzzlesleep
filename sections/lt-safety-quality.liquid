@@ -1,0 +1,290 @@
+<style>
+#shopify-section-{{section.id}} {
+  background-color: {{ section.settings.background_color }};
+  padding: 60px 20px;
+}
+
+#shopify-section-{{section.id}} .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#shopify-section-{{section.id}} .section-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #27214D;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+#shopify-section-{{section.id}} .section-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 60px;
+}
+
+#shopify-section-{{section.id}} .features-grid {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-bottom: 60px;
+}
+
+#shopify-section-{{section.id}} .feature-item {
+  flex: 1;
+  max-width: 280px;
+}
+
+#shopify-section-{{section.id}} .feature-icon {
+  width: 80px;
+  height: 80px;
+  background-color: #e8e5f3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 25px;
+  overflow: hidden;
+}
+
+#shopify-section-{{section.id}} .feature-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+#shopify-section-{{section.id}} .feature-icon svg {
+  width: 40px;
+  height: 40px;
+  fill: #3d4c6b;
+}
+
+#shopify-section-{{section.id}} .feature-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+#shopify-section-{{section.id}} .feature-description {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
+#shopify-section-{{section.id}} .cta-button {
+  background-color: #27214D;
+  color: white;
+  padding: 18px 40px;
+  line-height: 1;
+  border-radius: 100px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+#shopify-section-{{section.id}} .cta-button:hover {
+  background-color: #2c3654;
+}
+
+#shopify-section-{{section.id}} .bottom-text {
+  font-size: 16px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  #shopify-section-{{section.id}} {
+    padding: 40px 15px;
+  }
+  
+  #shopify-section-{{section.id}} .section-title {
+    font-size: 36px;
+  }
+  
+  #shopify-section-{{section.id}} .features-grid {
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+  
+  #shopify-section-{{section.id}} .feature-item {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #shopify-section-{{section.id}} .section-title {
+    font-size: 28px;
+  }
+  
+  #shopify-section-{{section.id}} .section-subtitle {
+    font-size: 16px;
+  }
+  
+  #shopify-section-{{section.id}} .feature-icon {
+    width: 70px;
+    height: 70px;
+  }
+  
+  #shopify-section-{{section.id}} .feature-title {
+    font-size: 18px;
+  }
+  
+  #shopify-section-{{section.id}} .feature-description,
+  #shopify-section-{{section.id}} .cta-button {
+    font-size: 14px;
+  }
+}
+</style>
+
+<div class="container">
+  {% if section.settings.section_title != blank %}
+    <h2 class="section-title">{{ section.settings.section_title }}</h2>
+  {% endif %}
+  
+  {% if section.settings.section_subtitle != blank %}
+    <div class="section-subtitle">{{ section.settings.section_subtitle }}</div>
+  {% endif %}
+  
+  <div class="features-grid">
+    {% for block in section.blocks %}
+      <div class="feature-item">
+        <div class="feature-icon">
+          {% if block.settings.icon_image != blank %}
+            <img src="{{ block.settings.icon_image | img_url: '80x80' }}" alt="{{ block.settings.title }}">
+          {% else %}
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+              <path d="9 12l2 2 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          {% endif %}
+        </div>
+        
+        {% if block.settings.title != blank %}
+          <h3 class="feature-title">{{ block.settings.title }}</h3>
+        {% endif %}
+        
+        {% if block.settings.description != blank %}
+          <div class="feature-description">{{ block.settings.description }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+  
+  {% if section.settings.button_text != blank %}
+    <a href="{{ section.settings.button_url | default: '#' }}" class="cta-button">
+      {{ section.settings.button_text }}
+    </a>
+  {% endif %}
+  
+  {% if section.settings.bottom_text != blank %}
+    <div class="bottom-text">{{ section.settings.bottom_text }}</div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "LT Safety & Quality",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Safety & Quality You Can Trust"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Section Subtitle",
+      "default": "Designed with Your Health in Mind"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Get Safe, Gentle Relief Now"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "bottom_text",
+      "label": "Bottom Text",
+      "default": "Your safety is our priority"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Feature Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Feature Description",
+          "default": "Feature description goes here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Safety & Quality",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Breathe-Safe™ Technology",
+            "description": "Our patented design features breathable, micropore material that allows air circulation while maintaining secure hold."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Toxin-Free Promise",
+            "description": "The only mouth tape certified free from BPA, Phthalates, Parabens, and PFAS (Forever Chemicals)."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "Dermatologically Tested",
+            "description": "Independent testing shows excellent skin tolerability, even for users with sensitive skin conditions. Zero reported allergic reactions."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "title": "HSA/FSA Approved",
+            "description": "Qualify for Health Savings Account purchases, making better sleep an investment in your health."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

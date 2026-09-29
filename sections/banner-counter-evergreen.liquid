@@ -1,0 +1,486 @@
+<style>
+  #shopify-section-{{ section.id }} {
+    color: {{ section.settings.txt_color }}
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter {
+    position: relative;
+    /* min-height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px 0 50px 0;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter .container.top {
+    max-width: 1550px;
+  }
+  #shopify-section-{{ section.id }} .lt-banner--img img {
+    display: block;
+    max-width: 100%;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__top {
+    border: 5px solid #c3c3c3;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }  
+  #shopify-section-{{ section.id }} .lt-banner-counter__top::after {
+    {% if section.settings.overlay == true %}
+      content: '';
+    {% else %}
+      content: unset;
+    {% endif %}
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  #shopify-section-{{ section.id }} .lt-banner__content {
+    position: absolute;
+    width: 100%;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-banner__title {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 900;
+    max-width: 800px;
+    color: inherit;
+    margin: 0;
+    line-height: 1.1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  {% if section.settings.title_small == true %}
+    #shopify-section-{{ section.id }} .lt-banner__title {
+      font-size: clamp(30px, 5vw, 60px);
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .lt-banner__description {
+    font-size: clamp(15px, 2vw, 22px);
+    color: inherit;
+    max-width: 810px;
+    line-height: 1.4;
+    font-weight: 500;
+    margin: 20px 0 30px 0;
+  }
+  #shopify-section-{{ section.id }} .lt-banner__button {
+    display: inline-block;
+    background: #26204C;
+    color: white;
+    padding: 12px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(45, 27, 105, 0.3);
+  }
+  #shopify-section-{{ section.id }} .lt-banner__button:hover {
+    background: #1a0f3d;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 27, 105, 0.4);
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__bottom {
+    position: relative;
+    z-index: 2;
+    padding-top: 50px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-banner__counter-title {
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 800;
+    color: #2d1b69;
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-banner__counter-description {
+    font-size: clamp(16px, 2vw, 16px);
+    color: #222;
+    margin: 0 auto 10px auto;
+    max-width: 800px;
+    line-height: 1.5;
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__urgency {
+    font-size: clamp(16px, 2vw, 16px);
+    color: #222;
+    margin-bottom: 40px;
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__timer-label {
+    background: #27214D;
+    color: #fff;
+    line-height: 1;
+    padding: 7px 30px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    display: inline-block;
+    letter-spacing: 0.5px;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__timer {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    max-width: 700px;
+    margin: -15px auto 0 auto;
+    padding: 40px 30px;
+    background: #fff;
+    border-radius: 20px;
+    border: 3px solid #27214D;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__timer-item {
+    background: linear-gradient(135deg, #6251DA 0%, #26204C 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    min-width: 100px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__timer-number {
+    font-size: clamp(26px, 4vw, 48px);
+    font-weight: 900;
+    display: block;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__timer-label-text {
+    font-size: 12.8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 8px;
+    opacity: 0.9;
+    font-weight: 600;
+  }
+  #shopify-section-{{ section.id }} .lt-banner-counter__separator {
+    color: #2d1b69;
+    font-size: 50px;
+    font-weight: 900;
+    align-self: center;
+  }
+  #shopify-section-{{ section.id }} .lt-banner--img .mobile-img {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ section.id }} .lt-banner-counter__content {
+      padding: 40px 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__bottom {
+      padding: 40px 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__timer {
+      gap: 10px;
+      padding: 20px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__timer-item {
+      min-width: 70px;
+      padding: 15px 10px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__separator {
+      font-size: 30px;
+    }
+  }
+
+  @media (max-width: 550px) {
+    #shopify-section-{{ section.id }} .lt-banner-counter__timer {
+      gap: 0;
+      padding: 25px 15px 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__timer-item {
+      min-width: 70px;
+      padding: 12px 8px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__content {
+      padding: 40px 0;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter {
+      padding-top: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter .container.top {
+      padding: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__top {
+      border: unset;
+      border-radius: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__timer-label-text {
+      font-size: 10px;
+    }
+    #shopify-section-{{ section.id }} .lt-banner__button {
+      padding: 12px 20px;
+      font-size: 13px;
+    }
+    {% if section.settings.banner_img_mbl != blank %}
+      #shopify-section-{{ section.id }} .lt-banner--img .mobile-img {
+        display: block;
+      }
+      #shopify-section-{{ section.id }} .lt-banner--img .desktop-img {
+        display: none;
+      }
+    {% endif %}
+  }
+  @media (max-width: 429px) {
+    #shopify-section-{{ section.id }} .lt-banner-counter__bottom {
+      padding: 40px 0;
+    }
+    #shopify-section-{{ section.id }} .lt-banner-counter__timer-item {
+      min-width: 65px;
+      padding: 8px 6px;
+    }
+  }
+</style>
+
+<section class="lt-banner-counter">
+  <div class="container top">
+    <div class="lt-banner-counter__top">
+      {% if section.settings.banner_img %}
+        <div class="lt-banner--img">
+          <img src="{{ section.settings.banner_img | img_url: 'master' }}" alt="" class="desktop-img">
+          {% if section.settings.banner_img_mbl != blank %}
+            <img src="{{ section.settings.banner_img_mbl | img_url: 'master' }}" alt="" class="mobile-img">
+          {% endif %}
+        </div>
+      {% endif %}
+      <div class="lt-banner__content">
+        {% if section.settings.title != blank %}
+          <h1 class="lt-banner__title">{{ section.settings.title }}</h1>
+        {% endif %}
+        
+        {% if section.settings.description != blank %}
+          <p class="lt-banner__description">{{ section.settings.description }}</p>
+        {% endif %}
+        
+        {% if section.settings.button_label != blank and section.settings.button_url != blank %}
+          <a href="{{ section.settings.button_url }}" class="lt-banner__button">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if section.settings.show_counter %}
+    <div class="container">
+      <div class="lt-banner-counter__bottom">
+        {% if section.settings.counter_title != blank %}
+          <h2 class="lt-banner__counter-title">{{ section.settings.counter_title }}</h2>
+        {% endif %}
+        
+        {% if section.settings.counter_description != blank %}
+          <p class="lt-banner__counter-description">{{ section.settings.counter_description }}</p>
+        {% endif %}
+        
+        <p class="lt-banner-counter__urgency">🔒 Lock in your peaceful sleep because this offer expires soon...⏰</p>
+        
+        <div class="lt-banner-counter__timer-label">OFFER EXPIRES</div>
+        
+        <div class="lt-banner-counter__timer" id="lt-countdown-timer">
+          <div class="lt-banner-counter__timer-item">
+            <span class="lt-banner-counter__timer-number" id="lt-days">00</span>
+            <span class="lt-banner-counter__timer-label-text">DAYS</span>
+          </div>
+          <div class="lt-banner-counter__separator">:</div>
+          <div class="lt-banner-counter__timer-item">
+            <span class="lt-banner-counter__timer-number" id="lt-hours">00</span>
+            <span class="lt-banner-counter__timer-label-text">HOURS</span>
+          </div>
+          <div class="lt-banner-counter__separator">:</div>
+          <div class="lt-banner-counter__timer-item">
+            <span class="lt-banner-counter__timer-number" id="lt-minutes">00</span>
+            <span class="lt-banner-counter__timer-label-text">MINUTES</span>
+          </div>
+          <div class="lt-banner-counter__separator">:</div>
+          <div class="lt-banner-counter__timer-item">
+            <span class="lt-banner-counter__timer-number" id="lt-seconds">00</span>
+            <span class="lt-banner-counter__timer-label-text">SECONDS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% if section.settings.show_counter %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // --- START: New Evergreen Logic ---
+
+      // 1. Define the countdown duration from Shopify settings (e.g., 6 days).
+      const durationInDays = parseInt('{{ section.settings.countdown_days | default: "6" }}');
+      const storageKey = 'lt-countdown-end-date';
+
+      // 2. Check if an end date already exists in the user's browser storage.
+      let storedEndDate = localStorage.getItem(storageKey);
+
+      if (!storedEndDate) {
+        // 3. If NOT, this is a new visitor. Create a new end date.
+        const now = new Date();
+        const newEndDate = new Date(now.getTime() + durationInDays * 24 * 60 * 60 * 1000);
+        
+        // 4. Save the new end date to localStorage.
+        localStorage.setItem(storageKey, newEndDate.toISOString());
+        storedEndDate = newEndDate.toISOString();
+      }
+      
+      const countdownEndDate = new Date(storedEndDate);
+
+      // --- END: New Evergreen Logic ---
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownEndDate.getTime() - now;
+        
+        {% comment %} if (distance < 0) {
+          document.getElementById('lt-days').textContent = '00';
+          document.getElementById('lt-hours').textContent = '00';
+          document.getElementById('lt-minutes').textContent = '00';
+          document.getElementById('lt-seconds').textContent = '00';
+          // Optional: Hide the timer or show an "expired" message
+          // document.getElementById('lt-countdown-timer').style.display = 'none';
+          return;
+        } {% endcomment %}
+        if (distance < 0) {
+          // Reset: create a new end date starting from now
+          const now = new Date();
+          const newEndDate = new Date(now.getTime() + durationInDays * 24 * 60 * 60 * 1000);
+          localStorage.setItem(storageKey, newEndDate.toISOString());
+          countdownEndDate.setTime(newEndDate.getTime());
+
+          // Immediately update display with the new countdown
+          updateCountdown();
+          return;
+        }      
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById('lt-days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('lt-hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('lt-minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('lt-seconds').textContent = seconds.toString().padStart(2, '0');
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "LT Banner + Countdown",
+  "settings": [
+    {
+      "type": "color",
+      "id": "txt_color",
+      "label": "Section Text Color",
+      "default": "#26204C"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_img",
+      "label": "Banner Image",
+      "info": "Recommended size: 1920x1080px"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_img_mbl",
+      "label": "Banner Image (Mobile)"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay",
+      "label": "Banner Top Overlay",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Muzzle Sleep"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_small",
+      "label": "Smaller Title",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "The Sleep Strip that silences your snoring so you (and your partner) can wake up feeling refreshed"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "SLEEP QUIET NOW - 33% OFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_counter",
+      "label": "Countdown Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "counter_title",
+      "label": "Counter Section Title",
+      "default": "SLEEP GOAL: QUIET NIGHTS, RESTFUL MORNINGS",
+      "visible_if": "{{ section.settings.show_counter == true }}"
+    },
+    {
+      "type": "textarea",
+      "id": "counter_description",
+      "label": "Counter Section Description",
+      "default": "Reality check: Mouth breathing and snoring are sleep saboteurs—destroying your rest, energy, and relationships. Your Goal: Use Muzzle Strips to silence the chaos.",
+      "visible_if": "{{ section.settings.show_counter == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Countdown Timer Settings",
+      "visible_if": "{{ section.settings.show_counter == true }}"
+    },
+    {
+      "type": "number",
+      "id": "countdown_days",
+      "label": "Countdown Duration (in days)",
+      "default": 6,
+      "visible_if": "{{ section.settings.show_counter == true }}"
+    }    
+  ],
+  "presets": [
+    {
+      "name": "LT Banner + Countdown",
+      "category": "LT Sections"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,630 @@
+<!-- SCHEMA DEBUG START: enhanced-product-schema.liquid loaded -->
+<!-- Product exists: {{ product.id | default: 'NO PRODUCT' }} -->
+<!-- Product title: {{ product.title | default: 'NO TITLE' }} -->
+<!-- Request page type: {{ request.page_type }} -->
+<!-- Template: {{ template }} -->
+<!-- SCHEMA DEBUG END -->
+
+{% comment %}
+  Enhanced Product Schema for SEO & AI Visibility
+  Version: 3.8 - Fixed FAQ schema JSON parsing errors with price formatting
+  Works with: All Shopify themes (JSON/Liquid templates)
+  Last Updated: 2025
+  
+  Features:
+  - Universal theme compatibility
+  - Multiple review app support (Shopify Reviews, SPR, Loox, Junip, Judge.me, Yotpo)
+  - Configurable shipping times via metafields
+  - Enhanced error handling and fallbacks
+  - Performance optimized for large variant counts
+  - FIX: Resilient comma handling to prevent JSON parsing errors
+  - FIX: Hardened type-casting for review ratings to prevent Liquid errors
+  - FIX: Added productGroupID, shippingDestination, and highPrice fields
+  - FIX: Enhanced GTIN validation to filter out ASINs and other invalid formats
+  - FIX: Price formatting in FAQ schema to prevent JSON parsing errors
+{% endcomment %}
+
+{% comment %} Only render on product pages {% endcomment %}
+{% if product and product.id %}
+
+{% comment %} Setup all variables with fallbacks {% endcomment %}
+{% liquid
+  assign selected_variant = product.selected_or_first_available_variant
+  assign currency_code = cart.currency.iso_code | default: shop.currency
+  
+  comment
+    Enhanced shop URL handling with multiple fallbacks
+  endcomment
+  assign shop_url = shop.url
+  unless shop_url contains 'http'
+    if request.host contains 'myshopify.com'
+      assign shop_url = 'https://' | append: request.host
+    elsif shop.permanent_domain
+      assign shop_url = 'https://' | append: shop.permanent_domain
+    else
+      assign shop_url = 'https://' | append: shop.domain
+    endif
+  endunless
+  
+  assign product_description = product.description | strip_html | strip | truncate: 5000
+  if product_description == blank or product_description == nil
+    assign product_description = product.title | append: ' available at ' | append: shop.name
+  endif
+  
+  assign product_sku = selected_variant.sku | default: selected_variant.barcode | default: product.id
+  
+  comment
+    Get current timestamp for price validity
+  endcomment
+  assign current_date = 'now' | date: '%Y-%m-%d'
+  assign future_date = 'now' | date: '%s' | plus: 2592000 | date: '%Y-%m-%d'
+  
+  comment
+    Configurable shipping times - can be set via metafields or fall back to defaults
+  endcomment
+  assign min_handling_days = shop.metafields.shipping.min_handling_days | default: 0
+  assign max_handling_days = shop.metafields.shipping.max_handling_days | default: 2
+  assign min_transit_days = shop.metafields.shipping.min_transit_days | default: 1
+  assign max_transit_days = shop.metafields.shipping.max_transit_days | default: 5
+  assign return_days = shop.metafields.policies.return_days | default: 30
+  
+  comment
+    Performance optimization for products with many variants
+  endcomment
+  assign variant_limit = 50
+  assign show_all_variants = true
+  if product.variants.size > variant_limit
+    assign show_all_variants = false
+  endif
+  
+  comment
+    Calculate price range for highPrice
+  endcomment
+  assign lowest_price = product.price_min
+  assign highest_price = product.price_max
+  
+  comment
+    Format prices safely for JSON
+  endcomment
+  assign formatted_price = selected_variant.price | money
+  assign formatted_compare_price = selected_variant.compare_at_price | money
+  assign clean_price = formatted_price | strip_html | escape
+  assign clean_compare_price = formatted_compare_price | strip_html | escape
+%}
+
+{% comment %} Enhanced GTIN validation function {% endcomment %}
+{% assign valid_main_gtin = false %}
+{% assign main_gtin_type = '' %}
+{% assign main_gtin_value = '' %}
+
+{% if selected_variant.barcode and selected_variant.barcode != blank %}
+  {% assign barcode_clean = selected_variant.barcode | strip %}
+  {% assign barcode_length = barcode_clean | size %}
+  {% assign is_numeric = true %}
+  
+  {% comment %} Check if barcode contains only digits {% endcomment %}
+  {% assign test_numeric = barcode_clean | replace: '0', '' | replace: '1', '' | replace: '2', '' | replace: '3', '' | replace: '4', '' | replace: '5', '' | replace: '6', '' | replace: '7', '' | replace: '8', '' | replace: '9', '' %}
+  {% if test_numeric != blank %}
+    {% assign is_numeric = false %}
+  {% endif %}
+  
+  {% if is_numeric and barcode_length >= 8 and barcode_length <= 14 %}
+    {% case barcode_length %}
+      {% when 8 %}
+        {% assign valid_main_gtin = true %}
+        {% assign main_gtin_type = 'gtin8' %}
+        {% assign main_gtin_value = barcode_clean %}
+      {% when 12 %}
+        {% assign valid_main_gtin = true %}
+        {% assign main_gtin_type = 'gtin12' %}
+        {% assign main_gtin_value = barcode_clean %}
+      {% when 13 %}
+        {% assign valid_main_gtin = true %}
+        {% assign main_gtin_type = 'gtin13' %}
+        {% assign main_gtin_value = barcode_clean %}
+      {% when 14 %}
+        {% assign valid_main_gtin = true %}
+        {% assign main_gtin_type = 'gtin14' %}
+        {% assign main_gtin_value = barcode_clean %}
+    {% endcase %}
+  {% endif %}
+{% endif %}
+
+{% comment %} Main Product Schema {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "@id": {{ shop_url | append: product.url | json }},
+  "name": {{ product.title | strip | json }},
+  "description": {{ product_description | json }},
+  "sku": {{ product_sku | json }},
+  "productID": {{ product.id | json }},
+  "productGroupID": {{ product.id | json }},
+  "url": {{ shop_url | append: product.url | json }},
+  
+  {% comment %} Product Images {% endcomment %}
+  {% if product.images.size > 0 %}
+    "image": [
+      {% for image in product.images limit: 10 %}
+        {% if image and image.src %}
+          {
+            "@type": "ImageObject",
+            "url": {{ image | image_url: width: 1024 | prepend: 'https:' | json }},
+            "contentUrl": {{ image | image_url: width: 2048 | prepend: 'https:' | json }},
+            "caption": {{ image.alt | default: product.title | strip | json }}
+            {% if image.width %}, "width": {{ image.width }}{% endif %}
+            {% if image.height %}, "height": {{ image.height }}{% endif %}
+          }{% unless forloop.last %},{% endunless %}
+        {% endif %}
+      {% endfor %}
+    ],
+  {% else %}
+    "image": {{ 'no-image.jpg' | asset_url | json }},
+  {% endif %}
+  
+  {% comment %} Brand Information {% endcomment %}
+  {% if product.vendor and product.vendor != blank and product.vendor != 'Default' %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | strip | json }}
+    },
+    "manufacturer": {
+      "@type": "Organization",
+      "name": {{ product.vendor | strip | json }}
+    },
+  {% else %}
+    "brand": {
+      "@type": "Brand",
+      "name": {{ shop.name | json }}
+    },
+  {% endif %}
+  
+  {% comment %} Category {% endcomment %}
+  {% if product.type and product.type != blank %}
+    "category": {{ product.type | json }},
+  {% elsif collection %}
+    "category": {{ collection.title | json }},
+  {% elsif product.collections.first %}
+    "category": {{ product.collections.first.title | json }},
+  {% endif %}
+  
+  {% comment %} Enhanced GTIN/Barcode Handling with validation {% endcomment %}
+  {% if valid_main_gtin %}
+    "{{ main_gtin_type }}": {{ main_gtin_value | json }},
+  {% endif %}
+  
+  {% comment %} Weight Information {% endcomment %}
+  {% if selected_variant.weight and selected_variant.weight > 0 %}
+    "weight": {
+      "@type": "QuantitativeValue",
+      "value": {{ selected_variant.weight }},
+      "unitCode": {% case selected_variant.weight_unit %}
+        {% when 'g' %}"GRM"
+        {% when 'kg' %}"KGM"
+        {% when 'lb' %}"LBR"
+        {% when 'oz' %}"ONZ"
+        {% else %}"GRM"
+      {% endcase %}
+    },
+  {% endif %}
+  
+  {% comment %} Dimensions if available via metafields {% endcomment %}
+  {% if product.metafields.dimensions.length or product.metafields.dimensions.width or product.metafields.dimensions.height %}
+    "depth": {
+      "@type": "QuantitativeValue",
+      {% if product.metafields.dimensions.length %}
+        "value": {{ product.metafields.dimensions.length }},
+        "unitCode": {{ product.metafields.dimensions.unit | default: "CMT" | json }}
+      {% endif %}
+    },
+    "width": {
+      "@type": "QuantitativeValue",
+      {% if product.metafields.dimensions.width %}
+        "value": {{ product.metafields.dimensions.width }},
+        "unitCode": {{ product.metafields.dimensions.unit | default: "CMT" | json }}
+      {% endif %}
+    },
+    "height": {
+      "@type": "QuantitativeValue",
+      {% if product.metafields.dimensions.height %}
+        "value": {{ product.metafields.dimensions.height }},
+        "unitCode": {{ product.metafields.dimensions.unit | default: "CMT" | json }}
+      {% endif %}
+    },
+  {% endif %}
+  
+  {% comment %} Main Offer with fixes {% endcomment %}
+  "offers": {
+    "@type": "AggregateOffer",
+    "@id": {{ shop_url | append: product.url | append: '#offer' | json }},
+    "lowPrice": {{ lowest_price | divided_by: 100.0 | round: 2 }},
+    "highPrice": {{ highest_price | divided_by: 100.0 | round: 2 }},
+    "priceCurrency": {{ currency_code | json }},
+    "priceValidUntil": {{ future_date | json }},
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url": {{ shop_url | append: product.url | json }},
+    "offerCount": {{ product.variants.size }},
+    {% if selected_variant.compare_at_price and selected_variant.compare_at_price > selected_variant.price %}
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "price": {{ selected_variant.price | divided_by: 100.0 | round: 2 }},
+        "priceCurrency": {{ currency_code | json }},
+        "validFrom": {{ current_date | json }}
+      },
+    {% endif %}
+    "seller": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      "url": {{ shop_url | json }}
+      {% if shop.email %}
+        ,"email": {{ shop.email | json }}
+      {% endif %}
+      {% if shop.phone %}
+        ,"telephone": {{ shop.phone | json }}
+      {% endif %}
+    },
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "0",
+        "currency": {{ currency_code | json }}
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": {% if shop.address.country_code %}{{ shop.address.country_code | json }}{% else %}"US"{% endif %}
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": {{ min_handling_days }},
+          "maxValue": {{ max_handling_days }},
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": {{ min_transit_days }},
+          "maxValue": {{ max_transit_days }},
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": {% if shop.address.country_code %}{{ shop.address.country_code | json }}{% else %}"US"{% endif %},
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": {{ return_days }},
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "https://schema.org/FreeReturn"
+    }
+  }
+  
+  {% comment %} Variants handling with enhanced GTIN validation {% endcomment %}
+  {% if product.variants.size > 1 %}
+    ,
+    "hasVariant": [
+      {% for variant in product.variants limit: variant_limit %}
+        {% assign variant_valid_gtin = false %}
+        {% assign variant_gtin_type = '' %}
+        {% assign variant_gtin_value = '' %}
+        
+        {% if variant.barcode and variant.barcode != blank %}
+          {% assign variant_barcode_clean = variant.barcode | strip %}
+          {% assign variant_barcode_length = variant_barcode_clean | size %}
+          {% assign variant_is_numeric = true %}
+          
+          {% comment %} Check if variant barcode contains only digits {% endcomment %}
+          {% assign variant_test_numeric = variant_barcode_clean | replace: '0', '' | replace: '1', '' | replace: '2', '' | replace: '3', '' | replace: '4', '' | replace: '5', '' | replace: '6', '' | replace: '7', '' | replace: '8', '' | replace: '9', '' %}
+          {% if variant_test_numeric != blank %}
+            {% assign variant_is_numeric = false %}
+          {% endif %}
+          
+          {% if variant_is_numeric and variant_barcode_length >= 8 and variant_barcode_length <= 14 %}
+            {% case variant_barcode_length %}
+              {% when 8 %}
+                {% assign variant_valid_gtin = true %}
+                {% assign variant_gtin_type = 'gtin8' %}
+                {% assign variant_gtin_value = variant_barcode_clean %}
+              {% when 12 %}
+                {% assign variant_valid_gtin = true %}
+                {% assign variant_gtin_type = 'gtin12' %}
+                {% assign variant_gtin_value = variant_barcode_clean %}
+              {% when 13 %}
+                {% assign variant_valid_gtin = true %}
+                {% assign variant_gtin_type = 'gtin13' %}
+                {% assign variant_gtin_value = variant_barcode_clean %}
+              {% when 14 %}
+                {% assign variant_valid_gtin = true %}
+                {% assign variant_gtin_type = 'gtin14' %}
+                {% assign variant_gtin_value = variant_barcode_clean %}
+            {% endcase %}
+          {% endif %}
+        {% endif %}
+        
+        {
+          "@type": "Product",
+          "name": {{ product.title | append: ' - ' | append: variant.title | strip | json }},
+          "sku": {{ variant.sku | default: variant.id | json }},
+          "productGroupID": {{ product.id | json }},
+          {% if variant_valid_gtin %}
+            "{{ variant_gtin_type }}": {{ variant_gtin_value | json }},
+          {% endif %}
+          {% comment %} Use variant image if available, otherwise use product featured image {% endcomment %}
+          {% if variant.image %}
+            "image": {{ variant.image | image_url: width: 1024 | prepend: 'https:' | json }},
+          {% elsif product.featured_image %}
+            "image": {{ product.featured_image | image_url: width: 1024 | prepend: 'https:' | json }},
+          {% else %}
+            "image": {{ 'no-image.jpg' | asset_url | json }},
+          {% endif %}
+          "description": {{ product.description | strip_html | truncate: 160 | default: product.title | json }},
+          {% if variant.weight and variant.weight > 0 %}
+            "weight": {
+              "@type": "QuantitativeValue",
+              "value": {{ variant.weight | json }},
+              "unitCode": {% case variant.weight_unit %}
+                {% when 'g' %}"GRM"
+                {% when 'kg' %}"KGM"
+                {% when 'lb' %}"LBR"
+                {% when 'oz' %}"ONZ"
+                {% else %}"GRM"
+              {% endcase %}
+            },
+          {% endif %}
+          "offers": {
+            "@type": "Offer",
+            "price": {{ variant.price | divided_by: 100.0 | round: 2 }},
+            "priceCurrency": {{ currency_code | json }},
+            "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "url": {{ shop_url | append: variant.url | json }},
+            "seller": {
+              "@type": "Organization", 
+              "name": {{ shop.name | json }}
+            }
+          }
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ]
+  {% endif %}
+  
+{% comment %} Reviews/Ratings - Extended support for multiple review apps {% endcomment %}
+{% assign rating_found = false %}
+{% assign rating_value = 0 %}
+{% assign review_count = 0 %}
+
+{% comment %} Shopify Product Reviews {% endcomment %}
+{% if product.metafields.reviews.rating.value %}
+  {% assign temp_rating = product.metafields.reviews.rating.value.rating | default: product.metafields.reviews.rating.value | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.reviews.rating_count.value | default: product.metafields.reviews.rating_count | default: 1 %}
+  {% endif %}
+
+{% comment %} Shopify Product Reviews (SPR) {% endcomment %}
+{% elsif product.metafields.spr.reviews %}
+  {% assign temp_rating = product.metafields.spr.reviews | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.spr.review_count | default: 1 %}
+  {% endif %}
+
+{% comment %} Loox Reviews {% endcomment %}
+{% elsif product.metafields.loox.rating %}
+  {% assign temp_rating = product.metafields.loox.rating | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.loox.review_count | default: 1 %}
+  {% endif %}
+
+{% comment %} Junip Reviews {% endcomment %}
+{% elsif product.metafields.junip.rating %}
+  {% assign temp_rating = product.metafields.junip.rating | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.junip.review_count | default: 1 %}
+  {% endif %}
+
+{% comment %} Judge.me Reviews {% endcomment %}
+{% elsif product.metafields.judgeme.badge %}
+  {% assign temp_rating = product.metafields.judgeme.badge.rating | default: product.metafields.judgeme.rating | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.judgeme.badge.review_count | default: product.metafields.judgeme.review_count | default: 1 %}
+  {% endif %}
+
+{% comment %} Yotpo Reviews {% endcomment %}
+{% elsif product.metafields.yotpo.reviews_average %}
+  {% assign temp_rating = product.metafields.yotpo.reviews_average | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.yotpo.reviews_count | default: 1 %}
+  {% endif %}
+
+{% comment %} Stamped.io Reviews {% endcomment %}
+{% elsif product.metafields.stamped.reviews %}
+  {% assign temp_rating = product.metafields.stamped.reviews.rating | default: product.metafields.stamped.rating | times: 1.0 %}
+  {% if temp_rating > 0 and temp_rating <= 5 %}
+    {% assign rating_found = true %}
+    {% assign rating_value = temp_rating %}
+    {% assign review_count = product.metafields.stamped.reviews.count | default: product.metafields.stamped.count | default: 1 %}
+  {% endif %}
+{% endif %}
+
+{% if rating_found and rating_value >= 1 and rating_value <= 5 %}
+  ,
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": {{ rating_value | round: 1 }},
+    "reviewCount": {{ review_count | round | at_least: 1 }},
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+{% endif %}
+  
+  ,
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "Product ID",
+      "value": {{ product.id | json }}
+    }
+    {% if product.tags.size > 0 %}
+      ,{
+        "@type": "PropertyValue",
+        "name": "Tags",
+        "value": {{ product.tags | join: ', ' | json }}
+      }
+    {% endif %}
+    {% if product.metafields.custom.material %}
+      ,{
+        "@type": "PropertyValue",
+        "name": "Material",
+        "value": {{ product.metafields.custom.material | json }}
+      }
+    {% endif %}
+    {% if product.metafields.custom.color %}
+      ,{
+        "@type": "PropertyValue",
+        "name": "Color",
+        "value": {{ product.metafields.custom.color | json }}
+      }
+    {% endif %}
+  ]
+}
+</script>
+
+{% comment %} BreadcrumbList Schema {% endcomment %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": {{ shop_url | json }}
+    }
+    {% if collection %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ collection.title | json }},
+        "item": {{ shop_url | append: collection.url | json }}
+      }
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ product.title | json }},
+        "item": {{ shop_url | append: product.url | json }}
+      }
+    {% elsif product.collections.first %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ product.collections.first.title | json }},
+        "item": {{ shop_url | append: product.collections.first.url | json }}
+      }
+      ,{
+        "@type": "ListItem",
+        "position": 3,
+        "name": {{ product.title | json }},
+        "item": {{ shop_url | append: product.url | json }}
+      }
+    {% else %}
+      ,{
+        "@type": "ListItem",
+        "position": 2,
+        "name": {{ product.title | json }},
+        "item": {{ shop_url | append: product.url | json }}
+      }
+    {% endif %}
+  ]
+}
+</script>
+
+{% comment %} FAQ Schema with default questions - FIXED JSON parsing error {% endcomment %}
+{% comment %} Build price text components separately to ensure proper JSON encoding {% endcomment %}
+{% liquid
+  assign price_answer_base = 'The price of ' | append: product.title | append: ' is ' | append: clean_price | append: '.'
+  
+  if selected_variant.compare_at_price and selected_variant.compare_at_price > selected_variant.price
+    assign price_answer = price_answer_base | append: ' This is reduced from ' | append: clean_compare_price | append: '.'
+  else
+    assign price_answer = price_answer_base
+  endif
+  
+  if selected_variant.available
+    assign stock_answer = 'Yes, ' | append: product.title | append: ' is currently in stock and available for immediate shipping.'
+  else
+    assign stock_answer = product.title | append: ' is currently out of stock. Please check back later or contact us for availability updates.'
+  endif
+  
+  assign return_answer = 'We offer a ' | append: return_days | append: '-day return policy on all products. Items must be returned in their original condition. Please contact our customer service for return instructions.'
+  
+  assign shipping_answer = 'Orders are typically processed within ' | append: min_handling_days | append: '-' | append: max_handling_days | append: ' business days. Shipping usually takes ' | append: min_transit_days | append: '-' | append: max_transit_days | append: ' business days depending on your location.'
+%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": {{ 'What is the price of ' | append: product.title | append: '?' | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ price_answer | json }}
+      }
+    },
+    {
+      "@type": "Question",
+      "name": {{ 'Is ' | append: product.title | append: ' in stock?' | json }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ stock_answer | json }}
+      }
+    },
+    {
+      "@type": "Question", 
+      "name": "What is the return policy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ return_answer | json }}
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does shipping take?",
+      "acceptedAnswer": {
+        "@type": "Answer", 
+        "text": {{ shipping_answer | json }}
+      }
+    }
+    {% if product.metafields.faq.items %}
+      {% for faq in product.metafields.faq.items limit: 10 %}
+        ,{
+          "@type": "Question",
+          "name": {{ faq.question | json }},
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": {{ faq.answer | json }}
+          }
+        }
+      {% endfor %}
+    {% endif %}
+  ]
+}
+</script>
+
+{% endif %}

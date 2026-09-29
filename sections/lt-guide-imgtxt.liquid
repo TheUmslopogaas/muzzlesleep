@@ -1,0 +1,183 @@
+<style>
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-inner {
+    display: flex;
+    gap: 48px;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt--image-right {
+    flex-direction: row;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt--image-left {
+    flex-direction: row-reverse;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-content {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-media {
+    flex: 1 1 0;
+    min-width: 260px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-title {
+    font-size: 40px;
+    line-height: 48px;
+    margin: 0 0 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-subtitle {
+    margin: 0 0 16px;
+    font-size: 18px;
+    line-height: 24px;
+    color: #121212;
+		font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-list ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-list li {
+		color: #121212;
+		font-weight: 500;
+		letter-spacing: 0;
+		font-size: 16px;
+    position: relative;
+    padding-left: 25px;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-list li::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    background-image: url('https://cdn.shopify.com/s/files/1/0886/5542/9998/files/lets-icons_check-fill.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-image-wrap {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-imgtxt-image-wrap img {
+    width: 100%;
+    display: block;
+  }
+
+  @media(max-width:900px){
+    #shopify-section-{{ section.id }} .lt-guide-imgtxt {
+      padding-top: calc({{ section.settings.padding_top }}px * 0.6);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * 0.6);
+    }
+    #shopify-section-{{ section.id }} .lt-guide-imgtxt-inner {
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+  @media(max-width:600px){
+    #shopify-section-{{ section.id }} .lt-guide-imgtxt-title {
+      font-size: 28px;
+      line-height: 34px;
+    }
+  }
+</style>
+
+<section class="lt-guide-imgtxt">
+  <div class="lt-container">
+    <div class="lt-guide-imgtxt-inner {% if section.settings.image_position == 'left' %}lt-guide-imgtxt--image-left{% else %}lt-guide-imgtxt--image-right{% endif %}">
+      <div class="lt-guide-imgtxt-content">
+        <h2 class="lt-guide-imgtxt-title">{{ section.settings.title }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="lt-guide-imgtxt-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+        <div class="lt-guide-imgtxt-list rte">
+          {{ section.settings.list_content }}
+        </div>
+      </div>
+
+      <div class="lt-guide-imgtxt-media">
+        {% if section.settings.image != blank %}
+          <div class="lt-guide-imgtxt-image-wrap">
+            <img src="{{ section.settings.image | img_url: 'master' }}" alt="{{ section.settings.title | escape }}">
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+{
+  "name": "LT Guide Imgtxt",
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "When It’s Working"
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": "Subtitle",
+      "default": "You’ll know proper usage when:"
+    },
+    {
+      "id": "list_content",
+      "type": "richtext",
+      "label": "List content (use ul/li)",
+      "default": "<ul><li>The tape stays on all night</li><li>Your child wakes feeling rested</li><li>No dry mouth in the morning</li><li>Less tossing/turning during sleep</li></ul>"
+    },
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "Image"
+    },
+    {
+      "id": "image_position",
+      "type": "select",
+      "label": "Image position",
+      "default": "right",
+      "options": [
+        { "value": "right", "label": "Image on right" },
+        { "value": "left", "label": "Image on left" }
+      ]
+    },
+    {
+      "id": "padding_top",
+      "type": "range",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    },
+    {
+      "id": "padding_bottom",
+      "type": "range",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Guide Imgtxt"
+    }
+  ]
+}
+{% endschema %}

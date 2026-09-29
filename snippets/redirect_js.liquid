@@ -1,0 +1,9 @@
+{% if template != 'page.muzzle-sleep' %}
+    <script>
+        var previous_page = sessionStorage.getItem("_previous_page");
+        if (previous_page != '' && previous_page != null){
+            sessionStorage.setItem("_previous_page", "");
+            location.href = previous_page;
+        }
+    </script>
+{% endif %} 

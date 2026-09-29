@@ -1,0 +1,782 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+-%}
+
+<div
+  id="lt-hero-{{ section.id }}"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <div class="lt-hero-banner__inner page-width">
+
+    {%- comment -%} Background image {%- endcomment -%}
+    <div class="lt-hero-banner__bg" aria-hidden="true">
+      {%- if section.settings.background_image != blank or section.settings.mobile_background_image != blank -%}
+        {%- if section.settings.background_image != blank -%}
+          <img
+            src="{{ section.settings.background_image | img_url: 'master' }}"
+            alt="{{ section.settings.background_image.alt | escape }}"
+            class="lt-hero-banner__bg-img {% if section.settings.mobile_background_image != blank %}lt-hero-banner__bg-img--desktop{% endif %}"
+            loading="eager"
+            fetchpriority="high"
+            width="{{ section.settings.background_image.width }}"
+            height="{{ section.settings.background_image.height }}"
+          >
+        {%- endif -%}
+        {%- if section.settings.mobile_background_image != blank -%}
+          <img
+            src="{{ section.settings.mobile_background_image | img_url: 'master' }}"
+            alt="{{ section.settings.mobile_background_image.alt | escape }}"
+            class="lt-hero-banner__bg-img lt-hero-banner__bg-img--mobile"
+            loading="eager"
+            fetchpriority="high"
+            width="{{ section.settings.mobile_background_image.width }}"
+            height="{{ section.settings.mobile_background_image.height }}"
+          >
+        {%- endif -%}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'lt-hero-banner__bg-placeholder' }}
+      {%- endif -%}
+      <div class="lt-hero-banner__overlay"></div>
+    </div>
+
+    {%- comment -%} Content panel {%- endcomment -%}
+    <div class="lt-hero-banner__content-wrap">
+      <div class="lt-hero-banner__content" style="text-align: {{ section.settings.content_align }};">
+
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-hero-banner__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h1 class="lt-hero-banner__heading" style="color: {{ section.settings.heading_color }};">
+            {{ section.settings.heading }}
+          </h1>
+        {%- endif -%}
+
+        {%- if section.settings.subtext != blank -%}
+          <p class="lt-hero-banner__subtext">{{ section.settings.subtext }}</p>
+        {%- endif -%}
+
+        {%- comment -%} Add to Cart button {%- endcomment -%}
+        {%- if product != blank -%}
+          {%- assign current_variant = product.selected_or_first_available_variant -%}
+          <div class="lt-hero-banner__cta-wrap">
+            <button
+              type="button"
+              class="lt-hero-banner__atc-btn"
+              data-atc-btn
+              data-variant-id="{{ current_variant.id }}"
+              data-product-id="{{ product.id }}"
+              {% unless current_variant.available %}disabled{% endunless %}
+              aria-label="{{ section.settings.btn_text | escape }}"
+              style="
+                background-color: {{ section.settings.btn_bg_color }};
+                color: {{ section.settings.btn_text_color }};
+              "
+            >
+              <span class="lt-hero-banner__atc-btn-text" data-btn-text>
+                {%- if current_variant.available -%}
+                  {{ section.settings.btn_text }}
+                {%- else -%}
+                  {{ section.settings.btn_sold_out_text }}
+                {%- endif -%}
+              </span>
+              <span class="lt-hero-banner__atc-spinner" data-btn-spinner aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="38" stroke-dashoffset="10"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+        {%- elsif section.settings.btn_text != blank and section.settings.btn_url != blank -%}
+          <div class="lt-hero-banner__cta-wrap">
+            <a
+              href="{{ section.settings.btn_url }}"
+              class="lt-hero-banner__atc-btn lt-hero-banner__atc-btn--link"
+              style="
+                background-color: {{ section.settings.btn_bg_color }};
+                color: {{ section.settings.btn_text_color }};
+              "
+            >
+              {{ section.settings.btn_text }}
+            </a>
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Trust badges (blocks) {%- endcomment -%}
+        {%- if section.blocks.size > 0 -%}
+          <div class="lt-hero-banner__badges">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'trust_badge' -%}
+                <div class="lt-hero-banner__badge" {{ block.shopify_attributes }}>
+                  {%- if block.settings.badge_icon != blank -%}
+                    <img
+                      src="{{ block.settings.badge_icon | img_url: 'master' }}"
+                      alt=""
+                      class="lt-hero-banner__badge-icon"
+                      width="20"
+                      height="20"
+                      aria-hidden="true"
+                    >
+                  {%- else -%}
+                    <span class="lt-hero-banner__badge-icon-default" aria-hidden="true">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 1.5L2.5 4.5V9.5C2.5 13.6421 5.79 17.535 10 18.5C14.21 17.535 17.5 13.6421 17.5 9.5V4.5L10 1.5Z" stroke="{{ section.settings.heading_color }}" stroke-width="1.5" stroke-linejoin="round"/>
+                        <text x="10" y="13" text-anchor="middle" font-size="8" font-family="sans-serif" fill="{{ section.settings.heading_color }}" font-weight="700">$</text>
+                      </svg>
+                    </span>
+                  {%- endif -%}
+                  {%- if block.settings.badge_text != blank -%}
+                    <span class="lt-hero-banner__badge-text">{{ block.settings.badge_text }}</span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #lt-hero-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__inner {
+    position: relative;
+    min-height: {{ section.settings.min_height }}px;
+    display: flex;
+    align-items: center;
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    border: 4px solid #C3C3C380;
+  }
+
+  /* ── Background image ── */
+  #lt-hero-{{ section.id }} .lt-hero-banner__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__bg-img,
+  #lt-hero-{{ section.id }} .lt-hero-banner__bg-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__bg-img--mobile {
+    display: none;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__bg-placeholder svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Left-to-right gradient overlay: opaque white left → transparent right */
+  #lt-hero-{{ section.id }} .lt-hero-banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      {{ section.settings.overlay_color }} 0%,
+      {{ section.settings.overlay_color }} {{ section.settings.overlay_stop }}%,
+      transparent {{ section.settings.overlay_fade }}%
+    );
+    pointer-events: none;
+  }
+
+  /* ── Content wrapper ── */
+  #lt-hero-{{ section.id }} .lt-hero-banner__content-wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__content {
+    max-width: {{ section.settings.content_max_width }}px;
+  }
+
+  /* ── Typography ── */
+  #lt-hero-{{ section.id }} .lt-hero-banner__eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 12px;
+    opacity: 0.7;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__heading {
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin: 0 0 18px;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__heading p {
+    margin: 0;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__subtext {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 30px;
+    max-width: 600px;
+  }
+
+  /* ── CTA button ── */
+  #lt-hero-{{ section.id }} .lt-hero-banner__cta-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 280px;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn:hover:not(:disabled) {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn:active:not(:disabled) {
+    transform: translateY(0);
+    opacity: 0.75;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn--loading .lt-hero-banner__atc-btn-text {
+    opacity: 0;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn--loading .lt-hero-banner__atc-spinner {
+    display: flex;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-spinner {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__atc-spinner svg {
+    animation: lt-spin 0.75s linear infinite;
+  }
+
+  @keyframes lt-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Trust badges ── */
+  #lt-hero-{{ section.id }} .lt-hero-banner__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    margin-top: 10px;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ section.settings.text_color }};
+    letter-spacing: 0;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__badge-icon,
+  #lt-hero-{{ section.id }} .lt-hero-banner__badge-icon-default {
+    display: flex;
+    align-items: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  #lt-hero-{{ section.id }} .lt-hero-banner__badge-text {
+    font-size: 15px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    white-space: nowrap;
+  }
+
+  /* ── Responsive 767px ── */
+  @media screen and (max-width: 767px) {
+    #lt-hero-{{ section.id }} .lt-hero-banner__bg-img--desktop {
+      display: none;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__bg-img--mobile {
+      display: block;
+    }
+    #lt-hero-{{ section.id }} {
+      padding-top: {{ pt_mob }}px !important;
+      padding-bottom: {{ pb_mob }}px !important;
+      margin-top: {{ mt_mob }}px !important;
+      margin-bottom: {{ mb_mob }}px !important;
+      border-radius: {{ section.settings.border_radius | times: 0.6 | round }}px;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__inner {
+      min-height: {{ section.settings.mobile_min_height }}px;
+      align-items: {{ section.settings.mobile_content_align }};
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__overlay {
+      background: linear-gradient(
+        {% if section.settings.mobile_content_align == 'flex-start' %}to bottom{% else %}to top{% endif %},
+        {{ section.settings.overlay_color }} 0%,
+        {{ section.settings.overlay_color }} 50%,
+        rgba(255,255,255,0.55) 75%,
+        transparent 100%
+      );
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__content-wrap {
+      padding-top: 30px;
+      padding-bottom: 36px;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__content {
+      max-width: 100%;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__heading {
+      font-size: 36px;
+      margin-bottom: 14px;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__subtext {
+      font-size: 15px;
+      max-width: 100%;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__atc-btn {
+      min-width: 100%;
+      width: 100%;
+    }
+  }
+
+  /* ── Responsive 480px ── */
+  @media screen and (max-width: 480px) {
+    #lt-hero-{{ section.id }} .lt-hero-banner__heading {
+      font-size: 30px;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__subtext {
+      font-size: 14px;
+    }
+    #lt-hero-{{ section.id }} .lt-hero-banner__badge-text {
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  function initHeroBanner(sectionEl) {
+    var btn = sectionEl.querySelector('[data-atc-btn]');
+    if (!btn) return;
+
+    var textEl = sectionEl.querySelector('[data-btn-text]');
+
+    function setLoading(isLoading) {
+      btn.classList.toggle('lt-hero-banner__atc-btn--loading', isLoading);
+      btn.disabled = isLoading;
+    }
+
+    function getVariantId() {
+      /* Prefer the live variant selector if present in the page */
+      var variantInput = document.querySelector(
+        'input[name="id"][form], select[name="id"], input[name="id"]'
+      );
+      if (variantInput && variantInput.value) return variantInput.value;
+      return btn.dataset.variantId;
+    }
+
+    function handleClick() {
+      var variantId = getVariantId();
+      if (!variantId) return;
+
+      setLoading(true);
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      })
+      .then(function (res) {
+        if (!res.ok) return res.json().then(function (d) { throw new Error(d.description || 'Error'); });
+        return res.json();
+      })
+      .then(function () {
+        setLoading(false);
+
+        /* Trigger cart drawer / bubble updates that themes listen for */
+        document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+        document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true }));
+
+        /* Dawn / Debut / common theme cart drawer pattern */
+        fetch('/cart.js')
+          .then(function (r) { return r.json(); })
+          .then(function (cart) {
+            document.dispatchEvent(new CustomEvent('cart:item-added', { bubbles: true, detail: { cart: cart } }));
+            
+            /* --- REBUY SMART CART INTEGRATION --- */
+            // 1. Tell Rebuy the cart has changed so it updates the item count and subtotals
+            document.dispatchEvent(new CustomEvent('rebuy:cart.change', { detail: { cart: cart } }));
+            
+            // 2. Programmatically open the Rebuy Smart Cart
+            if (window.Rebuy && window.Rebuy.SmartCart) {
+                window.Rebuy.SmartCart.show();
+            }
+            /* ------------------------------------ */
+          });
+      })
+      .catch(function (err) {
+        setLoading(false);
+        console.error('Could not add to cart:', err);
+      });
+    }
+
+    btn.addEventListener('click', handleClick);
+
+    /* Keep variant ID in sync if a variant selector exists on the page */
+    function syncVariant(e) {
+      if (e.target && (e.target.name === 'id' || e.target.dataset.variantId)) {
+        var newId = e.target.value || e.target.dataset.variantId;
+        if (newId) btn.dataset.variantId = newId;
+      }
+    }
+    document.addEventListener('change', syncVariant);
+
+    /* Also listen for Shopify variant:changed custom event (used by many themes) */
+    document.addEventListener('variant:changed', function (e) {
+      if (e.detail && e.detail.variant) {
+        var v = e.detail.variant;
+        btn.dataset.variantId = v.id;
+        if (textEl) {
+          textEl.textContent = v.available
+            ? (btn.dataset.btnText || 'Add To Cart')
+            : (btn.dataset.btnSoldOut || 'Sold Out');
+        }
+        btn.disabled = !v.available;
+      }
+    });
+
+    /* Cleanup helper stored on element for unload */
+    sectionEl._ltHeroCleanup = function () {
+      btn.removeEventListener('click', handleClick);
+      document.removeEventListener('change', syncVariant);
+    };
+  }
+
+  function teardownHeroBanner(sectionEl) {
+    if (typeof sectionEl._ltHeroCleanup === 'function') {
+      sectionEl._ltHeroCleanup();
+      delete sectionEl._ltHeroCleanup;
+    }
+  }
+
+  /* ── Initial boot ── */
+  document.querySelectorAll('#lt-hero-{{ section.id }}').forEach(initHeroBanner);
+
+  /* ── Theme editor lifecycle ── */
+  document.addEventListener('shopify:section:load', function (e) {
+    var el = e.target.querySelector('#lt-hero-{{ section.id }}') || e.target;
+    initHeroBanner(el);
+  });
+
+  document.addEventListener('shopify:section:unload', function (e) {
+    var el = e.target.querySelector('#lt-hero-{{ section.id }}') || e.target;
+    teardownHeroBanner(el);
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "LT Product Banner w ATC",
+  "class": "lt-section-hero-banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Body text color",
+      "default": "#2d2d3a"
+    },
+    {
+      "type": "header",
+      "content": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_background_image",
+      "label": "Mobile background image"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "info": "The solid color on the left that fades to transparent",
+      "default": "#f1f0f5"
+    },
+    {
+      "type": "range",
+      "id": "overlay_stop",
+      "label": "Overlay solid stop (%)",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "info": "How far (%) the solid overlay extends before fading"
+    },
+    {
+      "type": "range",
+      "id": "overlay_fade",
+      "label": "Overlay fade end (%)",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "default": 55,
+      "info": "How far (%) the overlay fade reaches"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Section min-height (px)",
+      "min": 400,
+      "max": 900,
+      "step": 20,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "mobile_min_height",
+      "label": "Mobile min-height (px)",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "label": "Content max-width (px)",
+      "min": 320,
+      "max": 700,
+      "step": 10,
+      "default": 500
+    },
+    {
+      "type": "select",
+      "id": "content_align",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_align",
+      "label": "Mobile vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "flex-end"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Corner radius (px)",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Designed For Quiet, Comfortable Sleep</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Blocks up to 33dB of noise to help you sleep deeper — without bulky foam or painful pressure."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button label",
+      "default": "Add To Cart"
+    },
+    {
+      "type": "text",
+      "id": "btn_sold_out_text",
+      "label": "Sold out label",
+      "default": "Sold Out"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL",
+      "info": "Used only when there is no product context (e.g. in the theme editor)"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button background",
+      "default": "#1e1b4b"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "badge_icon",
+          "label": "Badge icon",
+          "info": "Leave blank to use the default shield icon"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text",
+          "default": "30-Night Comfort Guarantee"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "LT Product Banner w ATC",
+      "category": "LT Sections",
+      "blocks": [
+        {
+          "type": "trust_badge",
+          "settings": {
+            "badge_text": "30-Night Comfort Guarantee"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

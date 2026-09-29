@@ -1,0 +1,320 @@
+<div id="LT-Badge-{{ section.id }}" class="lt-badge-section">
+  <div class="lt-badge-bg-box {% if section.settings.layout == 'box_width' %}page-width{% endif %}">
+    <div class="lt-badge-content-wrapper {% if section.settings.layout == 'full_width' %}page-width{% endif %}">
+      <div class="lt-badge-inner">
+        <div class="lt-badge-image-container" style="max-width: {{ section.settings.image_width }}px;">
+          {%- if section.settings.image != blank -%}
+            <img 
+              src="{{ section.settings.image | image_url: width: section.settings.image.width }}" 
+              alt="{{ section.settings.image.alt | escape | default: section.settings.heading }}" 
+              loading="lazy" 
+              width="{{ section.settings.image.width }}" 
+              height="{{ section.settings.image.height }}"
+              class="lt-badge-img"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'lt-placeholder-svg' }}
+          {%- endif -%}
+        </div>
+
+        <div class="lt-badge-content">
+          {%- if section.settings.heading != blank -%}
+            <h2 class="lt-badge-heading">{{ section.settings.heading }}</h2>
+          {%- endif -%}
+          
+          {%- if section.settings.text != blank -%}
+            <div class="lt-badge-text">{{ section.settings.text }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Scoped Section Styles */
+  #LT-Badge-{{ section.id }} {
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-bg-box {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  {%- if section.settings.layout == 'box_width' -%}
+  #LT-Badge-{{ section.id }} .lt-badge-bg-box {
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+  }
+  {%- endif -%}
+
+  /* Desktop First Layout */
+  #LT-Badge-{{ section.id }} .lt-badge-inner {
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    flex-direction: {{ section.settings.desktop_image_position }};
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-image-container {
+    flex-shrink: 0;
+    width: 100%;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  #LT-Badge-{{ section.id }} .lt-placeholder-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #f3f3f3;
+    fill: #cccccc;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-content {
+    flex-grow: 1;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-heading {
+    color: {{ section.settings.heading_color }};
+    font-size: 50px;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-text {
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.3px;
+    font-weight: 400;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-text p {
+    margin: 0;
+  }
+  #LT-Badge-{{ section.id }} .lt-badge-text p + p {
+    margin-top: 16px;
+  }
+
+  /* Tablet & Mobile Breakpoint (767px) */
+  @media screen and (max-width: 767px) {
+    #LT-Badge-{{ section.id }} {
+      margin-top: {{ section.settings.margin_top | times: 0.6 | round }}px;
+      margin-bottom: {{ section.settings.margin_bottom | times: 0.6 | round }}px;
+    }
+
+    #LT-Badge-{{ section.id }} .lt-badge-bg-box {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+
+    #LT-Badge-{{ section.id }} .lt-badge-inner {
+      flex-direction: {{ section.settings.mobile_image_position }};
+      text-align: center;
+      gap: 32px;
+    }
+
+    #LT-Badge-{{ section.id }} .lt-badge-image-container {
+      margin: 0 auto;
+    }
+
+    #LT-Badge-{{ section.id }} .lt-badge-heading {
+      font-size: 28px;
+    }
+  }
+
+  /* Small Mobile Breakpoint (480px) */
+  @media screen and (max-width: 480px) {
+    #LT-Badge-{{ section.id }} .lt-badge-inner {
+      gap: 24px;
+    }
+    #LT-Badge-{{ section.id }} .lt-badge-heading {
+      font-size: 24px;
+    }
+    #LT-Badge-{{ section.id }} .lt-badge-img {
+      max-width: 130px;
+      margin: 0 auto;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Badge with Text",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Section Layout",
+      "options": [
+        {
+          "value": "full_width",
+          "label": "Full Width"
+        },
+        {
+          "value": "box_width",
+          "label": "Box Width"
+        }
+      ],
+      "default": "full_width"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius (Box Width Only)",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#322E54"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Badge Image"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 80,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop Image Max Width",
+      "default": 180
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "Desktop Image Position",
+      "options": [
+        {
+          "value": "row",
+          "label": "Left"
+        },
+        {
+          "value": "row-reverse",
+          "label": "Right"
+        }
+      ],
+      "default": "row"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile Image Position",
+      "options": [
+        {
+          "value": "column",
+          "label": "Top"
+        },
+        {
+          "value": "column-reverse",
+          "label": "Bottom"
+        }
+      ],
+      "default": "column"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "OEKO-TEX® STANDARD 100: the original safety standard."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>a globally recognized, independent label ensuring that textiles, from raw materials to finished products, are tested for over 1,000 harmful substances. It guarantees consumer safety regarding chemicals like pesticides, heavy metals, and formaldehyde, with stricter limits for products with closer skin contact.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Badge with Text"
+    }
+  ]
+}
+{% endschema %}

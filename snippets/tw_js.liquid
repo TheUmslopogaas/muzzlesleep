@@ -1,0 +1,25 @@
+<script>
+    window.addEventListener("scroll", function () {
+        const lazyScrollItems = document.querySelectorAll("[lazy-scroll]");
+        lazyScrollItems.forEach(function (lazyScrollItem) {
+            var offset_top = lazyScrollItem.getBoundingClientRect().top;
+            const assistant_var = -50;
+            const amplitude = lazyScrollItem.getAttribute('lazy-scroll') ?? 4;
+            var shift = (screen.height / 2 - offset_top + assistant_var);
+            lazyScrollItem.style.transform = 'translateY(' + shift / parseFloat(amplitude) * 1 + 'px)';
+        });
+    });
+
+    const scrollButtons = document.querySelectorAll('[scroll-id]');
+    scrollButtons.forEach(function (scrollButton) {
+        scrollButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            const scrollTo = scrollButton.getAttribute('scroll-id');
+            if(scrollTo) {
+                document.querySelector(`[cs-id="${scrollTo}"]`)?.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+</script>

@@ -1,0 +1,734 @@
+{% comment %} sections/before-after-image-section.liquid {% endcomment %}
+
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mobile = pt | times: 0.6 | round
+  assign pb_mobile = pb | times: 0.6 | round
+  assign mt_mobile = mt | times: 0.6 | round
+  assign mb_mobile = mb | times: 0.6 | round
+-%}
+
+<div
+  id="shopify-section-{{ section.id }}"
+  class="lt-bas-section"
+  style="
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  "
+>
+  <style>
+    #shopify-section-{{ section.id }} {
+      --lt-bas-text: {{ section.settings.text_color }};
+      --lt-bas-btn-bg: {{ section.settings.btn_bg_color }};
+      --lt-bas-btn-text: {{ section.settings.btn_text_color }};
+      --lt-bas-heading-size: {{ section.settings.heading_size }}px;
+      --lt-bas-subtext-size: {{ section.settings.subtext_size }}px;
+      --lt-bas-handle-size: 48px;
+    }
+    #shopify-section-{{ section.id }} *,
+    #shopify-section-{{ section.id }} *::before,
+    #shopify-section-{{ section.id }} *::after {
+      box-sizing: border-box;
+    }
+
+    /* ── Text content ── */
+    #shopify-section-{{ section.id }} .lt-bas-text-wrap {
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto 48px;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-heading {
+      font-size: var(--lt-bas-heading-size);
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--lt-bas-text);
+      margin: 0 0 24px;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-subtext {
+      font-size: var(--lt-bas-subtext-size);
+      line-height: 1.8;
+      color: #222;
+      margin: 0 0 18px;
+      letter-spacing: 0.2px;
+      font-weight: 500;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-subtext:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── Image layout ── */
+    #shopify-section-{{ section.id }} .lt-bas-media-row {
+      display: flex;
+      gap: 16px;
+      align-items: stretch;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider-col {
+      flex: 0 0 calc(66.666% - 8px);
+      min-width: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-side-col {
+      flex: 0 0 calc(33.333% - 8px);
+      min-width: 0;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-side-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 20px;
+      border: 4px solid rgba(0,0,0,0.12);
+    }
+    #shopify-section-{{ section.id }} .lt-bas-side-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 380px;
+      background: #e8e8e8;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    /* ── Before/After Slider ── */
+    #shopify-section-{{ section.id }} .lt-bas-slider {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 380px;
+      border-radius: 20px;
+      overflow: hidden;
+      user-select: none;
+      cursor: col-resize;
+      border: 4px solid rgba(0,0,0,0.12);
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__after,
+    #shopify-section-{{ section.id }} .lt-bas-slider__before-wrap {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__after img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__after .lt-bas-placeholder-img {
+      width: 100%;
+      height: 100%;
+      background: #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 14px;
+    }
+
+    /* Before layer clips from left */
+    #shopify-section-{{ section.id }} .lt-bas-slider__before-wrap {
+      clip-path: inset(0 50% 0 0);
+      /* JS will override the right value */
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__before-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__before-wrap .lt-bas-placeholder-img {
+      width: 100%;
+      height: 100%;
+      background: #d5d5d5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-size: 14px;
+    }
+
+    /* Divider line */
+    #shopify-section-{{ section.id }} .lt-bas-slider__divider {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: #fff;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* Handle */
+    #shopify-section-{{ section.id }} .lt-bas-slider__handle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: var(--lt-bas-handle-size);
+      height: var(--lt-bas-handle-size);
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      pointer-events: none;
+      transition: box-shadow 0.15s;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider.lt-bas-slider--dragging .lt-bas-slider__handle {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__handle svg {
+      width: 22px;
+      height: 22px;
+      color: #222;
+    }
+
+    /* Labels */
+    #shopify-section-{{ section.id }} .lt-bas-slider__label {
+      position: absolute;
+      bottom: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      z-index: 5;
+      pointer-events: none;
+      letter-spacing: 0.02em;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__label--before {
+      left: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-slider__label--after {
+      right: 16px;
+    }
+
+    /* ── CTA Button ── */
+    #shopify-section-{{ section.id }} .lt-bas-cta-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 48px;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-btn {
+      display: inline-block;
+      background-color: var(--lt-bas-btn-bg);
+      color: var(--lt-bas-btn-text);
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1;
+      padding: 20px 52px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.15s;
+      letter-spacing: 0.01em;
+    }
+    #shopify-section-{{ section.id }} .lt-bas-btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+    #shopify-section-{{ section.id }} .lt-bas-btn:active {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ── Responsive: 767px ── */
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ pt_mobile }}px !important;
+        padding-bottom: {{ pb_mobile }}px !important;
+        margin-top: {{ mt_mobile }}px !important;
+        margin-bottom: {{ mb_mobile }}px !important;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-heading {
+        font-size: calc(var(--lt-bas-heading-size) * 0.72);
+      }
+      #shopify-section-{{ section.id }} .lt-bas-subtext {
+        font-size: calc(var(--lt-bas-subtext-size) * 0.9);
+      }
+      #shopify-section-{{ section.id }} .lt-bas-text-wrap {
+        margin-bottom: 32px;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-media-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-slider-col,
+      #shopify-section-{{ section.id }} .lt-bas-side-col {
+        flex: 0 0 100%;
+        width: 100%;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-slider {
+        min-height: 280px;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-side-placeholder {
+        min-height: 240px;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-cta-wrap {
+        margin-top: 32px;
+      }
+    }
+
+    /* ── Responsive: 480px ── */
+    @media (max-width: 480px) {
+      #shopify-section-{{ section.id }} .lt-bas-heading {
+        font-size: calc(var(--lt-bas-heading-size) * 0.58);
+      }
+      #shopify-section-{{ section.id }} .lt-bas-subtext {
+        font-size: calc(var(--lt-bas-subtext-size) * 0.82);
+        line-height: 2;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-slider {
+        min-height: 220px;
+      }
+      #shopify-section-{{ section.id }} .lt-bas-btn {
+        font-size: 15px;
+        padding: 16px 36px;
+      }
+    }
+  </style>
+
+  <div class="page-width">
+
+    {%- comment -%} ── Text block ── {%- endcomment -%}
+    <div class="lt-bas-text-wrap">
+      {%- if section.settings.heading != blank -%}
+        <{{ section.settings.heading_tag }} class="lt-bas-heading">
+          {{ section.settings.heading }}
+        </{{ section.settings.heading_tag }}>
+      {%- endif -%}
+
+      {%- if section.settings.subtext_1 != blank -%}
+        <p class="lt-bas-subtext">{{ section.settings.subtext_1 }}</p>
+      {%- endif -%}
+
+      {%- if section.settings.subtext_2 != blank -%}
+        <p class="lt-bas-subtext">{{ section.settings.subtext_2 }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ── Media row ── {%- endcomment -%}
+    <div class="lt-bas-media-row">
+
+      {%- comment -%} Before/After Slider {%- endcomment -%}
+      <div class="lt-bas-slider-col">
+        <div
+          class="lt-bas-slider"
+          data-slider
+          role="img"
+          aria-label="{{ section.settings.before_label }} / {{ section.settings.after_label }} comparison"
+        >
+          {%- comment -%} After image (behind) {%- endcomment -%}
+          <div class="lt-bas-slider__after">
+            {%- if section.settings.after_image != blank -%}
+              <img
+                src="{{ section.settings.after_image | image_url: width: 1200 }}"
+                alt="{{ section.settings.after_image.alt | escape | default: section.settings.after_label }}"
+                loading="lazy"
+                draggable="false"
+              >
+            {%- else -%}
+              <div class="lt-bas-placeholder-img">{{ 'image' | placeholder_svg_tag }}</div>
+            {%- endif -%}
+          </div>
+
+          {%- comment -%} Before image (clips from left) {%- endcomment -%}
+          <div class="lt-bas-slider__before-wrap" data-before-wrap>
+            {%- if section.settings.before_image != blank -%}
+              <img
+                src="{{ section.settings.before_image | image_url: width: 1200 }}"
+                alt="{{ section.settings.before_image.alt | escape | default: section.settings.before_label }}"
+                loading="lazy"
+                draggable="false"
+              >
+            {%- else -%}
+              <div class="lt-bas-placeholder-img">{{ 'image' | placeholder_svg_tag }}</div>
+            {%- endif -%}
+          </div>
+
+          {%- comment -%} Divider line + handle {%- endcomment -%}
+          <div class="lt-bas-slider__divider" data-divider></div>
+          <div class="lt-bas-slider__handle" data-handle aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12H3M8 7l-5 5 5 5M16 7l5 5-5 5"/>
+            </svg>
+          </div>
+
+          {%- if section.settings.before_label != blank -%}
+            <span class="lt-bas-slider__label lt-bas-slider__label--before" aria-hidden="true">
+              {{ section.settings.before_label }}
+            </span>
+          {%- endif -%}
+
+          {%- if section.settings.after_label != blank -%}
+            <span class="lt-bas-slider__label lt-bas-slider__label--after" aria-hidden="true">
+              {{ section.settings.after_label }}
+            </span>
+          {%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Side image {%- endcomment -%}
+      <div class="lt-bas-side-col">
+        {%- if section.settings.side_image != blank -%}
+          <img
+            class="lt-bas-side-img"
+            src="{{ section.settings.side_image | image_url: width: 800 }}"
+            alt="{{ section.settings.side_image.alt | escape | default: section.settings.side_image_alt }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div class="lt-bas-side-placeholder">{{ 'image' | placeholder_svg_tag }}</div>
+        {%- endif -%}
+      </div>
+
+    </div>{%- comment -%} /.lt-bas-media-row {%- endcomment -%}
+
+    {%- comment -%} ── CTA Button ── {%- endcomment -%}
+    {%- if section.settings.btn_label != blank -%}
+      <div class="lt-bas-cta-wrap">
+        {%- if section.settings.btn_url != blank -%}
+          <a
+            href="{{ section.settings.btn_url }}"
+            class="lt-bas-btn"
+            {% if section.settings.btn_new_tab %}target="_blank" rel="noopener"{% endif %}
+          >
+            {{ section.settings.btn_label }}
+          </a>
+        {%- else -%}
+          <button class="lt-bas-btn" type="button">{{ section.settings.btn_label }}</button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+  </div>{%- comment -%} /.page-width {%- endcomment -%}
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var SECTION_ID = {{ section.id | json }};
+
+  function initSlider(sectionEl) {
+    var slider = sectionEl.querySelector('[data-slider]');
+    if (!slider) return;
+
+    var beforeWrap = slider.querySelector('[data-before-wrap]');
+    var divider    = slider.querySelector('[data-divider]');
+    var handle     = slider.querySelector('[data-handle]');
+    var pct        = 50; // starting position
+
+    function setPosition(newPct) {
+      pct = Math.min(Math.max(newPct, 0), 100);
+      var right = (100 - pct).toFixed(3) + '%';
+      beforeWrap.style.clipPath = 'inset(0 ' + right + ' 0 0)';
+      divider.style.left  = pct + '%';
+      handle.style.left   = pct + '%';
+    }
+
+    function getX(e) {
+      return e.touches ? e.touches[0].clientX : e.clientX;
+    }
+
+    function onMove(e) {
+      var rect = slider.getBoundingClientRect();
+      var x = getX(e) - rect.left;
+      setPosition((x / rect.width) * 100);
+    }
+
+    function onUp() {
+      slider.classList.remove('lt-bas-slider--dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup',   onUp);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend',  onUp);
+    }
+
+    function onDown(e) {
+      e.preventDefault();
+      slider.classList.add('lt-bas-slider--dragging');
+      onMove(e);
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup',   onUp);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('touchend',  onUp);
+    }
+
+    /* Keyboard support on the slider */
+    slider.setAttribute('tabindex', '0');
+    slider.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft')  setPosition(pct - 2);
+      if (e.key === 'ArrowRight') setPosition(pct + 2);
+    });
+
+    slider.addEventListener('mousedown',  onDown);
+    slider.addEventListener('touchstart', onDown, { passive: false });
+
+    setPosition(50);
+
+    return onUp; /* returned so cleanup can call it */
+  }
+
+  function init() {
+    var sectionEl = document.getElementById('shopify-section-' + SECTION_ID);
+    if (!sectionEl) return;
+    initSlider(sectionEl);
+  }
+
+  /* Initial run */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  /* Theme editor lifecycle */
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail && e.detail.sectionId === SECTION_ID) {
+      init();
+    }
+  });
+
+  document.addEventListener('shopify:section:unload', function (e) {
+    if (e.detail && e.detail.sectionId === SECTION_ID) {
+      /* Cleanup: remove any stray global listeners from an interrupted drag */
+      document.removeEventListener('mousemove', function () {});
+      document.removeEventListener('mouseup',   function () {});
+      document.removeEventListener('touchmove', function () {});
+      document.removeEventListener('touchend',  function () {});
+    }
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "LT Before After + Image",
+  "tag": "div",
+  "class": "lt-bas-section-wrapper",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "Original is Sleep → Oxygen → REM → Rejuvenation.\nNew Version (Cleaner, Smarter, More Premium)"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading HTML tag",
+      "options": [
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size (desktop)",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "header",
+      "content": "Body text"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext_1",
+      "label": "Paragraph 1",
+      "default": "Nose breathing increases oxygen intake and supports deeper REM sleep cycles — the stage where the body repairs tissue, reduces inflammation, and replenishes moisture reserves."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext_2",
+      "label": "Paragraph 2",
+      "default": "By sealing the lips softly during sleep, Muzzle encourages nasal breathing patterns linked to improved sleep quality, clearer skin, less puffiness, and healthier facial development."
+    },
+    {
+      "type": "range",
+      "id": "subtext_size",
+      "label": "Body text size (desktop)",
+      "min": 13,
+      "max": 22,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Before / After Slider"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before image"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After image"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "header",
+      "content": "Side Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "side_image",
+      "label": "Side image"
+    },
+    {
+      "type": "text",
+      "id": "side_image_alt",
+      "label": "Side image alt text",
+      "default": "Product in use"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button label",
+      "default": "Upgrade My Sleep"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "btn_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button background color",
+      "default": "#ff45a4"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT LT Before After + Image",
+      "settings": {
+        "heading": "Original is Sleep → Oxygen → REM → Rejuvenation.\nNew Version (Cleaner, Smarter, More Premium)",
+        "subtext_1": "Nose breathing increases oxygen intake and supports deeper REM sleep cycles — the stage where the body repairs tissue, reduces inflammation, and replenishes moisture reserves.",
+        "subtext_2": "By sealing the lips softly during sleep, Muzzle encourages nasal breathing patterns linked to improved sleep quality, clearer skin, less puffiness, and healthier facial development.",
+        "before_label": "Before",
+        "after_label": "After",
+        "btn_label": "Upgrade My Sleep",
+        "btn_bg_color": "#ff45a4",
+        "btn_text_color": "#ffffff"
+      }
+    }
+  ]
+}
+{% endschema %}

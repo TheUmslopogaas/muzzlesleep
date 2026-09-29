@@ -1,0 +1,738 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign left_blocks = ''
+  assign right_blocks = ''
+  for block in section.blocks
+    if block.type == 'left_feature'
+      assign left_blocks = left_blocks | append: block.id | append: ','
+    elsif block.type == 'right_feature'
+      assign right_blocks = right_blocks | append: block.id | append: ','
+    endif
+  endfor
+-%}
+
+<div class="lt-bbc">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="lt-bbc__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="lt-bbc__grid">
+      {%- comment -%} ----- LEFT (negative) card ----- {%- endcomment -%}
+      <div class="lt-bbc__card lt-bbc__card--neg">
+        {%- if section.settings.left_title != blank -%}
+          <div class="lt-bbc__card-head">
+            <h3 class="lt-bbc__card-title">{{ section.settings.left_title }}</h3>
+            {%- if section.settings.left_subtitle != blank -%}
+              <p class="lt-bbc__card-sub">{{ section.settings.left_subtitle }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="lt-bbc__media">
+          {%- if section.settings.left_image != blank -%}
+            <img
+              class="lt-bbc__img"
+              src="{{ section.settings.left_image | image_url: width: section.settings.left_image.width }}"
+              alt="{{ section.settings.left_image.alt | default: section.settings.left_title | escape }}"
+              width="{{ section.settings.left_image.width }}"
+              height="{{ section.settings.left_image.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'lt-bbc__img lt-bbc__img--placeholder' }}
+          {%- endif -%}
+
+          {%- if section.settings.left_badge != blank -%}
+            <span class="lt-bbc__badge">
+              <img
+                class="lt-bbc__badge-img"
+                src="{{ section.settings.left_badge | image_url: width: 220 }}"
+                alt=""
+                width="110"
+                height="110"
+                loading="lazy"
+              >
+            </span>
+          {%- endif -%}
+        </div>
+
+        <ul class="lt-bbc__list" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'left_feature' -%}
+              <li class="lt-bbc__item" {{ block.shopify_attributes }}>
+                <span class="lt-bbc__icon" aria-hidden="true">
+                  {%- if block.settings.icon != blank -%}
+                    <img
+                      src="{{ block.settings.icon | image_url: width: 96 }}"
+                      alt=""
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'lt-bbc__icon-ph' }}
+                  {%- endif -%}
+                  <span class="lt-bbc__mark lt-bbc__mark--no">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                      <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                </span>
+                {%- if block.settings.text != blank -%}
+                  <span class="lt-bbc__text">{{ block.settings.text }}</span>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      {%- comment -%} ----- VS divider ----- {%- endcomment -%}
+      {%- if section.settings.show_vs -%}
+        <div class="lt-bbc__vs" aria-hidden="true">
+          <span class="lt-bbc__vs-badge">{{ section.settings.vs_label | default: 'VS' }}</span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} ----- RIGHT (positive) card ----- {%- endcomment -%}
+      <div class="lt-bbc__card lt-bbc__card--pos">
+        {%- if section.settings.right_title != blank -%}
+          <div class="lt-bbc__card-head">
+            <h3 class="lt-bbc__card-title">{{ section.settings.right_title }}</h3>
+            {%- if section.settings.right_subtitle != blank -%}
+              <p class="lt-bbc__card-sub">{{ section.settings.right_subtitle }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        <div class="lt-bbc__media">
+          {%- if section.settings.right_image != blank -%}
+            <img
+              class="lt-bbc__img"
+              src="{{ section.settings.right_image | image_url: width: section.settings.right_image.width }}"
+              alt="{{ section.settings.right_image.alt | default: section.settings.right_title | escape }}"
+              width="{{ section.settings.right_image.width }}"
+              height="{{ section.settings.right_image.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'lt-bbc__img lt-bbc__img--placeholder' }}
+          {%- endif -%}
+
+          {%- if section.settings.right_badge != blank -%}
+            <span class="lt-bbc__badge">
+              <img
+                class="lt-bbc__badge-img"
+                src="{{ section.settings.right_badge | image_url: width: 220 }}"
+                alt=""
+                width="110"
+                height="110"
+                loading="lazy"
+              >
+            </span>
+          {%- endif -%}
+        </div>
+
+        <ul class="lt-bbc__list" role="list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'right_feature' -%}
+              <li class="lt-bbc__item" {{ block.shopify_attributes }}>
+                <span class="lt-bbc__icon lt-bbc__icon--pos" aria-hidden="true">
+                  {%- if block.settings.icon != blank -%}
+                    <img
+                      src="{{ block.settings.icon | image_url: width: 96 }}"
+                      alt=""
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'lt-bbc__icon-ph' }}
+                  {%- endif -%}
+                  <span class="lt-bbc__mark lt-bbc__mark--yes">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                      <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </span>
+                {%- if block.settings.text != blank -%}
+                  <span class="lt-bbc__text">{{ block.settings.text }}</span>
+                {%- endif -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- style -%}
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__heading {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    margin: 0 0 40px;
+    text-align: center;
+    color: {{ section.settings.heading_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.card_gap }}px;
+    align-items: stretch;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card {
+    display: flex;
+    flex-direction: column;
+    padding: 28px 24px 12px;
+    border-radius: 28px;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card--neg {
+    background-color: {{ section.settings.neg_bg }};
+    color: {{ section.settings.neg_text }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card--pos {
+    background-color: {{ section.settings.pos_bg }};
+    color: {{ section.settings.pos_text }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card-head {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card-title {
+    margin: 0;
+    font-size: 32px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card-sub {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 600;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__media {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: {{ section.settings.image_focal_x }}% {{ section.settings.image_focal_y }}%;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__img--placeholder {
+    object-fit: cover;
+    background: #d6d8e0;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__badge {
+    position: absolute;
+    bottom: 50%;
+    transform: translateY(50%);
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid {{ section.settings.badge_ring }};
+    background: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card--neg .lt-bbc__badge {
+    right: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card--pos .lt-bbc__badge {
+    right: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__badge-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__list {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 4px;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card--neg .lt-bbc__item + .lt-bbc__item {
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__card--pos .lt-bbc__item + .lt-bbc__item {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__icon {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: {{ section.settings.neg_icon_bg }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__icon--pos {
+    background: {{ section.settings.pos_icon_bg }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__icon img {
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    display: block;
+    border-radius: 50%;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__icon-ph {
+    width: 60%;
+    height: 60%;
+    opacity: 0.5;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__mark {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__mark--no {
+    color: {{ section.settings.mark_no_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__mark--yes {
+    color: {{ section.settings.mark_yes_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__text {
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 500;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__vs {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .lt-bbc__vs-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    background: #fff;
+    color: {{ section.settings.heading_color }};
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__heading {
+      font-size: 34px;
+      margin-bottom: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__grid {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__card-title {
+      font-size: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__badge {
+      width: 78px;
+      height: 78px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__vs {
+      top: auto;
+      left: 50%;
+      /* sits in the gap between stacked cards */
+      transform: translate(-50%, -22px);
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__vs-badge {
+      width: 64px;
+      height: 64px;
+      font-size: 22px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-bbc__heading {
+      font-size: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__card {
+      padding: 22px 16px 8px;
+      border-radius: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__icon {
+      width: 46px;
+      height: 46px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__item {
+      gap: 12px;
+      padding: 12px 2px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-bbc__text {
+      font-size: 15px;
+    }
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "LT Breather Comparison",
+  "tag": "section",
+  "class": "lt-bbc-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ECEAFB"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Better Breathing. Better Rest. Better You"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "header",
+      "content": "VS divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vs",
+      "label": "Show VS badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "vs_label",
+      "label": "VS label",
+      "default": "VS",
+      "visible_if": "{{ section.settings.show_vs }}"
+    },
+    {
+      "type": "header",
+      "content": "Left card (negative)"
+    },
+    {
+      "type": "text",
+      "id": "left_title",
+      "label": "Title",
+      "default": "Mouth Breather"
+    },
+    {
+      "type": "text",
+      "id": "left_subtitle",
+      "label": "Subtitle",
+      "info": "Optional"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "left_badge",
+      "label": "Diagram badge (circle)"
+    },
+    {
+      "type": "color",
+      "id": "neg_bg",
+      "label": "Card background",
+      "default": "#211D52"
+    },
+    {
+      "type": "color",
+      "id": "neg_text",
+      "label": "Card text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "neg_icon_bg",
+      "label": "Icon background",
+      "default": "#6E6B86"
+    },
+    {
+      "type": "header",
+      "content": "Right card (positive)"
+    },
+    {
+      "type": "text",
+      "id": "right_title",
+      "label": "Title",
+      "default": "Nose Breather"
+    },
+    {
+      "type": "text",
+      "id": "right_subtitle",
+      "label": "Subtitle",
+      "default": "with Nose Strip"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "right_badge",
+      "label": "Diagram badge (circle)"
+    },
+    {
+      "type": "color",
+      "id": "pos_bg",
+      "label": "Card background",
+      "default": "#E5E1F5"
+    },
+    {
+      "type": "color",
+      "id": "pos_text",
+      "label": "Card text",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "color",
+      "id": "pos_icon_bg",
+      "label": "Icon background",
+      "default": "#3B3768"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "color",
+      "id": "badge_ring",
+      "label": "Badge ring color",
+      "default": "#1E1B4B"
+    },
+    {
+      "type": "header",
+      "content": "Status marks"
+    },
+    {
+      "type": "color",
+      "id": "mark_no_color",
+      "label": "Left mark (cross) color",
+      "default": "#E03B3B"
+    },
+    {
+      "type": "color",
+      "id": "mark_yes_color",
+      "label": "Right mark (check) color",
+      "default": "#2EA84F"
+    },
+    {
+      "type": "range",
+      "id": "image_focal_x",
+      "label": "Image focal X",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "image_focal_y",
+      "label": "Image focal Y",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Gap between cards",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "left_feature",
+      "name": "Left feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Feature description"
+        }
+      ]
+    },
+    {
+      "type": "right_feature",
+      "name": "Right feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Feature description"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 14,
+  "presets": [
+    {
+      "name": "LT Breather Comparison",
+      "blocks": [
+        { "type": "left_feature", "settings": { "text": "Bypasses the nose\u2019s natural filtering" } },
+        { "type": "left_feature", "settings": { "text": "Can feel less controlled in sleep or exercise" } },
+        { "type": "left_feature", "settings": { "text": "Common when nasal airflow is restricted" } },
+        { "type": "left_feature", "settings": { "text": "May cause dry mouth" } },
+        { "type": "left_feature", "settings": { "text": "Less ideal for rest, exercise, and recovery" } },
+        { "type": "right_feature", "settings": { "text": "Supports airflow through the nose" } },
+        { "type": "right_feature", "settings": { "text": "Helps breathing feel calmer and more controlled" } },
+        { "type": "right_feature", "settings": { "text": "Gently opens nasal passages for easier airflow" } },
+        { "type": "right_feature", "settings": { "text": "Supports closed-mouth breathing" } },
+        { "type": "right_feature", "settings": { "text": "Better supports natural breathing mechanics" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

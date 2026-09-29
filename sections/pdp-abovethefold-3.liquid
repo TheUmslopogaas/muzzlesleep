@@ -1,0 +1,2082 @@
+{% comment %}
+  PDP Abovethefold 2
+  sections/pdp-abovethefold-2.liquid
+{% endcomment %}
+
+{%- liquid
+  assign current_variant   = product.selected_or_first_available_variant
+  assign pdp_badges        = product.metafields.custom.pdp_badges.value
+  assign atf_reviews       = product.metafields.custom.product_abovethefold_reviews.value
+  assign product_desc_html = product.metafields.custom.product_description | metafield_tag
+  assign delivery_html     = product.metafields.custom.delivery_returns | metafield_tag
+
+  assign pt        = section.settings.padding_top
+  assign pb        = section.settings.padding_bottom
+  assign mt        = section.settings.margin_top
+  assign mb        = section.settings.margin_bottom
+  assign pt_mobile = pt | times: 0.6 | round
+  assign pb_mobile = pb | times: 0.6 | round
+  assign mt_mobile = mt | times: 0.6 | round
+  assign mb_mobile = mb | times: 0.6 | round
+
+-%}
+
+<style>
+  /* ─── Section shell ─────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  /* ─── Two-column layout ─────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-pdp-wrap {
+    display: flex;
+    gap: 25px;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  /* ─── Gallery – left ────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-gallery {
+    flex: 0 0 48%;
+    width: 48%;
+    position: sticky;
+    top: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__main {
+    border: 1.5px solid #d1d5db;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: #f5f5f3;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.25s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__thumbs {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__thumbs::-webkit-scrollbar {
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__thumb {
+    flex: 0 0 calc((100% - 60px) / 6);
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background: #f5f5f3;
+    transition: border-color 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__thumb.lt-active,
+  #shopify-section-{{ section.id }} .lt-gallery__thumb:hover {
+    border-color: #1e1b4b;
+  }
+  #shopify-section-{{ section.id }} .lt-gallery__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ─── Info – right ──────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-info {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+  }
+  #shopify-section-{{ section.id }} .lt-block--title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .lt-info__title {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 5px 0;
+  }
+
+  /* JudgeMe widget row */
+  #shopify-section-{{ section.id }} .lt-info__judgeme {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 18px;
+    font-size: 14px;
+  }
+
+  /* ─── Price ─────────────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-price-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .lt-price-current {
+    font-size: 22px;
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-price-compare {
+    font-size: 16px;
+    font-weight: 500;
+    color: #9ca3af;
+    text-decoration: line-through;
+    letter-spacing: 0;
+  }
+
+  /* ─── Divider ───────────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-divider {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 15px 0;
+  }
+
+  /* ─── Product description (from product.description) ───────────────────── */
+  #shopify-section-{{ section.id }} .lt-desc-block h1,
+  #shopify-section-{{ section.id }} .lt-desc-block h2,
+  #shopify-section-{{ section.id }} .lt-desc-block h3 {
+    font-size: 21px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 8px;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-desc-block p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #0F0F10;
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-desc-block p + p {
+    margin-top: 8px;
+  }
+
+  /* ─── Badges ────────────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-badge {
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 600;
+    color: #374151;
+    border: 1px solid rgb(0 0 0 / 20%);
+    border-radius: 6px;
+    padding: 5px 12px;
+    background: #F6F5FF;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  /* ─── Variant cards ─────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-variants {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card {
+    flex: 0 0 auto;
+    width: 175px;
+    cursor: pointer;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card__label {
+    font-size: 18px;
+    letter-spacing: 0;
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin-bottom: 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card__image {
+    width: 100%;
+    aspect-ratio: 9 / 4;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background: #e5e7eb;
+    transition: border-color 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card.lt-selected .lt-variant-card__image,
+  #shopify-section-{{ section.id }} .lt-variant-card:hover .lt-variant-card__image {
+    border-color: #6251DA;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card__weight {
+    font-size: 14px;
+    color: #374151;
+    margin: 8px 0 0;
+    line-height: 1.4;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card__weight p {
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-variant-card__weight strong {
+    font-weight: 700;
+  }
+
+  /* ─── Reviews slider ────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-reviews-outer {
+    position: relative;
+    padding: 0 4px;
+  }
+  #shopify-section-{{ section.id }} .lt-reviews-track-wrap {
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+  }
+  #shopify-section-{{ section.id }} .lt-reviews-track {
+    display: flex;
+    will-change: transform;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide {
+    flex: 0 0 100%;
+    padding: 5px 18px 15px;
+    box-sizing: border-box;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__author-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__name p,
+  #shopify-section-{{ section.id }} .lt-review-slide__name h2,
+  #shopify-section-{{ section.id }} .lt-review-slide__name h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__stars {
+    display: inline-flex;
+    gap: 1px;
+    font-size: 14px;
+    line-height: 1;
+    color: #f59e0b;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__star--empty {
+    color: #d1d5db;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__body {
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 400;
+    color: #111;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-review-slide__body p {
+    margin: 0;
+    letter-spacing: 0;
+  }
+
+  /* Arrow buttons */
+  #shopify-section-{{ section.id }} .lt-reviews-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.2s, border-color 0.2s;
+    padding: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-reviews-arrow:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+  }
+  #shopify-section-{{ section.id }} .lt-reviews-arrow--prev {
+    left: -16px;
+  }
+  #shopify-section-{{ section.id }} .lt-reviews-arrow--next {
+    right: -16px;
+  }
+  #shopify-section-{{ section.id }} .lt-reviews-arrow svg {
+    width: 13px;
+    height: 13px;
+    stroke: #374151;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: block;
+  }
+
+  /* ─── Accordions ────────────────────────────────────────────────────────── */
+  /* Each accordion item carries both borders. When two accordion blocks are    */
+  /* adjacent the redundant top border of the second is suppressed via the      */
+  /* adjacent-sibling selector, preventing a double-line between items.         */
+  #shopify-section-{{ section.id }} .lt-accordion-item {
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  #shopify-section-{{ section.id }} .lt-block--accordion-item + .lt-block--accordion-item .lt-accordion-item {
+    border-top: none;
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-btn {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: {{ section.settings.text_color }};
+    text-align: left;
+    gap: 12px;
+  }
+
+  /* Plus / minus icon */
+  #shopify-section-{{ section.id }} .lt-accordion-icon {
+    flex-shrink: 0;
+    position: relative;
+    width: 18px;
+    height: 18px;
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-icon::before,
+  #shopify-section-{{ section.id }} .lt-accordion-icon::after {
+    content: '';
+    position: absolute;
+    background: {{ section.settings.text_color }};
+    border-radius: 2px;
+    top: 50%;
+    left: 50%;
+  }
+
+  /* horizontal bar */
+  #shopify-section-{{ section.id }} .lt-accordion-icon::before {
+    width: 14px;
+    height: 2px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* vertical bar */
+  #shopify-section-{{ section.id }} .lt-accordion-icon::after {
+    width: 2px;
+    height: 14px;
+    transform: translate(-50%, -50%) rotate(0deg);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-btn[aria-expanded="true"] .lt-accordion-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    opacity: 0;
+  }
+
+  /* Animated body */
+  #shopify-section-{{ section.id }} .lt-accordion-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-content {
+    padding-bottom: 18px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-content p {
+    margin: 0 0 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-content p:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-accordion-content a {
+    color: #1e1b4b;
+    text-decoration: underline;
+  }
+
+  /* ─── CTA button ────────────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-cta-btn {
+    display: block;
+    width: 100%;
+    padding: 18px 24px;
+    background: #1e1b4b;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-btn:hover {
+    background: #2d2a60;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-btn:active {
+    transform: scale(0.99);
+  }
+  #shopify-section-{{ section.id }} .lt-cta-btn[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .lt-cta-btn.lt-loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  /* ─── Placeholder SVG ───────────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-placeholder-svg {
+    width: 100%;
+    height: 100%;
+    fill: #e5e7eb;
+  }
+
+  #shopify-section-{{ section.id }} .product_review_part {
+    display: flex;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    gap: 0px 5px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+  }
+  #shopify-section-{{ section.id }} .review_text {
+    width: 100%;
+  }
+
+  /* ─── Responsive: 767px ─────────────────────────────────────────────────── */
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mobile }}px;
+      padding-bottom: {{ pb_mobile }}px;
+      margin-top: {{ mt_mobile }}px;
+      margin-bottom: {{ mb_mobile }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-pdp-wrap {
+      flex-direction: column;
+    }
+
+    #shopify-section-{{ section.id }} .lt-gallery {
+      width: 100%;
+      flex: none;
+      position: static;
+    }
+
+    #shopify-section-{{ section.id }} .lt-info__title {
+      font-size: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-variants {
+      gap: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-variant-card {
+      width: calc(50% - 7px);
+    }
+
+    #shopify-section-{{ section.id }} .lt-reviews-arrow {
+      display: none;
+    }
+  }
+
+  /* ─── Subscription Widget ───────────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-sub-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 10px;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-widget {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    overflow: visible;
+    padding: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plans {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan.lt-selected {
+    border-color: #ec4899;
+    background: #fdf2f8;
+  }
+  /* One-time pill: neutral grey selected state instead of pink */
+  #shopify-section-{{ section.id }} .lt-sub-plan--onetime.lt-selected {
+    border-color: #6b7280;
+    background: #f3f4f6;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__badge {
+    display: inline-flex;
+    align-items: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__img {
+    width: 52px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__info { flex: 1; min-width: 0; }
+  #shopify-section-{{ section.id }} .lt-sub-plan__name {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__promo {
+    font-size: 13px;
+    font-weight: 600;
+    background: #ec4899;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 2px;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__sub p {
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__price { text-align: right; flex-shrink: 0; }
+  #shopify-section-{{ section.id }} .lt-sub-plan__price-current {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    display: block;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__price-compare {
+    font-size: 12px;
+    color: #9ca3af;
+    text-decoration: line-through;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    background: #ec4899;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-checkout-btn:hover { background: #db2777; }
+  #shopify-section-{{ section.id }} .lt-sub-checkout-btn.lt-loading { opacity: 0.7; pointer-events: none; }
+  #shopify-section-{{ section.id }} .lt-sub-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    padding: 5px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  #shopify-section-{{ section.id }} .pdp-shipping-txt {
+    font-size: 14px;
+    letter-spacing: 0;
+    text-align: center;
+    margin-top: 5px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #27214D;
+    margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .pdp-shipping-txt img {
+    width: 25px;
+  }
+
+  /* ─── Subscription radio indicator ─────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-sub-plan__radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__radio::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #ec4899;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan.lt-selected .lt-sub-plan__radio {
+    border-color: #ec4899;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan.lt-selected .lt-sub-plan__radio::after {
+    opacity: 1;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan--onetime.lt-selected .lt-sub-plan__radio {
+    border-color: #6b7280;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan--onetime.lt-selected .lt-sub-plan__radio::after {
+    background: #6b7280;
+  }
+
+  /* ─── Subscription perks bullets ────────────────────────────────────────── */
+  #shopify-section-{{ section.id }} .lt-sub-plan__bullets {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #shopify-section-{{ section.id }} .lt-sub-plan__bullets li {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  /* ─── Responsive: 480px ─────────────────────────────────────────────────── */
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-info__title {
+      font-size: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-desc-block h2,
+    #shopify-section-{{ section.id }} .lt-desc-block h3 {
+      font-size: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-variant-card {
+      width: calc(50% - 7px);
+    }
+  }
+</style>
+
+<div class="page-width">
+  <div class="lt-pdp-wrap">
+
+    {%- comment -%}── Left: Image Gallery ────────────────────────────────{%- endcomment -%}
+    <div class="lt-gallery">
+      {%- assign main_image = product.featured_image -%}
+
+      <div class="lt-gallery__main">
+        {%- if main_image -%}
+          <img
+            id="lt-main-img-{{ section.id }}"
+            src="{{ main_image | image_url: width: 900 }}"
+            alt="{{ main_image.alt | escape | default: product.title | escape }}"
+            width="{{ main_image.width }}"
+            height="{{ main_image.height }}"
+            loading="eager"
+            fetchpriority="high"
+          >
+        {%- else -%}
+          {{ 'product-1' | placeholder_svg_tag: 'lt-placeholder-svg' }}
+        {%- endif -%}
+      </div>
+
+      {%- if product.images.size > 0 -%}
+        <div class="lt-gallery__thumbs">
+          {%- for image in product.images -%}
+            <div
+              class="lt-gallery__thumb{% if image == main_image %} lt-active{% endif %}"
+              data-thumb-src="{{ image | image_url: width: 900 }}"
+              data-thumb-alt="{{ image.alt | escape | default: product.title | escape }}"
+              role="button"
+              tabindex="0"
+              aria-label="View image {{ forloop.index }}"
+            >
+              <img
+                src="{{ image | image_url: width: 220 }}"
+                alt="{{ image.alt | escape | default: product.title | escape }}"
+                loading="lazy"
+                width="220"
+                height="220"
+              >
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%}── Right: Product Information ──────────────────────────{%- endcomment -%}
+    <div class="lt-info">
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: title
+          Renders product title, optional sticker, and optional JudgeMe stars.
+          When show_judgeme is ON, all @app blocks in the section are rendered
+          inside the .lt-info__judgeme row here, and are skipped in the @app
+          case below to prevent duplication.
+          To use @app blocks as standalone elements instead, turn show_judgeme OFF.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+          {%- when 'title' -%}
+          <div class="lt-block lt-block--title" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+            <div class="lt-info__title-review-text">
+              <h1 class="lt-info__title">{{ product.title }}</h1>
+              {%- if block.settings.show_judgeme -%}
+                <div class="lt-info__judgeme">
+                  <div class="jdgm-widget jdgm-preview-badge" 
+                      data-id="{{ product.id }}" 
+                      data-template="manual-installation">
+                    {{ product.metafields.judgeme.badge }}
+                  </div>
+                </div>
+              {%- endif -%}
+              <div class="product_review_part">
+                <div class="review_star">
+                  {%- for item in (1..5) -%}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                      <path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"/>
+                    </svg>
+                  {%- endfor -%}
+                </div>
+                <div class="review_score">4.94/5 Overall Rating</div>
+                <div class="review_text">Trusted by 11,000+ Customers</div>
+              </div>                   
+            </div>
+            {%- if block.settings.show_sticker and product.metafields.custom.product_sticker.value -%}
+              <img src="{{ product.metafields.custom.product_sticker.value | image_url: width: 70 }}" alt="">
+            {%- endif -%}
+          </div>
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: price
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'price' -%}
+          <div class="lt-block lt-block--price" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+            <div class="lt-price-wrap" id="lt-price-{{ section.id }}">
+              <span class="lt-price-current">{{ current_variant.price | money }}</span>
+              {%- if current_variant.compare_at_price > current_variant.price -%}
+                <span class="lt-price-compare">{{ current_variant.compare_at_price | money }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: description
+          Renders product.description (the short description from the Shopify
+          product admin, not the custom metafield accordion content).
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'description' -%}
+          {%- if product.description != blank -%}
+            <div class="lt-block lt-block--description" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+              <div class="lt-desc-block">
+                {{ product.description }}
+              </div>
+              {% comment %} <hr class="lt-divider"> {% endcomment %}
+            </div>
+          {%- endif -%}
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: badges
+          Renders PDP badges from product.metafields.custom.pdp_badges.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'badges' -%}
+          {%- if pdp_badges != blank -%}
+            <div class="lt-block lt-block--badges" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+              <div class="lt-badges">
+                {%- for badge_obj in pdp_badges -%}
+                  {%- if badge_obj.badge_name != blank -%}
+                    <span class="lt-badge">{{ badge_obj.badge_name }}</span>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: variant_picker
+          Renders one card per variant. Clicking a card updates the main image,
+          price display, and ATC button via JS (ID-based, order-independent).
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'variant_picker' -%}
+          {%- if product.variants.size > 0 -%}
+            <div class="lt-block lt-block--variant-picker" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+              <div class="lt-variants" data-variants aria-label="Select variant">
+                {%- for variant in product.variants -%}
+                  {%- assign v_image    = variant.image | default: product.featured_image -%}
+                  {%- assign extra_info = variant.metafields.custom.extra_info | metafield_tag -%}
+                  <div
+                    class="lt-variant-card{% if variant.id == current_variant.id %} lt-selected{% endif %}"
+                    data-variant-id="{{ variant.id }}"
+                    data-variant-img="{{ v_image | image_url: width: 900 }}"
+                    data-variant-img-alt="{{ v_image.alt | escape | default: variant.title | escape }}"
+                    data-variant-available="{{ variant.available }}"
+                    data-price="{{ variant.price | money }}"
+                    data-compare-price="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money }}{% endif %}"
+                    role="radio"
+                    tabindex="0"
+                  >
+                    <div class="lt-variant-card__label">{{ variant.option1 }}</div>
+                    <div class="lt-variant-card__image">
+                      {%- if v_image -%}
+                        <img
+                          src="{{ v_image | image_url: width: 320 }}"
+                          alt="{{ v_image.alt | escape | default: variant.title | escape }}"
+                          loading="lazy"
+                          width="320"
+                          height="320"
+                        >
+                      {%- else -%}
+                        {{ 'product-1' | placeholder_svg_tag: 'lt-placeholder-svg' }}
+                      {%- endif -%}
+                    </div>
+                    {%- if extra_info != blank -%}
+                      <div class="lt-variant-card__weight">{{ extra_info }}</div>
+                    {%- endif -%}
+                  </div>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: reviews_slider
+          Renders the above-the-fold reviews carousel from
+          product.metafields.custom.product_abovethefold_reviews.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'reviews_slider' -%}
+          {%- if atf_reviews != blank and atf_reviews.size > 0 -%}
+            <div class="lt-block lt-block--reviews-slider" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+              <div class="lt-reviews-outer" data-reviews-slider="{{ section.id }}">
+
+                {%- if atf_reviews.size > 1 -%}
+                  <button
+                    class="lt-reviews-arrow lt-reviews-arrow--prev"
+                    aria-label="Previous review"
+                    data-prev
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                  </button>
+                {%- endif -%}
+
+                <div class="lt-reviews-track-wrap">
+                  <div class="lt-reviews-track" data-track>
+                    {%- for review_obj in atf_reviews -%}
+                      {%- assign star_count   = review_obj.stars | default: 5 | plus: 0 -%}
+                      {%- assign author_img   = review_obj.author_image -%}
+                      {%- assign author_name  = review_obj.author_name -%}
+                      {%- assign review_body  = review_obj.reviews | metafield_tag -%}
+
+                      <div class="lt-review-slide" role="group" aria-label="Review {{ forloop.index }} of {{ atf_reviews.size }}">
+                        <div class="lt-review-slide__meta">
+                          {%- if author_img != blank -%}
+                            <img
+                              class="lt-review-slide__author-img"
+                              src="{{ author_img | image_url: width: 72 }}"
+                              alt="{{ author_name | strip_html | escape }}"
+                              loading="lazy"
+                              width="36"
+                              height="36"
+                            >
+                          {%- endif -%}
+
+                          <div>
+                            {%- if author_name != blank -%}
+                              <span class="lt-review-slide__name">{{ author_name | strip_html | escape }},</span>
+                            {%- endif -%}
+                            <span
+                              class="lt-review-slide__stars"
+                              aria-label="{{ star_count }} out of 5 stars"
+                            >
+                              {%- for i in (1..5) -%}
+                                {%- if i <= star_count -%}
+                                  <span>★</span>
+                                {%- else -%}
+                                  <span class="lt-review-slide__star--empty">★</span>
+                                {%- endif -%}
+                              {%- endfor -%}
+                            </span>
+                          </div>
+                        </div>
+
+                        {%- if review_body != blank -%}
+                          <div class="lt-review-slide__body">{{ review_body }}</div>
+                        {%- endif -%}
+                      </div>
+
+                    {%- endfor -%}
+                  </div>
+                </div>
+
+                {%- if atf_reviews.size > 1 -%}
+                  <button
+                    class="lt-reviews-arrow lt-reviews-arrow--next"
+                    aria-label="Next review"
+                    data-next
+                  >
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </button>
+                {%- endif -%}
+
+              </div>
+              {% comment %} <hr class="lt-divider"> {% endcomment %}
+            </div>
+          {%- endif -%}
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: accordion_item
+          Renders a single animated accordion. The content is pulled from a
+          product metafield under the 'custom' namespace using the key defined
+          in block.settings.metafield_key.
+          Example: metafield_key "product_description" resolves to
+          product.metafields.custom.product_description
+          Add as many accordion_item blocks as needed; consecutive blocks share
+          borders cleanly via the adjacent-sibling CSS rule above.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'accordion_item' -%}
+          {%- assign acc_content = product.metafields.custom[block.settings.metafield_key] | metafield_tag -%}
+          {%- if acc_content != blank -%}
+            <div class="lt-block lt-block--accordion-item" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+              <div class="lt-accordion-item" data-accordion>
+                <button
+                  class="lt-accordion-btn"
+                  aria-expanded="false"
+                  aria-controls="lt-acc-{{ block.id }}"
+                >
+                  {{ block.settings.label }}
+                  <span class="lt-accordion-icon" aria-hidden="true"></span>
+                </button>
+                <div
+                  class="lt-accordion-body"
+                  id="lt-acc-{{ block.id }}"
+                  role="region"
+                  aria-labelledby="lt-acc-btn-{{ block.id }}"
+                >
+                  <div class="lt-accordion-content">{{ acc_content }}</div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: buy_buttons
+          Renders the Add to Cart / Checkout Now button.
+          The button ID is section-scoped so JS finds it by ID regardless of
+          where this block sits in the customiser order.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'buy_buttons' -%}
+          <div class="lt-block lt-block--buy-buttons" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+            <div class="lt-cta-wrap">
+              <button
+                class="lt-cta-btn"
+                id="lt-atc-{{ section.id }}"
+                data-variant-id="{{ current_variant.id }}"
+                {% unless current_variant.available %}disabled aria-disabled="true"{% endunless %}
+                aria-label="Add {{ product.title | escape }} to cart"
+              >
+                {%- if current_variant.available -%}
+                  Checkout Now
+                {%- else -%}
+                  Sold Out
+                {%- endif -%}
+              </button>
+            </div>
+          </div>
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: subscription_widget
+          Pills (top to bottom):
+            1. Subscribe & Save — variant[0] with Recharge selling plan (pre-selected)
+               Title hardcoded. Sub-desc = Recharge plan name. Price from Recharge.
+               Linethrough from variant[0].compare_at_price (Shopify admin).
+            2. variant[0] one-time — option1 name, metafield sub-desc, variant price.
+            3. variant[1] one-time — option1 name, metafield sub-desc, variant price.
+               Badge: Most Popular.
+            4. variant[2] one-time — option1 name, metafield sub-desc, variant price.
+               Badge: Best Value.
+          Each pill carries its own data-variant-id so the correct variant is
+          added to cart. The JS reads it from the selected pill at click time.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'subscription_widget' -%}
+          {%- assign sw_v1 = product.variants[0] -%}
+          {%- assign sw_v2 = product.variants[1] -%}
+          {%- assign sw_v3 = product.variants[2] -%}
+          {%- assign sw_plan_1 = nil -%}
+          {%- assign sw_plan_2 = nil -%}
+          {%- assign sw_plan_3 = nil -%}
+          {%- assign sw_max_pct = 0 -%}
+          {%- for sw_alloc in sw_v1.selling_plan_allocations -%}
+            {%- case sw_alloc.selling_plan.name -%}
+              {%- when '1 Month Subscription with 20% Discount' -%}{%- assign sw_plan_1 = sw_alloc -%}
+              {%- when '3 Months Plan' -%}{%- assign sw_plan_2 = sw_alloc -%}
+              {%- when '6 Months Plan' -%}{%- assign sw_plan_3 = sw_alloc -%}
+            {%- endcase -%}
+            {%- if sw_alloc.compare_at_price > 0 -%}
+              {%- assign sw_dpct = sw_alloc.compare_at_price | minus: sw_alloc.price | times: 100.0 | divided_by: sw_alloc.compare_at_price | round -%}
+              {%- if sw_dpct > sw_max_pct -%}{%- assign sw_max_pct = sw_dpct -%}{%- endif -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign sw_default = sw_plan_1 | default: sw_v1.selling_plan_allocations.first -%}
+          {%- assign sw_sub_save_pct = 0 -%}
+          {%- if sw_v1.compare_at_price > sw_plan_1.price -%}
+            {%- assign sw_sub_save_pct = sw_v1.compare_at_price | minus: sw_plan_1.price | times: 100 | divided_by: sw_v1.compare_at_price | round -%}
+          {%- endif -%}
+          {%- assign sw_v1_desc = sw_v1.metafields.custom.description | metafield_tag -%}
+          {%- assign sw_v2_desc = sw_v2.metafields.custom.description | metafield_tag -%}
+          {%- assign sw_v3_desc = sw_v3.metafields.custom.description | metafield_tag -%}
+
+          <div class="lt-block lt-block--subscription-widget" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+            <div class="lt-subscription-widget">
+              <p class="lt-sub-label">Select Purchase Type:</p>
+              <div class="lt-sub-widget" id="lt-sub-{{ section.id }}">
+
+                <div class="lt-sub-plans">
+
+                  {%- comment -%}── Pill 1: Subscribe & Save (Recharge subscription on variant 1) ──{%- endcomment -%}
+                  {%- if sw_plan_1 -%}
+                    <div class="lt-sub-plan lt-selected" role="radio" tabindex="0" aria-checked="true"
+                      data-type="subscription"
+                      data-variant-id="{{ sw_v1.id }}"
+                      data-selling-plan-id="{{ sw_plan_1.selling_plan.id }}"
+                      data-price="{{ sw_plan_1.price | money }}"
+                      data-quantity="1">
+                      <span class="lt-sub-plan__radio"></span>
+                      <div class="lt-sub-plan__info">
+                        <div class="lt-sub-plan__name">
+                          Subscribe &amp; Save
+                          {%- if sw_sub_save_pct > 0 -%}
+                            <span class="lt-sub-plan__promo">Save {{ sw_sub_save_pct }}%</span>
+                          {%- endif -%}
+                        </div>
+                        <div class="lt-sub-plan__sub">{{ sw_plan_1.selling_plan.name }}</div>
+                        <ul class="lt-sub-plan__bullets">
+                          <li>🔔 &nbsp;Never Run Out</li>
+                          <li>💤 &nbsp;Sleep And Forget About It</li>
+                          {%- if sw_sub_save_pct > 0 -%}
+                            <li>🌙 &nbsp;Extra {{ sw_sub_save_pct }}% Off For Subscribing</li>
+                          {%- else -%}
+                            <li>🌙 &nbsp; Exclusive Subscriber Savings</li>
+                          {%- endif -%}
+                        </ul>
+                      </div>
+                      <div class="lt-sub-plan__price">
+                        <span class="lt-sub-plan__price-current">{{ sw_plan_1.price | money }}</span>
+                        {%- if sw_v1.price > sw_plan_1.price -%}
+                          <span class="lt-sub-plan__price-compare">{{ sw_v1.price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+
+                  {%- comment -%}── Pill 2: Variant 1 one-time ──────────────────────────────────{%- endcomment -%}
+                  <div class="lt-sub-plan lt-sub-plan--onetime" role="radio" tabindex="0" aria-checked="false"
+                    data-type="onetime"
+                    data-variant-id="{{ sw_v1.id }}"
+                    data-price="{{ sw_v1.price | money }}"
+                    data-quantity="1">
+                    <span class="lt-sub-plan__radio"></span>
+                    <div class="lt-sub-plan__info">
+                      <div class="lt-sub-plan__name">{{ sw_v1.option1 }}</div>
+                      {%- if sw_v1_desc != blank -%}
+                        <div class="lt-sub-plan__sub">{{ sw_v1_desc }}</div>
+                      {%- endif -%}
+                    </div>
+                    <div class="lt-sub-plan__price">
+                      <span class="lt-sub-plan__price-current">{{ sw_v1.price | money }}</span>
+                      {%- if sw_v1.compare_at_price > sw_v1.price -%}
+                        <span class="lt-sub-plan__price-compare">{{ sw_v1.compare_at_price | money }}</span>
+                      {%- endif -%}
+                    </div>
+                  </div>
+
+                  {%- comment -%}── Pill 3: Variant 2 one-time ──────────────────────────────────{%- endcomment -%}
+                  {%- if sw_v2 -%}
+                    <div class="lt-sub-plan lt-sub-plan--onetime" role="radio" tabindex="0" aria-checked="false"
+                      data-type="onetime"
+                      data-variant-id="{{ sw_v2.id }}"
+                      data-price="{{ sw_v2.price | money }}"
+                      data-quantity="1">
+                      <span class="lt-sub-plan__radio"></span>
+                      <div class="lt-sub-plan__info">
+                        <div class="lt-sub-plan__name">
+                          {{ sw_v2.option1 }}
+                          <span class="lt-sub-plan__badge" style="background: #ec4899;">Most Popular</span>
+                        </div>
+                        {%- if sw_v2_desc != blank -%}
+                          <div class="lt-sub-plan__sub">{{ sw_v2_desc }}</div>
+                        {%- endif -%}
+                      </div>
+                      <div class="lt-sub-plan__price">
+                        <span class="lt-sub-plan__price-current">{{ sw_v2.price | money }}</span>
+                        {%- if sw_v2.compare_at_price > sw_v2.price -%}
+                          <span class="lt-sub-plan__price-compare">{{ sw_v2.compare_at_price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+
+                  {%- comment -%}── Pill 4: Variant 3 one-time ──────────────────────────────────{%- endcomment -%}
+                  {%- if sw_v3 -%}
+                    <div class="lt-sub-plan lt-sub-plan--onetime" role="radio" tabindex="0" aria-checked="false"
+                      data-type="onetime"
+                      data-variant-id="{{ sw_v3.id }}"
+                      data-price="{{ sw_v3.price | money }}"
+                      data-quantity="1">
+                      <span class="lt-sub-plan__radio"></span>
+                      <div class="lt-sub-plan__info">
+                        <div class="lt-sub-plan__name">
+                          {{ sw_v3.option1 }}
+                          <span class="lt-sub-plan__badge" style="background: #7c3aed;">Best Value</span>
+                        </div>
+                        {%- if sw_v3_desc != blank -%}
+                          <div class="lt-sub-plan__sub">{{ sw_v3_desc }}</div>
+                        {%- endif -%}
+                      </div>
+                      <div class="lt-sub-plan__price">
+                        <span class="lt-sub-plan__price-current">{{ sw_v3.price | money }}</span>
+                        {%- if sw_v3.compare_at_price > sw_v3.price -%}
+                          <span class="lt-sub-plan__price-compare">{{ sw_v3.compare_at_price | money }}</span>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  {%- endif -%}
+
+                </div>
+
+                <button class="lt-sub-checkout-btn" id="lt-sub-btn-{{ section.id }}">
+                  Checkout Now — <span id="lt-sub-btn-price-{{ section.id }}">{%- if sw_plan_1 -%}{{ sw_plan_1.price | money }}{%- else -%}{{ sw_v1.price | money }}{%- endif -%}</span>
+                </button>
+
+                <div class="pdp-shipping-txt">
+                  <img src="https://cdn.shopify.com/s/files/1/0886/5542/9998/files/fa7-solid_shipping-fast_1.png?v=1787345604">
+                  <span id="dynamic-shipping-text">Ships Tomorrow</span>
+                </div>
+
+                <script>
+                  document.addEventListener("DOMContentLoaded", function() {
+                    // getDay() returns 0 for Sunday, 1 for Monday, etc... 5 is Friday, 6 is Saturday
+                    const currentDay = new Date().getDay();
+                    const shippingTextEl = document.getElementById("dynamic-shipping-text");
+                    
+                    // If it's Friday (5) or Saturday (6)
+                    if (currentDay === 5 || currentDay === 6) {
+                      shippingTextEl.innerText = "Ships Next Monday";
+                    } else {
+                      // This automatically covers Sunday (0) through Thursday (4)
+                      shippingTextEl.innerText = "Ships Tomorrow";
+                    }
+                  });
+                </script>
+                <div class="lt-sub-footer">🇺🇸 Engineered for Comfort, Crafted for Performance</div>
+
+              </div>
+            </div>
+          </div>
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: divider
+          Renders a plain <hr>. Use wherever a visual separator is needed.
+          The hr carries its own margin: 15px 0 via CSS; use padding_top /
+          padding_bottom on the block for additional breathing room above/below.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when 'divider' -%}
+          <div class="lt-block lt-block--divider" {{ block.shopify_attributes }} style="padding-top: {{ block.settings.padding_top }}px; padding-bottom: {{ block.settings.padding_bottom }}px;">
+            <hr class="lt-divider">
+          </div>
+
+        {%- comment -%}────────────────────────────────────────────────────────
+          Block: @app
+          Standalone app embed block. Always renders in-line at this block's
+          position in the customiser order. Use for any app embed (trust badges,
+          upsells, etc.) other than JudgeMe review stars, which are handled
+          inside the Title block via the show_judgeme setting.
+          Note: if you add a JudgeMe @app block here while show_judgeme is also
+          ON in the Title block, the JudgeMe widget will render twice.
+        ────────────────────────────────────────────────────────{%- endcomment -%}
+        {%- when '@app' -%}
+          <div {{ block.shopify_attributes }}>{% render block %}</div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+
+    </div>{%- comment -%}/.lt-info{%- endcomment -%}
+  </div>{%- comment -%}/.lt-pdp-wrap{%- endcomment -%}
+</div>{%- comment -%}/.page-width{%- endcomment -%}
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── helpers ────────────────────────────────────────────────────────────── */
+  function qs(scope, sel) { return scope.querySelector(sel); }
+  function qsa(scope, sel) { return Array.from(scope.querySelectorAll(sel)); }
+
+  /* ── main init ──────────────────────────────────────────────────────────── */
+  function initSection(sectionId) {
+    var root = document.getElementById('shopify-section-' + sectionId);
+    if (!root) return;
+
+    initGallery(root, sectionId);
+    initVariants(root, sectionId);
+    initReviewsSlider(root);
+    initAccordions(root);
+    initSubscriptionWidget(root, sectionId);
+    initAddToCart(root, sectionId);
+  }
+
+  /* ── Gallery thumbnails ─────────────────────────────────────────────────── */
+  function initGallery(root, sectionId) {
+    var mainImg  = document.getElementById('lt-main-img-' + sectionId);
+    var thumbs   = qsa(root, '.lt-gallery__thumb');
+
+    thumbs.forEach(function (thumb) {
+      function activate() {
+        thumbs.forEach(function (t) { t.classList.remove('lt-active'); });
+        thumb.classList.add('lt-active');
+        if (!mainImg) return;
+        mainImg.style.opacity = '0';
+        mainImg.src = thumb.dataset.thumbSrc;
+        mainImg.alt = thumb.dataset.thumbAlt || '';
+        mainImg.onload = function () { mainImg.style.opacity = '1'; };
+      }
+      thumb.addEventListener('click', activate);
+      thumb.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+      });
+    });
+  }
+
+  /* ── Variant cards ──────────────────────────────────────────────────────── */
+  function initVariants(root, sectionId) {
+    var cards     = qsa(root, '.lt-variant-card');
+    var mainImg   = document.getElementById('lt-main-img-' + sectionId);
+    var atcBtn    = document.getElementById('lt-atc-' + sectionId);
+    var priceWrap = document.getElementById('lt-price-' + sectionId);
+
+    cards.forEach(function (card) {
+      function activate() {
+        cards.forEach(function (c) {
+          c.classList.remove('lt-selected');
+          c.setAttribute('aria-checked', 'false');
+        });
+        card.classList.add('lt-selected');
+        card.setAttribute('aria-checked', 'true');
+
+        // Update Price
+        if (priceWrap) {
+          var price = card.dataset.price;
+          var comparePrice = card.dataset.comparePrice;
+          var priceHtml = '<span class="lt-price-current">' + price + '</span>';
+          
+          if (comparePrice && comparePrice.trim() !== '') {
+            priceHtml += '<span class="lt-price-compare">' + comparePrice + '</span>';
+          }
+          priceWrap.innerHTML = priceHtml;
+        }
+
+        // Update ATC variant id
+        var vid = card.dataset.variantId;
+        if (atcBtn) {
+          atcBtn.dataset.variantId = vid;
+          var available = card.dataset.variantAvailable !== 'false';
+          atcBtn.disabled = !available;
+          atcBtn.textContent = available ? 'Checkout Now' : 'Sold Out';
+        }
+
+        // Swap main image
+        if (mainImg && card.dataset.variantImg) {
+          mainImg.style.opacity = '0';
+          mainImg.src = card.dataset.variantImg;
+          mainImg.alt = card.dataset.variantImgAlt || '';
+          mainImg.onload = function () { mainImg.style.opacity = '1'; };
+        }
+      }
+
+      card.addEventListener('click', activate);
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+      });
+    });
+  }
+
+  /* ── Reviews slider ─────────────────────────────────────────────────────── */
+  function initReviewsSlider(root) {
+    var sliderEl = qs(root, '[data-reviews-slider]');
+    if (!sliderEl) return;
+
+    var track    = qs(sliderEl, '[data-track]');
+    var slides   = qsa(sliderEl, '.lt-review-slide');
+    var prevBtn  = qs(sliderEl, '[data-prev]');
+    var nextBtn  = qs(sliderEl, '[data-next]');
+    var total    = slides.length;
+    var current  = 0;
+
+    if (total < 2) return;
+
+    function goTo(index) {
+      if (index < 0) index = total - 1;
+      if (index >= total) index = 0;
+      current = index;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+    // Touch swipe
+    var touchStartX = null;
+    var trackWrap = qs(sliderEl, '.lt-reviews-track-wrap');
+    if (trackWrap) {
+      trackWrap.addEventListener('touchstart', function (e) {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+      trackWrap.addEventListener('touchend', function (e) {
+        if (touchStartX === null) return;
+        var diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) { goTo(diff > 0 ? current + 1 : current - 1); }
+        touchStartX = null;
+      });
+    }
+  }
+
+  /* ── Accordions (animated max-height) ──────────────────────────────────── */
+  function initAccordions(root) {
+    var items = qsa(root, '[data-accordion]');
+
+    items.forEach(function (item) {
+      var btn  = qs(item, '.lt-accordion-btn');
+      var body = qs(item, '.lt-accordion-body');
+      if (!btn || !body) return;
+
+      btn.addEventListener('click', function () {
+        var isOpen = btn.getAttribute('aria-expanded') === 'true';
+
+        if (isOpen) {
+          // Close
+          body.style.maxHeight = body.scrollHeight + 'px'; // set explicit so transition fires
+          requestAnimationFrame(function () {
+            body.style.maxHeight = '0px';
+          });
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          // Open
+          body.style.maxHeight = body.scrollHeight + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+          // After transition, allow natural height for dynamic content
+          body.addEventListener('transitionend', function handler() {
+            if (btn.getAttribute('aria-expanded') === 'true') {
+              body.style.maxHeight = 'none';
+            }
+            body.removeEventListener('transitionend', handler);
+          });
+        }
+      });
+    });
+  }
+
+  /* ── Subscription Widget ────────────────────────────────────────────────── */
+  function initSubscriptionWidget(root, sectionId) {
+    var widget = document.getElementById('lt-sub-' + sectionId);
+    if (!widget) return;
+
+    var plans        = qsa(widget, '.lt-sub-plan');
+    var btnPriceSpan = document.getElementById('lt-sub-btn-price-' + sectionId);
+    var checkoutBtn  = document.getElementById('lt-sub-btn-' + sectionId);
+    var selectedPlan = plans.find(function (p) { return p.classList.contains('lt-selected'); }) || plans[0];
+
+    // Plan selection — updates selected state and button price
+    function selectPlan(plan) {
+      plans.forEach(function (p) {
+        p.classList.remove('lt-selected');
+        p.setAttribute('aria-checked', 'false');
+      });
+      plan.classList.add('lt-selected');
+      plan.setAttribute('aria-checked', 'true');
+      selectedPlan = plan;
+      if (btnPriceSpan) btnPriceSpan.textContent = plan.dataset.price;
+    }
+
+    plans.forEach(function (plan) {
+      plan.addEventListener('click', function () { selectPlan(plan); });
+      plan.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPlan(plan); }
+      });
+    });
+
+    // Cart add helper — dispatches Rebuy events
+    function cartAdd(vid, sellingPlanId, btn, originalHTML, qty) {
+      btn.classList.add('lt-loading');
+      btn.textContent = 'Adding…';
+
+      var body = { id: vid, quantity: qty || 1 };
+      if (sellingPlanId) body.selling_plan = sellingPlanId;
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify(body)
+      })
+      .then(function (r) { if (!r.ok) throw new Error('Cart error'); return r.json(); })
+      .then(function (lineItem) {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove('lt-loading');
+        document.dispatchEvent(new CustomEvent('cart:item-added', { bubbles: true, detail: { lineItem: lineItem } }));
+        return fetch('/cart.js', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        document.dispatchEvent(new CustomEvent('cart:updated', { bubbles: true, detail: { cart: cart } }));
+        document.dispatchEvent(new CustomEvent('rebuy:cart:ready', { bubbles: true, detail: { cart: cart } }));
+      })
+      .catch(function (err) {
+        console.error('[Sub Widget] Cart error:', err);
+        btn.innerHTML = originalHTML;
+        btn.classList.remove('lt-loading');
+      });
+    }
+
+    // Single checkout button — reads variant ID and plan details from the selected pill
+    if (checkoutBtn) {
+      checkoutBtn.addEventListener('click', function () {
+        if (!selectedPlan) return;
+        var isOnetime = selectedPlan.dataset.type === 'onetime';
+        var vid       = parseInt(selectedPlan.dataset.variantId, 10);
+        var spid      = isOnetime ? null : parseInt(selectedPlan.dataset.sellingPlanId, 10);
+        var qty       = parseInt(selectedPlan.dataset.quantity, 10) || 1;
+        cartAdd(vid, spid, checkoutBtn, checkoutBtn.innerHTML, qty);
+      });
+    }
+  }
+
+  /* ── Ajax Add to Cart ───────────────────────────────────────────────────── */
+  function initAddToCart(root, sectionId) {
+    var btn = document.getElementById('lt-atc-' + sectionId);
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+      var variantId = parseInt(btn.dataset.variantId, 10);
+      if (!variantId || btn.disabled) return;
+
+      btn.classList.add('lt-loading');
+      btn.textContent = 'Adding…';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Cart add failed');
+        return res.json();
+      })
+      .then(function (lineItem) {
+        btn.textContent = 'Checkout Now';
+        btn.classList.remove('lt-loading');
+
+        // Notify Rebuy and other cart-aware integrations
+        document.dispatchEvent(new CustomEvent('cart:item-added', {
+          bubbles: true,
+          detail: { lineItem: lineItem }
+        }));
+
+        // Fetch updated cart and broadcast
+        return fetch('/cart.js', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (cart) {
+        document.dispatchEvent(new CustomEvent('cart:updated', {
+          bubbles: true,
+          detail: { cart: cart }
+        }));
+        // Rebuy listens to this native event for drawer trigger
+        document.dispatchEvent(new CustomEvent('rebuy:cart:ready', {
+          bubbles: true,
+          detail: { cart: cart }
+        }));
+      })
+      .catch(function (err) {
+        console.error('[PDP ATF] Add to cart error:', err);
+        btn.textContent = 'Checkout Now';
+        btn.classList.remove('lt-loading');
+      });
+    });
+  }
+
+  /* ── Lifecycle ──────────────────────────────────────────────────────────── */
+  function boot() {
+    initSection('{{ section.id }}');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+      initSection('{{ section.id }}');
+    }
+  });
+
+  // On unload, listeners are automatically garbage-collected with the removed DOM.
+  // No explicit teardown needed here.
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PDP Abovethefold 2",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_sticker",
+          "label": "Show product sticker",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_judgeme",
+          "label": "Show review stars (JudgeMe)",
+          "info": "When enabled, all @app blocks are rendered inside this title area. Disable to use @app blocks as standalone blocks instead.",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 10,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 20,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Short Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "badges",
+      "name": "Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 20,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 20,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant Picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 20,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "reviews_slider",
+      "name": "Reviews Slider",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 20,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "accordion_item",
+      "name": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Details"
+        },
+        {
+          "type": "text",
+          "id": "metafield_key",
+          "label": "Metafield key (custom namespace)",
+          "default": "product_description",
+          "info": "Enter the key of the metafield under the 'custom' namespace. E.g. 'product_description' resolves to product.metafields.custom.product_description"
+        },
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 24,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "subscription_widget",
+      "name": "Subscription Widget",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "name": "Divider",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding Top",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding Bottom",
+          "min": 0,
+          "max": 60,
+          "step": 2,
+          "default": 0,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "type": "@app"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Abovethefold 2",
+      "blocks": [
+        {
+          "type": "title",
+          "settings": {
+            "show_sticker": true,
+            "show_judgeme": true
+          }
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "description"
+        },
+        {
+          "type": "badges"
+        },
+        {
+          "type": "variant_picker"
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "reviews_slider"
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "label": "Description",
+            "metafield_key": "product_description"
+          }
+        },
+        {
+          "type": "accordion_item",
+          "settings": {
+            "label": "Delivery & Returns",
+            "metafield_key": "delivery_returns"
+          }
+        },
+        {
+          "type": "buy_buttons"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

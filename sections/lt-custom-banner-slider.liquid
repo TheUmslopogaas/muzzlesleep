@@ -1,0 +1,351 @@
+{% comment %}
+  Banner Slider Section
+  Add this file to your theme's sections folder as 'banner-slider.liquid'
+{% endcomment %}
+
+<div class="lt-hwdy-banner-slider-wrapper" data-section-id="{{ section.id }}">
+  <div class="lt-hwdy-banner-slider" id="lt-hwdy-slider-{{ section.id }}">
+    {% for block in section.blocks %}
+      <div class="lt-hwdy-banner-slide" data-slide-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        {% if block.settings.link != blank %}
+          <a href="{{ block.settings.link }}" class="lt-hwdy-banner-slide-link">
+        {% endif %}
+        
+        {%- if block.settings.image_desktop != blank -%}
+          <picture>
+            {%- if block.settings.image_mobile != blank -%}
+              <source media="(max-width: 749px)" srcset="{{ block.settings.image_mobile | image_url: width: 800 }} 800w, {{ block.settings.image_mobile | image_url: width: 1200 }} 1200w">
+            {%- endif -%}
+            <img 
+              src="{{ block.settings.image_desktop | image_url: width: 1920 }}"
+              srcset="{{ block.settings.image_desktop | image_url: width: 1200 }} 1200w, {{ block.settings.image_desktop | image_url: width: 1920 }} 1920w"
+              alt="{{ block.settings.image_desktop.alt | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              class="lt-hwdy-banner-slide-image">
+          </picture>
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'lt-hwdy-placeholder-svg' }}
+        {%- endif -%}
+        
+        {% if block.settings.link != blank %}
+          </a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if section.blocks.size > 1 %}
+    <button class="lt-hwdy-slider-arrow lt-hwdy-slider-arrow-prev" aria-label="Previous slide">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="lt-hwdy-slider-arrow lt-hwdy-slider-arrow-next" aria-label="Next slide">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="lt-hwdy-slider-dots">
+      {% for block in section.blocks %}
+        <button class="lt-hwdy-slider-dot {% if forloop.first %}lt-hwdy-active{% endif %}" data-slide="{{ forloop.index0 }}" aria-label="Go to slide {{ forloop.index }}"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .lt-hwdy-banner-slider-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: {{ section.settings.margin_top }}px 0 {{ section.settings.margin_bottom }}px;
+  }
+
+  .lt-hwdy-banner-slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+  }
+
+  .lt-hwdy-banner-slide {
+    min-width: 100%;
+    position: relative;
+  }
+
+  .lt-hwdy-banner-slide-link {
+    display: block;
+    width: 100%;
+  }
+
+  .lt-hwdy-banner-slide-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .lt-hwdy-placeholder-svg {
+    width: 100%;
+    height: 400px;
+    background: #f3f4f6;
+  }
+
+  .lt-hwdy-slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .lt-hwdy-slider-arrow:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .lt-hwdy-slider-arrow-prev {
+    left: 20px;
+  }
+
+  .lt-hwdy-slider-arrow-next {
+    right: 20px;
+  }
+
+  .lt-hwdy-slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .lt-hwdy-slider-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .lt-hwdy-slider-dot.lt-hwdy-active,
+  .lt-hwdy-slider-dot:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.2);
+  }
+
+  @media (max-width: 768px) {
+    .lt-hwdy-slider-arrow {
+      width: 40px;
+      height: 40px;
+    }
+
+    .lt-hwdy-slider-arrow-prev {
+      left: 10px;
+    }
+
+    .lt-hwdy-slider-arrow-next {
+      right: 10px;
+    }
+
+    .lt-hwdy-slider-dots {
+      bottom: 15px;
+    }
+
+    .lt-hwdy-slider-dot {
+      width: 10px;
+      height: 10px;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const slider = document.getElementById('lt-hwdy-slider-{{ section.id }}');
+    const wrapper = slider.parentElement;
+    const slides = slider.querySelectorAll('.lt-hwdy-banner-slide');
+    const prevBtn = wrapper.querySelector('.lt-hwdy-slider-arrow-prev');
+    const nextBtn = wrapper.querySelector('.lt-hwdy-slider-arrow-next');
+    const dots = wrapper.querySelectorAll('.lt-hwdy-slider-dot');
+    
+    let currentSlide = 0;
+    let autoplayInterval;
+    const autoplayDelay = {{ section.settings.autoplay_delay | times: 1000 }};
+
+    function goToSlide(index) {
+      currentSlide = index;
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('lt-hwdy-active', i === currentSlide);
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      goToSlide(currentSlide);
+    }
+
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      goToSlide(currentSlide);
+    }
+
+    function startAutoplay() {
+      if ({{ section.settings.autoplay }} && slides.length > 1) {
+        autoplayInterval = setInterval(nextSlide, autoplayDelay);
+      }
+    }
+
+    function stopAutoplay() {
+      clearInterval(autoplayInterval);
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        prevSlide();
+        stopAutoplay();
+        startAutoplay();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        nextSlide();
+        stopAutoplay();
+        startAutoplay();
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        goToSlide(parseInt(dot.dataset.slide));
+        stopAutoplay();
+        startAutoplay();
+      });
+    });
+
+    // Touch support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    slider.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    slider.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        nextSlide();
+        stopAutoplay();
+        startAutoplay();
+      } else if (touchEndX - touchStartX > 50) {
+        prevSlide();
+        stopAutoplay();
+        startAutoplay();
+      }
+    });
+
+    startAutoplay();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Banner Slider",
+  "tag": "section",
+  "class": "section-banner-slider",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "sec",
+      "label": "Autoplay delay",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Top margin",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom margin",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile Image (optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Slider",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

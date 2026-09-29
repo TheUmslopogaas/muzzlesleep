@@ -1,0 +1,117 @@
+<section class="lt-guide-warning">
+  <div class="lt-container">
+    {% if section.settings.icon %}
+      <div class="lt-icon">
+        <img src="{{ section.settings.icon | img_url: '100x' }}" alt="">
+      </div>
+    {% endif %}
+    <h2>{{ section.settings.title }}</h2>
+    <p class="lt-desc">{{ section.settings.text }}</p>
+  </div>
+</section>
+
+<style>
+  {% if section.settings.bg_color != blank %}
+    #shopify-section-{{ section.id }} {
+      background-color: {{ section.settings.bg_color }};
+    }
+  {% endif %}
+  #shopify-section-{{ section.id }} .lt-guide-warning {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-container {
+    max-width: 1200px;
+    width: 95%;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-warning .lt-icon img {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-warning h2 {
+    font-size: 40px;
+    margin: 0 0 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-guide-warning .lt-desc {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 400;
+    color: #121212;
+    max-width: {{ section.settings.desc_width }}px;
+    margin: 0 auto;
+  }
+  @media(max-width:600px){
+    #shopify-section-{{ section.id }} .lt-guide-warning h2 { font-size:28px; }
+    #shopify-section-{{ section.id }} .lt-guide-warning .lt-desc { font-size:16px; line-height:24px; }
+    #shopify-section-{{ section.id }} .lt-guide-warning .lt-icon img { width: 40px;height: 40px; }
+    #shopify-section-{{ section.id }} .lt-guide-warning {
+      padding-top: calc({{ section.settings.padding_top }}px * 0.7);
+      padding-bottom: calc({{ section.settings.padding_bottom }}px * 0.7);
+    }    
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Guide Warning",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "info": "Keep empty to use #FFF as default color."
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "Icon"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "Before You Begin"
+    },
+    {
+      "id": "text",
+      "type": "textarea",
+      "label": "Description",
+      "default": "Kids' mouth taping is a new habit, not everyone gets it right first. That’s normal. It may take a few nights for your child to adjust. Practice makes perfect. The key to success is when and how it’s applied."
+    },
+    {
+      "id": "padding_top",
+      "type": "range",
+      "label": "Top Padding",
+      "default": 40,
+      "min": 0,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "padding_bottom",
+      "type": "range",
+      "label": "Bottom Padding",
+      "default": 40,
+      "min": 0,
+      "max": 200,
+      "step": 10
+    },
+    {
+      "id": "desc_width",
+      "type": "range",
+      "label": "Description Max Width",
+      "default": 860,
+      "min": 300,
+      "max": 1200,
+      "step": 20
+    }
+  ],
+  "presets": [
+    { "name": "LT Guide Warning" }
+  ]
+}
+{% endschema %}

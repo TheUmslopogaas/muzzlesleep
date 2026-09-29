@@ -1,0 +1,170 @@
+<style>
+  #lt-meet-expert-{{ section.id }} .lt-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-row {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-col {
+    display: flex;
+    flex-direction: column;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-col-text {
+    flex: 1 1 50%;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-col-media {
+    flex: 1 1 50%;
+    display: flex;
+    justify-content: center;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-heading {
+    font-size: 36px;
+    font-weight: 700;
+    color: #27214D;
+    margin: 0;
+    line-height: 1.2;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #2a2a2a;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-quote {
+    margin-top: 24px;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-quote-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.3;
+    margin: 0;
+    color: #27214d;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-quote-title {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: #6b6b6b;
+    font-weight: 500;
+  }
+  #lt-meet-expert-{{ section.id }} .lt-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  /* responsive (desktop-first) */
+  @media (max-width: 980px) {
+    #lt-meet-expert-{{ section.id }} .lt-row { flex-direction: column; }
+    #lt-meet-expert-{{ section.id }} .lt-col-media { width: 100%; }
+    #lt-meet-expert-{{ section.id }} .lt-heading { font-size: 32px;}
+  }
+  @media (max-width: 520px) {
+    #lt-meet-expert-{{ section.id }} .lt-container { padding: 44px 16px; }
+    #lt-meet-expert-{{ section.id }} .lt-heading { font-size: 28px;}
+  }
+</style>
+<section class="lt-meet-expert-wrap" id="lt-meet-expert-{{ section.id }}" data-section-id="{{ section.id }}">
+  <div class="lt-container">
+    <div class="lt-row">
+      <div class="lt-col lt-col-text">
+        {% if section.settings.heading != blank %}
+          <h2 class="lt-heading">{{ section.settings.heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.body != blank %}
+          <div class="lt-body">{{ section.settings.body }}</div>
+        {% endif %}
+
+        {% if section.settings.quote_name != blank or section.settings.quote_title != blank %}
+          <div class="lt-quote">
+            {% if section.settings.quote_name != blank %}
+              <p class="lt-quote-name">{{ section.settings.quote_name }}</p>
+            {% endif %}
+            {% if section.settings.quote_title != blank %}
+              <p class="lt-quote-title">{{ section.settings.quote_title }}</p>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="lt-col lt-col-media">
+        {% if section.settings.image != blank %}
+          <img
+            class="lt-photo"
+            src="{{ section.settings.image | img_url: '900x' }}"
+            alt="{{ section.settings.image_alt | escape }}"
+            width="720"
+            height="480"
+            loading="lazy">
+        {% else %}
+          <img
+            class="lt-photo"
+            src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=1200&auto=format&fit=crop"
+            alt="{{ section.settings.image_alt | escape | default: 'Doctor portrait' }}"
+            width="720"
+            height="480"
+            loading="lazy">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "LT Meet the Expert",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Meet Dr. Jing Liu"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>For over 30 years, Dr. Liu (L.AC, OMD., PhD) has been changing lives through Traditional Chinese Acupuncture and Herbal Medicine at the Eastern Medicine Center in Scottsdale, AZ. Dr. Liu blends Eastern and Western medicine, providing alternative solutions for those who have not found complete relief through Western treatments alone.</p><p>Founded on Dr. Liu’s belief that everyone should have access to the time-tested and scientifically backed remedies she has dedicated her life to, Sol Nutrition allows health-conscious consumers everywhere to take their well-being into their own hands.</p>"
+    },
+    {
+      "type": "text",
+      "id": "quote_name",
+      "label": "Signature Name",
+      "default": "Dr. Ken Berry"
+    },
+    {
+      "type": "text",
+      "id": "quote_title",
+      "label": "Signature Title",
+      "default": "Licensed Physician"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Right Image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image Alt Text",
+      "default": "Expert portrait"
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "LT Meet the Expert"
+    }
+  ]
+}
+{% endschema %}
