@@ -1,0 +1,317 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+
+  assign heading_safe = section.settings.heading | escape
+  assign highlight_safe = section.settings.heading_highlight | escape
+  if highlight_safe != blank and heading_safe contains highlight_safe
+    assign highlight_span = '<span class="lt-hero__highlight">' | append: highlight_safe | append: '</span>'
+    assign heading_html = heading_safe | replace: highlight_safe, highlight_span
+  else
+    assign heading_html = heading_safe
+  endif
+
+  assign image_alt = section.settings.image.alt | default: 'Child sleeping in bed at night' | escape
+-%}
+
+<div class="lt-hero">
+  <div class="page-width">
+    <div class="lt-hero__card{% if section.settings.mobile_image_position == 'bottom' %} lt-hero__card--mobile-reverse{% endif %}">
+
+      <div class="lt-hero__media">
+        {%- if section.settings.image != blank -%}
+          <img
+            class="lt-hero__img"
+            src="{{ section.settings.image | image_url: width: 1600 }}"
+            srcset="
+              {{ section.settings.image | image_url: width: 600 }} 600w,
+              {{ section.settings.image | image_url: width: 900 }} 900w,
+              {{ section.settings.image | image_url: width: 1200 }} 1200w,
+              {{ section.settings.image | image_url: width: 1600 }} 1600w
+            "
+            sizes="(max-width: 767px) 100vw, {{ settings.page_width | default: 1200 }}px"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            alt="{{ image_alt }}"
+            loading="eager"
+            fetchpriority="high"
+          >
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'lt-hero__img lt-hero__img--placeholder' }}
+        {%- endif -%}
+      </div>
+
+      <div class="lt-hero__content">
+        {%- if heading_html != blank -%}
+          <h1 class="lt-hero__heading">{{ heading_html }}</h1>
+        {%- endif -%}
+
+        {%- if section.settings.subheading != blank -%}
+          <p class="lt-hero__subtext">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    isolation: isolate;
+    aspect-ratio: 2.08 / 1;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__img,
+  #shopify-section-{{ section.id }} .lt-hero__img--placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__img--placeholder svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 500px;
+    padding: 0 24px 0 64px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__heading {
+    margin: 0 0 16px;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__highlight {
+    color: {{ section.settings.highlight_color }};
+  }
+
+  #shopify-section-{{ section.id }} .lt-hero__subtext {
+    margin: 0;
+    max-width: 440px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: inherit;
+  }
+
+  /* ── Responsive 767px: stack image + content ── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mob }}px;
+      padding-bottom: {{ pb_mob }}px;
+      margin-top: {{ mt_mob }}px;
+      margin-bottom: {{ mb_mob }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__card {
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      aspect-ratio: auto;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__card--mobile-reverse {
+      flex-direction: column-reverse;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__media {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      aspect-ratio: 1.55 / 1;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__content {
+      position: static;
+      display: block;
+      max-width: 100%;
+      padding: 28px 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__heading {
+      font-size: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__subtext {
+      max-width: 100%;
+      font-size: 15px;
+    }
+  }
+
+  /* ── Responsive 480px ── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-hero__heading {
+      font-size: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__subtext {
+      font-size: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__content {
+      padding: 24px 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Affiliate Hero",
+  "class": "lt-section-affiliate-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Upload the full visual (including any fade/gradient) exactly as it should appear — it is used as-is, with no overlay added."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "7 Signs Your Child May Be Mouth Breathing at Night"
+    },
+    {
+      "type": "text",
+      "id": "heading_highlight",
+      "label": "Highlighted phrase",
+      "default": "Mouth Breathing",
+      "info": "Must match a phrase inside the heading exactly to be colored."
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "Highlight color",
+      "default": "#A78BFA"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "They may be sleeping all night — but how they're breathing could be affecting the quality of that sleep."
+    },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Image position on mobile",
+      "options": [
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Affiliate Hero",
+      "category": "LT Sections"
+    }
+  ]
+}
+{% endschema %}
