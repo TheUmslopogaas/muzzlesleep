@@ -1,0 +1,283 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+-%}
+
+<div class="lt-product-intro">
+  <div class="page-width lt-product-intro__wrap">
+
+    <div class="lt-product-intro__top">
+      {%- if section.settings.top_heading != blank -%}
+        <h2 class="lt-product-intro__top-heading">{{ section.settings.top_heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.top_body != blank -%}
+        <div class="lt-product-intro__top-body">{{ section.settings.top_body }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="lt-product-intro__card">
+      <div class="lt-product-intro__card-content">
+        {%- if section.settings.card_heading != blank -%}
+          <h3 class="lt-product-intro__card-heading">{{ section.settings.card_heading }}</h3>
+        {%- endif -%}
+        {%- if section.settings.card_body != blank -%}
+          <div class="lt-product-intro__card-body">{{ section.settings.card_body }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.product_image != blank -%}
+        <div class="lt-product-intro__card-media">
+          <img
+            class="lt-product-intro__img"
+            src="{{ section.settings.product_image | image_url: width: 1000 }}"
+            srcset="
+              {{ section.settings.product_image | image_url: width: 400 }} 400w,
+              {{ section.settings.product_image | image_url: width: 700 }} 700w,
+              {{ section.settings.product_image | image_url: width: 1000 }} 1000w
+            "
+            sizes="(max-width: 767px) 100vw, 500px"
+            width="{{ section.settings.product_image.width }}"
+            height="{{ section.settings.product_image.height }}"
+            alt="{{ section.settings.product_image.alt | default: 'Muzzle Sleep mouth tape product' | escape }}"
+            loading="lazy"
+          >
+        </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  /* ── Top content ── */
+  #shopify-section-{{ section.id }} .lt-product-intro__top-heading {
+    margin: 0 0 16px;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top-body {
+    font-size: 17px;
+    line-height: 1.6;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top-body p {
+    margin: 0 0 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Card ── */
+  #shopify-section-{{ section.id }} .lt-product-intro__card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    background-color: #ffffff;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card-content {
+    padding: 48px 24px 48px 48px;
+    align-self: center;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
+    margin: 0 0 20px;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card-body {
+    font-size: 16px;
+    line-height: 1.65;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card-body p {
+    margin: 0 0 14px;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card-body p:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card-media {
+    padding: 40px 0 0 0;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ── Responsive 767px ── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mob }}px;
+      padding-bottom: {{ pb_mob }}px;
+      margin-top: {{ mt_mob }}px;
+      margin-bottom: {{ mb_mob }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__top-heading {
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__top-body {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__card {
+      grid-template-columns: 1fr;
+      margin-top: 28px;
+      border-radius: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__card-content {
+      padding: 28px 24px 24px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__card-body {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__card-media {
+      padding: 8px 0 0;
+    }
+  }
+
+  /* ── Responsive 480px ── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-product-intro__top-heading {
+      font-size: 22px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
+      font-size: 21px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Affiliate Product Intro",
+  "class": "lt-section-affiliate-product-intro",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Top Content"
+    },
+    {
+      "type": "text",
+      "id": "top_heading",
+      "label": "Heading",
+      "default": "A Simple Bedtime Habit to Consider"
+    },
+    {
+      "type": "richtext",
+      "id": "top_body",
+      "label": "Body text",
+      "default": "<p>For children who can already breathe comfortably through their nose and have been appropriately evaluated when needed, some families use gentle mouth tape as part of a nasal-breathing bedtime routine.</p><p>That's where Muzzle Sleep comes in.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Product Card"
+    },
+    {
+      "type": "text",
+      "id": "card_heading",
+      "label": "Card heading",
+      "default": "Meet Muzzle"
+    },
+    {
+      "type": "richtext",
+      "id": "card_body",
+      "label": "Card body text",
+      "default": "<p>Muzzle is designed to make mouth taping feel more comfortable and approachable.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Affiliate Product Intro",
+      "category": "LT Sections"
+    }
+  ]
+}
+{% endschema %}

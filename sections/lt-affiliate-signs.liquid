@@ -1,0 +1,486 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+-%}
+
+<div class="lt-signs">
+  <div class="page-width lt-signs__wrap">
+
+    {%- if section.settings.intro_text != blank -%}
+      <div class="lt-signs__intro">{{ section.settings.intro_text }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.callout_text != blank -%}
+      <div class="lt-signs__callout">
+        <span class="lt-signs__callout-icon" aria-hidden="true">
+          {%- if section.settings.callout_icon != blank -%}
+            <img
+              src="{{ section.settings.callout_icon | image_url: width: 64 }}"
+              width="20"
+              height="20"
+              alt=""
+              loading="lazy"
+            >
+          {%- else -%}
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M9 6.5V10L11.5 11.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.5 3.5L15.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M15.5 5.5H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          {%- endif -%}
+        </span>
+        <span class="lt-signs__callout-text">{{ section.settings.callout_text }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.image != blank -%}
+      <div class="lt-signs__media">
+        <img
+          class="lt-signs__img"
+          src="{{ section.settings.image | image_url: width: 1600 }}"
+          srcset="
+            {{ section.settings.image | image_url: width: 600 }} 600w,
+            {{ section.settings.image | image_url: width: 900 }} 900w,
+            {{ section.settings.image | image_url: width: 1200 }} 1200w,
+            {{ section.settings.image | image_url: width: 1600 }} 1600w
+          "
+          sizes="(max-width: 767px) 100vw, {{ settings.page_width | default: 1200 }}px"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+          alt="{{ section.settings.image.alt | default: 'Child showing a sign of mouth breathing' | escape }}"
+          loading="lazy"
+        >
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="lt-signs__list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'sign' -%}
+            <div class="lt-signs__item" {{ block.shopify_attributes }}>
+              <div class="lt-signs__number" aria-hidden="true">{{ forloop.index }}.</div>
+              <div class="lt-signs__content">
+                {%- if block.settings.heading != blank -%}
+                  <h2 class="lt-signs__heading">{{ block.settings.heading }}</h2>
+                {%- endif -%}
+                {%- if block.settings.subheading != blank -%}
+                  <p class="lt-signs__subheading">{{ block.settings.subheading }}</p>
+                {%- endif -%}
+                {%- if block.settings.body != blank -%}
+                  <div class="lt-signs__body">{{ block.settings.body }}</div>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-signs__wrap {
+    max-width: 760px;
+  }
+
+  /* ── Intro ── */
+  #shopify-section-{{ section.id }} .lt-signs__intro {
+    font-size: 16px;
+    line-height: 1.7;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__intro p {
+    margin: 0 0 18px;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Callout ── */
+  #shopify-section-{{ section.id }} .lt-signs__callout {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding: 16px 20px;
+    background-color: {{ section.settings.callout_bg_color }};
+    border-left: 3px solid {{ section.settings.callout_accent_color }};
+    border-radius: 10px;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__callout-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    color: {{ section.settings.callout_accent_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-signs__callout-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__callout-text {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: inherit;
+  }
+
+  /* ── Media ── */
+  #shopify-section-{{ section.id }} .lt-signs__media {
+    margin-top: 32px;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 2.1 / 1;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+
+  /* ── List ── */
+  #shopify-section-{{ section.id }} .lt-signs__list {
+    margin-top: 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 32px 0;
+    border-top: 1px solid #ececec;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__item:first-child {
+    border-top: none;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__number {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin-top: 3px;
+    border-radius: 50%;
+    background-color: {{ section.settings.number_bg_color }};
+    color: {{ section.settings.number_text_color }};
+    font-size: 14px;
+    font-weight: 700;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__content {
+    min-width: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__heading {
+    margin: 0 0 10px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__subheading {
+    margin: 0 0 10px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.6;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__body {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: inherit;
+    opacity: 0.85;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__body p {
+    margin: 0 0 10px;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Responsive 767px ── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mob }}px;
+      padding-bottom: {{ pb_mob }}px;
+      margin-top: {{ mt_mob }}px;
+      margin-bottom: {{ mb_mob }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__intro,
+    #shopify-section-{{ section.id }} .lt-signs__callout-text {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__media {
+      margin-top: 24px;
+      aspect-ratio: 1.5 / 1;
+      border-radius: 12px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__item {
+      gap: 14px;
+      padding: 26px 0;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__number {
+      width: 30px;
+      height: 30px;
+      font-size: 13px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__heading {
+      font-size: 20px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__subheading,
+    #shopify-section-{{ section.id }} .lt-signs__body {
+      font-size: 14px;
+    }
+  }
+
+  /* ── Responsive 480px ── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-signs__callout {
+      padding: 14px 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__heading {
+      font-size: 18px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Affiliate Signs",
+  "class": "lt-section-affiliate-signs",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Intro Text"
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "<p>Mouth breathing can be easy to miss, especially when it happens after bedtime.</p><p>Your child may fall asleep easily. They may get a full 9 or 10 hours. They may never complain about their sleep at all.</p><p>But there can still be little clues that they're spending part of the night sleeping with their mouth open instead of comfortably breathing through their nose.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Callout"
+    },
+    {
+      "type": "image_picker",
+      "id": "callout_icon",
+      "label": "Callout icon",
+      "info": "Leave blank to use the default clock icon"
+    },
+    {
+      "type": "text",
+      "id": "callout_text",
+      "label": "Callout text",
+      "default": "Here are 7 signs parents may want to pay attention to."
+    },
+    {
+      "type": "color",
+      "id": "callout_bg_color",
+      "label": "Callout background",
+      "default": "#F4F1FC"
+    },
+    {
+      "type": "color",
+      "id": "callout_accent_color",
+      "label": "Callout accent (border + icon)",
+      "default": "#4F8EF7"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Section image"
+    },
+    {
+      "type": "header",
+      "content": "Numbering"
+    },
+    {
+      "type": "color",
+      "id": "number_bg_color",
+      "label": "Number badge background",
+      "default": "#1A1442"
+    },
+    {
+      "type": "color",
+      "id": "number_text_color",
+      "label": "Number badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "sign",
+      "name": "Sign",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "New sign"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Bold intro line",
+          "default": ""
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body text",
+          "default": "<p>Describe this sign in more detail.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "LT Affiliate Signs",
+      "category": "LT Sections",
+      "blocks": [
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "They Wake Up With a Dry Mouth",
+            "subheading": "Does your child immediately reach for water in the morning?",
+            "body": "<p>Sleeping with the mouth open can leave the mouth and throat feeling noticeably dry by morning.</p><p>If this happens regularly, it may be worth paying attention to how they're breathing while they sleep.</p>"
+          }
+        },
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "You Notice Their Mouth Is Open While They Sleep",
+            "subheading": "This is one of the easiest signs to spot — once you know to look for it.",
+            "body": "<p>Check on them after they've been asleep for a little while.</p><p>Are their lips gently closed? Or is their mouth hanging open?</p><p>Many parents simply never think to check.</p>"
+          }
+        },
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "They Toss, Turn or Seem Restless",
+            "subheading": "Being in bed for 10 hours doesn't necessarily mean getting 10 hours of high-quality sleep.",
+            "body": "<p>If your child frequently changes positions, kicks off the covers or seems unusually restless during the night, it may be worth looking at their overall sleep habits — including how they breathe.</p>"
+          }
+        },
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "They're Tired Even After a Full Night's Sleep",
+            "subheading": "\"But you slept for 10 hours!\"",
+            "body": "<p>Sound familiar?</p><p>Sleep isn't just about quantity. Quality matters, too.</p><p>If mornings are consistently difficult or your child still seems exhausted after plenty of time in bed, their nighttime routine and sleep quality may deserve a closer look.</p>"
+          }
+        },
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "Mornings Come With Irritability or Crankiness",
+            "subheading": "Every child has rough mornings.",
+            "body": "<p>But when waking up tired, moody or irritable becomes the norm, parents may want to look beyond bedtime itself.</p><p>Sometimes the question isn't:<br>\"How long did they sleep?\"<br>It's:<br>\"How well did they sleep?\"</p>"
+          }
+        },
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "They Have Trouble Focusing During the Day",
+            "subheading": "Sleep and daytime behavior are closely connected.",
+            "body": "<p>When kids don't get restorative sleep, it can show up during the day as difficulty concentrating, low energy or simply seeming \"off.\"</p><p>That doesn't automatically mean nighttime breathing is the cause — but sleep quality is an important piece of the puzzle.</p>"
+          }
+        },
+        {
+          "type": "sign",
+          "settings": {
+            "heading": "You Hear Snoring or Noisy Breathing",
+            "subheading": "Children can occasionally snore, especially when they're congested.",
+            "body": "<p>But frequent snoring, loud breathing, gasping or noticeable difficulty breathing during sleep deserves attention.</p><p>If your child regularly snores, gasps, struggles to breathe or you suspect a sleep or airway issue, talk with their pediatrician, dentist or another qualified healthcare professional.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
