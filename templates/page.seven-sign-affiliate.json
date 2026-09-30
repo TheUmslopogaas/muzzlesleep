@@ -1,18 +1,42 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-page",
       "disabled": true,
-      "settings": { "padding_top": 28, "padding_bottom": 28 }
-    }, 
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
     "affiliate_hero": {
       "type": "lt-affiliate-hero",
       "name": "LT Affiliate Hero",
-      "settings": {}
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "image": "shopify://shop_images/sleeping-kid.jpg",
+        "heading": "7 Signs Your Child May Be Mouth Breathing at Night",
+        "heading_highlight": "Mouth Breathing",
+        "highlight_color": "#a78bfa",
+        "subheading": "They may be sleeping all night — but how they're breathing could be affecting the quality of that sleep.",
+        "mobile_image_position": "top",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
     },
     "affiliate_signs": {
       "type": "lt-affiliate-signs",
-      "name": "LT Affiliate Signs",
       "blocks": {
         "sign_1": {
           "type": "sign",
@@ -71,33 +95,119 @@
           }
         }
       },
-      "block_order": ["sign_1", "sign_2", "sign_3", "sign_4", "sign_5", "sign_6", "sign_7"],
-      "settings": {}
+      "block_order": [
+        "sign_1",
+        "sign_2",
+        "sign_3",
+        "sign_4",
+        "sign_5",
+        "sign_6",
+        "sign_7"
+      ],
+      "name": "LT Affiliate Signs",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "intro_text": "<p>Mouth breathing can be easy to miss, especially when it happens after bedtime.</p><p>Your child may fall asleep easily. They may get a full 9 or 10 hours. They may never complain about their sleep at all.</p><p>But there can still be little clues that they're spending part of the night sleeping with their mouth open instead of comfortably breathing through their nose.</p>",
+        "callout_text": "Here are 7 signs parents may want to pay attention to.",
+        "callout_bg_color": "#f4f1fc",
+        "callout_accent_color": "#4f8ef7",
+        "number_bg_color": "#1a1442",
+        "number_text_color": "#ffffff",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
     },
     "affiliate_nasal_breathing": {
       "type": "lt-affiliate-nasal-breathing",
       "name": "LT Nasal Breathing",
-      "settings": { "bg_color": "#EEECFB" }
+      "settings": {
+        "bg_color": "#eeecfb",
+        "text_color": "#222222",
+        "heading": "Why Nasal Breathing Matters",
+        "body_text": "<p>Our noses aren't just there to smell.</p><p>They're designed to filter, warm and humidify the air we breathe.</p><p>That's why healthy nasal breathing is an important habit — including during sleep.</p><p>And it's why more parents are beginning to pay attention not only to how much their kids sleep, but how they're breathing while they sleep.</p>",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
     },
     "affiliate_product_intro": {
       "type": "lt-affiliate-product-intro",
       "name": "LT Product Intro",
-      "settings": {}
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "top_heading": "A Simple Bedtime Habit to Consider",
+        "top_body": "<p>For children who can already breathe comfortably through their nose and have been appropriately evaluated when needed, some families use gentle mouth tape as part of a nasal-breathing bedtime routine.</p><p>That's where Muzzle Sleep comes in.</p>",
+        "card_heading": "Meet Muzzle",
+        "card_body": "<p>Muzzle is designed to make mouth taping feel more comfortable and approachable.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
     },
     "affiliate_bedtime_cta": {
       "type": "lt-affiliate-bedtime-cta",
-      "name": "LT Affiliate Bedtime CTA",
       "blocks": {
-        "bullet_1": { "type": "bullet", "settings": { "text": "You already think about their bedtime." } },
-        "bullet_2": { "type": "bullet", "settings": { "text": "Their mattress." } },
-        "bullet_3": { "type": "bullet", "settings": { "text": "Their room temperature." } },
-        "bullet_4": { "type": "bullet", "settings": { "text": "Their screen time." } },
-        "bullet_5": { "type": "bullet", "settings": { "text": "Their nighttime routine." } }
+        "bullet_1": {
+          "type": "bullet",
+          "settings": {
+            "text": "You already think about their bedtime."
+          }
+        },
+        "bullet_2": {
+          "type": "bullet",
+          "settings": {
+            "text": "Their mattress."
+          }
+        },
+        "bullet_3": {
+          "type": "bullet",
+          "settings": {
+            "text": "Their room temperature."
+          }
+        },
+        "bullet_4": {
+          "type": "bullet",
+          "settings": {
+            "text": "Their screen time."
+          }
+        },
+        "bullet_5": {
+          "type": "bullet",
+          "settings": {
+            "text": "Their nighttime routine."
+          }
+        }
       },
-      "block_order": ["bullet_1", "bullet_2", "bullet_3", "bullet_4", "bullet_5"],
+      "block_order": [
+        "bullet_1",
+        "bullet_2",
+        "bullet_3",
+        "bullet_4",
+        "bullet_5"
+      ],
+      "name": "LT Affiliate Bedtime CTA",
       "settings": {
-        "bg_color": "#F5F3FC",
-        "text_color": "#ffffff"
+        "bg_color": "#f5f3fc",
+        "text_color": "#ffffff",
+        "card_bg_color": "#241c4e",
+        "bullet_color": "#4fc3f7",
+        "callout_bg_color": "#ffffff14",
+        "button_bg_color": "#ffffff",
+        "button_text_color": "#1a1442",
+        "heading": "Make Better Breathing Part of Bedtime",
+        "callout_text": "Maybe it's time to think about how they're breathing, too.",
+        "button_text": "Shop Muzzle",
+        "button_url": "",
+        "padding_top": 60,
+        "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
       }
     }
   },
