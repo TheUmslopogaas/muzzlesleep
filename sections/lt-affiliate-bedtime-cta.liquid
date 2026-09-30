@@ -7,6 +7,8 @@
   assign pb_mob = pb | times: 0.6 | round
   assign mt_mob = mt | times: 0.6 | round
   assign mb_mob = mb | times: 0.6 | round
+
+  assign button_url = section.settings.button_url | default: 'https://muzzlesleep.com/'
 -%}
 
 <div class="lt-cta">
@@ -40,7 +42,7 @@
           {%- if section.settings.button_text != blank -%}
             <a
               class="lt-cta__button"
-              {% if section.settings.button_url != blank %}href="{{ section.settings.button_url }}"{% else %}href="#" role="link" aria-disabled="true"{% endif %}
+              href="{{ button_url }}"
             >
               {{ section.settings.button_text }}
             </a>
@@ -305,7 +307,7 @@
       "type": "url",
       "id": "button_url",
       "label": "Button link",
-      "default": "https://muzzlesleep.com/"
+      "info": "Defaults to https://muzzlesleep.com/ when left blank"
     },
     {
       "type": "header",
