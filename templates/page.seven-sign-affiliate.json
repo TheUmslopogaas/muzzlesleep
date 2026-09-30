@@ -76,12 +76,12 @@
     },
     "affiliate_nasal_breathing": {
       "type": "lt-affiliate-nasal-breathing",
-      "name": "LT Affiliate Nasal Breathing",
+      "name": "LT Nasal Breathing",
       "settings": { "bg_color": "#EEECFB" }
     },
     "affiliate_product_intro": {
       "type": "lt-affiliate-product-intro",
-      "name": "LT Affiliate Product Intro",
+      "name": "LT Product Intro",
       "settings": {}
     },
     "affiliate_bedtime_cta": {
