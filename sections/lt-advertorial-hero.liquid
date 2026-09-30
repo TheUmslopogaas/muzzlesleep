@@ -22,7 +22,7 @@
 
 <div class="lt-hero">
   <div class="page-width">
-    <div class="lt-hero__card{% if section.settings.mobile_content_position == 'top' %} lt-hero__card--mobile-reverse{% endif %}">
+    <div class="lt-hero__card lt-hero__card--content-{{ section.settings.mobile_content_position }}">
 
       <div class="lt-hero__media">
         {%- if section.settings.image != blank -%}
@@ -124,13 +124,13 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    max-width: 500px;
+    max-width: 530px;
     padding: 0 24px 0 64px;
   }
 
   #shopify-section-{{ section.id }} .lt-hero__heading {
     margin: 0 0 16px;
-    font-size: 42px;
+    font-size: 48px;
     font-weight: 800;
     line-height: 1.15;
     letter-spacing: -0.5px;
@@ -144,13 +144,13 @@
   #shopify-section-{{ section.id }} .lt-hero__subtext {
     margin: 0;
     max-width: 440px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.6;
     color: inherit;
   }
 
-  /* ── Responsive 767px: stack image + content ── */
+  /* ── Responsive 767px: text overlays image, anchored top/bottom ── */
   @media screen and (max-width: 767px) {
     #shopify-section-{{ section.id }} {
       padding-top: {{ pt_mob }}px;
@@ -160,32 +160,25 @@
     }
 
     #shopify-section-{{ section.id }} .lt-hero__card {
-      display: flex;
-      flex-direction: column;
       border-radius: 16px;
-      aspect-ratio: auto;
-    }
-
-    #shopify-section-{{ section.id }} .lt-hero__card--mobile-reverse {
-      flex-direction: column-reverse;
-    }
-
-    #shopify-section-{{ section.id }} .lt-hero__media {
-      position: relative;
-      inset: auto;
-      width: 100%;
-      aspect-ratio: 1.55 / 1;
+      aspect-ratio: 4 / 5;
     }
 
     #shopify-section-{{ section.id }} .lt-hero__content {
-      position: static;
-      display: block;
       max-width: 100%;
-      padding: 28px 24px;
+      padding: 28px 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__card--content-top .lt-hero__content {
+      justify-content: flex-start;
+    }
+
+    #shopify-section-{{ section.id }} .lt-hero__card--content-bottom .lt-hero__content {
+      justify-content: flex-end;
     }
 
     #shopify-section-{{ section.id }} .lt-hero__heading {
-      font-size: 28px;
+      font-size: 35px;
     }
 
     #shopify-section-{{ section.id }} .lt-hero__subtext {
@@ -197,11 +190,14 @@
   /* ── Responsive 480px ── */
   @media screen and (max-width: 480px) {
     #shopify-section-{{ section.id }} .lt-hero__heading {
-      font-size: 24px;
+      font-size: 35px;
+      text-align: center;
     }
 
     #shopify-section-{{ section.id }} .lt-hero__subtext {
-      font-size: 14px;
+      font-size: 16px;
+      text-align: center;
+      font-weight: 500;
     }
 
     #shopify-section-{{ section.id }} .lt-hero__content {
