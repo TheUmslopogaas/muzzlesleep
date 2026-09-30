@@ -17,9 +17,9 @@
         "padding_bottom": 28
       }
     },
-    "affiliate_hero": {
-      "type": "lt-affiliate-hero",
-      "name": "LT Affiliate Hero",
+    "advertorial_hero": {
+      "type": "lt-advertorial-hero",
+      "name": "LT Advertorial Hero",
       "settings": {
         "bg_color": "#ffffff",
         "text_color": "#222222",
@@ -28,15 +28,15 @@
         "heading_highlight": "Mouth Breathing",
         "highlight_color": "#a78bfa",
         "subheading": "They may be sleeping all night — but how they're breathing could be affecting the quality of that sleep.",
-        "mobile_image_position": "top",
+        "mobile_content_position": "bottom",
         "padding_top": 60,
         "padding_bottom": 60,
         "margin_top": 0,
         "margin_bottom": 0
       }
     },
-    "affiliate_signs": {
-      "type": "lt-affiliate-signs",
+    "advertorial_signs": {
+      "type": "lt-advertorial-signs",
       "blocks": {
         "sign_1": {
           "type": "sign",
@@ -104,7 +104,7 @@
         "sign_6",
         "sign_7"
       ],
-      "name": "LT Affiliate Signs",
+      "name": "LT Advertorial Signs",
       "settings": {
         "bg_color": "#ffffff",
         "text_color": "#222222",
@@ -121,23 +121,24 @@
         "margin_bottom": 0
       }
     },
-    "affiliate_nasal_breathing": {
-      "type": "lt-affiliate-nasal-breathing",
+    "advertorial_nasal_breathing": {
+      "type": "lt-advertorial-nasal-breathing",
       "name": "LT Nasal Breathing",
       "settings": {
         "bg_color": "#eeecfb",
         "text_color": "#222222",
         "heading": "Why Nasal Breathing Matters",
         "body_text": "<p>Our noses aren't just there to smell.</p><p>They're designed to filter, warm and humidify the air we breathe.</p><p>That's why healthy nasal breathing is an important habit — including during sleep.</p><p>And it's why more parents are beginning to pay attention not only to how much their kids sleep, but how they're breathing while they sleep.</p>",
-        "image_top": "shopify://shop_images/image_1_efcdbf18-344b-4128-8096-cdabdac62411.png",
+        "image": "shopify://shop_images/image_1_efcdbf18-344b-4128-8096-cdabdac62411.png",
+        "image_max_width": 500,
         "padding_top": 60,
         "padding_bottom": 60,
         "margin_top": 0,
         "margin_bottom": 0
       }
     },
-    "affiliate_product_intro": {
-      "type": "lt-affiliate-product-intro",
+    "advertorial_product_intro": {
+      "type": "lt-advertorial-product-intro",
       "name": "LT Product Intro",
       "settings": {
         "bg_color": "#ffffff",
@@ -153,8 +154,8 @@
         "margin_bottom": 0
       }
     },
-    "affiliate_bedtime_cta": {
-      "type": "lt-affiliate-bedtime-cta",
+    "advertorial_bedtime_cta": {
+      "type": "lt-advertorial-bedtime-cta",
       "blocks": {
         "bullet_1": {
           "type": "bullet",
@@ -194,7 +195,7 @@
         "bullet_4",
         "bullet_5"
       ],
-      "name": "LT Affiliate Bedtime CTA",
+      "name": "LT Advertorial CTA",
       "settings": {
         "bg_color": "#f5f3fc",
         "text_color": "#ffffff",
@@ -217,10 +218,10 @@
   },
   "order": [
     "main",
-    "affiliate_hero",
-    "affiliate_signs",
-    "affiliate_nasal_breathing",
-    "affiliate_product_intro",
-    "affiliate_bedtime_cta"
+    "advertorial_hero",
+    "advertorial_signs",
+    "advertorial_nasal_breathing",
+    "advertorial_product_intro",
+    "advertorial_bedtime_cta"
   ]
 }

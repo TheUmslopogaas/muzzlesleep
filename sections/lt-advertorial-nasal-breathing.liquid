@@ -23,39 +23,20 @@
     </div>
 
     <div class="lt-nasal__media">
-      {%- if section.settings.image_top != blank -%}
-        <div class="lt-nasal__media-item">
+      {%- if section.settings.image != blank -%}
+        <div class="lt-nasal__media-item" style="max-width: {{ section.settings.image_max_width }}px;">
           <img
             class="lt-nasal__img"
-            src="{{ section.settings.image_top | image_url: width: 1000 }}"
+            src="{{ section.settings.image | image_url: width: 1000 }}"
             srcset="
-              {{ section.settings.image_top | image_url: width: 400 }} 400w,
-              {{ section.settings.image_top | image_url: width: 700 }} 700w,
-              {{ section.settings.image_top | image_url: width: 1000 }} 1000w
+              {{ section.settings.image | image_url: width: 400 }} 400w,
+              {{ section.settings.image | image_url: width: 700 }} 700w,
+              {{ section.settings.image | image_url: width: 1000 }} 1000w
             "
-            sizes="(max-width: 767px) 100vw, 500px"
-            width="{{ section.settings.image_top.width }}"
-            height="{{ section.settings.image_top.height }}"
-            alt="{{ section.settings.image_top.alt | default: 'Mouth breathing versus nasal breathing comparison' | escape }}"
-            loading="lazy"
-          >
-        </div>
-      {%- endif -%}
-
-      {%- if section.settings.image_bottom != blank -%}
-        <div class="lt-nasal__media-item">
-          <img
-            class="lt-nasal__img"
-            src="{{ section.settings.image_bottom | image_url: width: 1000 }}"
-            srcset="
-              {{ section.settings.image_bottom | image_url: width: 400 }} 400w,
-              {{ section.settings.image_bottom | image_url: width: 700 }} 700w,
-              {{ section.settings.image_bottom | image_url: width: 1000 }} 1000w
-            "
-            sizes="(max-width: 767px) 100vw, 500px"
-            width="{{ section.settings.image_bottom.width }}"
-            height="{{ section.settings.image_bottom.height }}"
-            alt="{{ section.settings.image_bottom.alt | default: 'Sleep and heart rate statistics with customer testimonial' | escape }}"
+            sizes="(max-width: 767px) 100vw, {{ section.settings.image_max_width }}px"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            alt="{{ section.settings.image.alt | default: 'Mouth breathing versus nasal breathing comparison' | escape }}"
             loading="lazy"
           >
         </div>
@@ -160,7 +141,7 @@
 {% schema %}
 {
   "name": "LT Nasal Breathing",
-  "class": "lt-section-affiliate-nasal-breathing",
+  "class": "lt-section-advertorial-nasal-breathing",
   "settings": [
     {
       "type": "header",
@@ -200,15 +181,18 @@
     },
     {
       "type": "image_picker",
-      "id": "image_top",
-      "label": "Top image",
-      "info": "e.g. mouth breathing vs nasal breathing comparison graphic"
+      "id": "image",
+      "label": "Image"
     },
     {
-      "type": "image_picker",
-      "id": "image_bottom",
-      "label": "Bottom image",
-      "info": "e.g. sleep/heart rate stats card with testimonial"
+      "type": "range",
+      "id": "image_max_width",
+      "label": "Image max-width",
+      "min": 200,
+      "max": 800,
+      "step": 10,
+      "default": 500,
+      "unit": "px"
     },
     {
       "type": "header",
