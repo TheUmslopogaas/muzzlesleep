@@ -32,7 +32,7 @@
       </div>
 
       {%- if section.settings.product_image != blank -%}
-        <div class="lt-product-intro__card-media" style="max-width: {{ section.settings.image_max_width }}px;">
+        <div class="lt-product-intro__card-media" style="width: {{ section.settings.image_max_width }}px; max-width: {{ section.settings.image_max_width }}px;">
           <img
             class="lt-product-intro__img"
             src="{{ section.settings.product_image | image_url: width: 1000 }}"
@@ -124,7 +124,6 @@
     margin-bottom: 0;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-media {
-    width: 100%;
     padding: 40px 0 0 0;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__img {
@@ -164,6 +163,8 @@
       font-size: 15px;
     }
     #shopify-section-{{ section.id }} .lt-product-intro__card-media {
+      width: 100% !important;
+      max-width: 100% !important;
       padding: 8px 0 0;
     }
   }
