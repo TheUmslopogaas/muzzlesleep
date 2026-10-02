@@ -90,7 +90,7 @@
   /* ── Card ── */
   #shopify-section-{{ section.id }} .lt-product-intro__card {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
     margin-top: 40px;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 20px;
@@ -124,8 +124,8 @@
     margin-bottom: 0;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-media {
+    width: 100%;
     padding: 40px 0 0 0;
-    margin-left: auto;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__img {
     display: block;
