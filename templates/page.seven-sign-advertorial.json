@@ -149,6 +149,7 @@
         "card_heading": "Meet Muzzle",
         "card_body": "<p>Muzzle is designed to make mouth taping feel more comfortable and approachable.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
         "product_image": "shopify://shop_images/Muzzle_Sleep_-_28_2.png",
+        "image_max_width": 500,
         "padding_top": 60,
         "padding_bottom": 60,
         "margin_top": 0,

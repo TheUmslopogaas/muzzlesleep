@@ -32,7 +32,7 @@
       </div>
 
       {%- if section.settings.product_image != blank -%}
-        <div class="lt-product-intro__card-media">
+        <div class="lt-product-intro__card-media" style="max-width: {{ section.settings.image_max_width }}px;">
           <img
             class="lt-product-intro__img"
             src="{{ section.settings.product_image | image_url: width: 1000 }}"
@@ -41,7 +41,7 @@
               {{ section.settings.product_image | image_url: width: 700 }} 700w,
               {{ section.settings.product_image | image_url: width: 1000 }} 1000w
             "
-            sizes="(max-width: 767px) 100vw, 500px"
+            sizes="(max-width: 767px) 100vw, {{ section.settings.image_max_width }}px"
             width="{{ section.settings.product_image.width }}"
             height="{{ section.settings.product_image.height }}"
             alt="{{ section.settings.product_image.alt | default: 'Muzzle Sleep mouth tape product' | escape }}"
@@ -125,6 +125,7 @@
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-media {
     padding: 40px 0 0 0;
+    margin-left: auto;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__img {
     display: block;
@@ -235,6 +236,16 @@
       "type": "image_picker",
       "id": "product_image",
       "label": "Product image"
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "label": "Image max-width",
+      "min": 200,
+      "max": 700,
+      "step": 10,
+      "default": 500,
+      "unit": "px"
     },
     {
       "type": "header",
