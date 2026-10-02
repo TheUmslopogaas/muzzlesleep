@@ -138,7 +138,8 @@
   {% endif %} 
   
   <!-- Lightlabs Snippet -->
-  <script async src="https://app.lightlabs.com/assets/ll-pip-testing-report.js"></script> 
+  <script async src="https://app.lightlabs.com/assets/ll-pip-testing-report.js"></script>
+  <script async="true" src="https://app.lightlabs.com/assets/ll-pip-sticker.js"></script>
 </head>
 
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %} template-{{ template | handleize | default: 'standard' }} {% if template.name == 'page' %}page-{{ page.handle }}{% elsif template.name == 'product' %}product-{{ product.handle }}{% endif %}">

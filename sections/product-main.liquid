@@ -46,17 +46,29 @@
             margin-left: 6%;
         }
     
+        {{ _section }} .product_swiper_group {
+            position: relative;
+            width: 51%;
+        }
+
         {{ _section }} .product_swiper_part {
             display: flex;
             flex-direction: column;
-            width: 51%;
+            width: 100%;
             height: fit-content;
             position: sticky;
             top: 40px;
         }
-    
+
         {{ _section }} .product_main_swiper {
             position: relative;
+        }
+
+        {{ _section }} .product_sticker_overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
         }
     
         {{ _section }} .image_wrapper {
@@ -726,12 +738,16 @@
                 flex-direction: column;
             }
     
-            {{ _section }} .product_swiper_part {
+            {{ _section }} .product_swiper_group {
                 width: 100%;
                 margin-top: 25px;
+            }
+
+            {{ _section }} .product_swiper_part {
+                width: 100%;
                 position: static;
             }
-    
+
             {{ _section }} .product_thumb_swiper {
                 margin: 6px -24px 0 -24px;
             }
@@ -972,6 +988,7 @@
                     </div>
                 </div>
 
+                <div class="product_swiper_group">
                 {% for product_by_age in mother_product.products_by_age.value %}
                     {% for product_by_strength in product_by_age.products_by_strength.value %}
                         {% if product_by_strength.variant.value %}
@@ -1055,7 +1072,9 @@
                         {% endif %}
                     {% endfor %}
                 {% endfor %}
-    
+                    <lightlabs-sticker company-id="693" class="product_sticker_overlay"></lightlabs-sticker>
+                </div>
+
                 <div class="product_info_part" style="">
                     <div class="product_summary_part mobile__hidden">
                         <div class="product_review_part">
