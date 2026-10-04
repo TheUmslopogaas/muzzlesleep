@@ -251,7 +251,7 @@
           <p class="lt-benefits__eyebrow">{{ section.settings.eyebrow | escape }}</p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
-          <h2 class="lt-benefits__heading">{{ section.settings.heading }}</h2>
+          <h2 class="lt-benefits__heading">{{ section.settings.heading | escape | newline_to_br }}</h2>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -370,10 +370,11 @@
       "default": "Core Benefits"
     },
     {
-      "type": "inline_richtext",
+      "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "One Tiny Strip.<br>A Better Nighttime Routine."
+      "info": "Press Enter to add a line break.",
+      "default": "One Tiny Strip.\nA Better Nighttime Routine."
     },
     {
       "type": "header",

@@ -555,7 +555,7 @@
       {%- endif -%}
 
       {%- if section.settings.heading != blank -%}
-        <{{ section.settings.heading_tag }} class="lt-vsl-hero__heading">{{ section.settings.heading }}</{{ section.settings.heading_tag }}>
+        <{{ section.settings.heading_tag }} class="lt-vsl-hero__heading">{{ section.settings.heading | escape | newline_to_br }}</{{ section.settings.heading_tag }}>
       {%- endif -%}
 
       {%- if section.settings.description != blank -%}
@@ -800,10 +800,11 @@
       "content": "Content"
     },
     {
-      "type": "inline_richtext",
+      "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "Sleep Better. Breathe Better.<br>Wake Up Looking Better."
+      "info": "Press Enter to add a line break.",
+      "default": "Sleep Better. Breathe Better.\nWake Up Looking Better."
     },
     {
       "type": "select",
