@@ -1,0 +1,517 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem,
+  #shopify-section-{{ section.id }} .lt-vsl-problem *,
+  #shopify-section-{{ section.id }} .lt-vsl-problem *::before,
+  #shopify-section-{{ section.id }} .lt-vsl-problem *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  /* Header */
+  #shopify-section-{{ section.id }} .lt-vsl-problem__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__eyebrow {
+    margin: 0 0 18px;
+    color: {{ section.settings.eyebrow_color }};
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__heading {
+    max-width: 900px;
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+    text-wrap: balance;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__intro {
+    max-width: 840px;
+    margin-top: 28px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__intro p,
+  #shopify-section-{{ section.id }} .lt-vsl-problem__footer p {
+    margin: 0 0 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__intro p:last-child,
+  #shopify-section-{{ section.id }} .lt-vsl-problem__footer p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Grid */
+  #shopify-section-{{ section.id }} .lt-vsl-problem__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    max-width: 1228px;
+    margin: 64px auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__card {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    margin: 0;
+    padding: 0;
+    aspect-ratio: 602 / 486;
+    border: 3px solid rgba(120, 120, 120, 0.7);
+    border-radius: 48px;
+    overflow: hidden;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    isolation: isolate;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__media img,
+  #shopify-section-{{ section.id }} .lt-vsl-problem__media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__media svg {
+    background-color: #d9d9d9;
+    fill: rgba(0, 0, 0, 0.25);
+  }
+
+  /* Frosted blur fading in from the sharp upper image */
+  #shopify-section-{{ section.id }} .lt-vsl-problem__blur {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    height: 56%;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000000 60%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000000 60%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__shade {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    height: 62%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 45%, rgba(0, 0, 0, 0.62) 100%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding: 0 40px 38px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__title {
+    margin: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-problem__text {
+    max-width: 510px;
+    margin: 10px 0 0;
+    color: rgba(255, 255, 255, 0.94);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 25px;
+  }
+
+  /* Footer */
+  #shopify-section-{{ section.id }} .lt-vsl-problem__footer {
+    max-width: 840px;
+    margin: 64px auto 0;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-vsl-problem__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__eyebrow {
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__intro {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__intro p,
+    #shopify-section-{{ section.id }} .lt-vsl-problem__footer p {
+      margin-bottom: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__card {
+      aspect-ratio: 5 / 4;
+      border-width: 2px;
+      border-radius: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__content {
+      padding: 0 24px 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__title {
+      font-size: 22px;
+      line-height: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__text {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__footer {
+      margin-top: 40px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-vsl-problem__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__card {
+      aspect-ratio: 1 / 1;
+      border-radius: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-problem__content {
+      padding: 0 20px 20px;
+    }
+  }
+</style>
+
+<div class="lt-vsl-problem">
+  <div class="page-width lt-vsl-problem__inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.intro != blank -%}
+      <div class="lt-vsl-problem__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-vsl-problem__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-vsl-problem__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="lt-vsl-problem__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="lt-vsl-problem__grid">
+        {%- for block in section.blocks -%}
+          <li class="lt-vsl-problem__card" {{ block.shopify_attributes }}>
+            <div class="lt-vsl-problem__media">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 1204 }}"
+                  srcset="{{ block.settings.image | image_url: width: 602 }} 602w, {{ block.settings.image | image_url: width: 1204 }} 1204w"
+                  sizes="(max-width: 767px) 100vw, 602px"
+                  alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+            <div class="lt-vsl-problem__blur" aria-hidden="true"></div>
+            <div class="lt-vsl-problem__shade" aria-hidden="true"></div>
+            <div class="lt-vsl-problem__content">
+              {%- if block.settings.title != blank -%}
+                <h3 class="lt-vsl-problem__title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="lt-vsl-problem__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if section.settings.footer_text != blank -%}
+      <div class="lt-vsl-problem__footer">{{ section.settings.footer_text }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT VSL Problem",
+  "tag": "div",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The Problem"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#f25ca8"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your Mouth Might Be More Open Than You Think."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>When your jaw relaxes during sleep, your mouth can naturally fall open. That can lead to nighttime mouth breathing — especially if you’ve developed the habit without even realizing it.</p><p>And you may notice it in the morning:</p>"
+    },
+    {
+      "type": "header",
+      "content": "Closing text"
+    },
+    {
+      "type": "richtext",
+      "id": "footer_text",
+      "label": "Text below cards",
+      "default": "<p>Muzzle Beauty Tape gives you a simple way to gently encourage your lips to remain closed so you can comfortably breathe through your nose instead.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Card title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Describe the symptom in a sentence or two."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL Problem",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 70
+      },
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Dry mouth and throat",
+            "text": "You wake up reaching for water because your mouth feels completely dried out."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Snoring",
+            "text": "Sleeping with your mouth open can contribute to noisy nighttime breathing for some people."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Poor-quality sleep",
+            "text": "You may spend the whole night in bed and still wake up feeling like your sleep wasn’t as restorative as it should have been."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Morning breath",
+            "text": "Less saliva and a dry mouth overnight can make morning breath more noticeable."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

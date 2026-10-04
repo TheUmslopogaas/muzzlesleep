@@ -1,0 +1,455 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign card_bg = section.settings.card_background | default: '#d4838f'
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo,
+  #shopify-section-{{ section.id }} .lt-vsl-promo *,
+  #shopify-section-{{ section.id }} .lt-vsl-promo *::before,
+  #shopify-section-{{ section.id }} .lt-vsl-promo *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__card {
+    position: relative;
+    max-width: 1228px;
+    margin: 0 auto;
+    border: 3px solid rgba(255, 255, 255, 0.45);
+    border-radius: 40px;
+    overflow: hidden;
+    background: {{ card_bg }};
+    color: {{ section.settings.card_text_color }};
+    isolation: isolate;
+  }
+
+  /* Text */
+  #shopify-section-{{ section.id }} .lt-vsl-promo__content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    padding: 80px 80px 80px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__heading {
+    max-width: 560px;
+    margin: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__body {
+    margin-top: 28px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__body p {
+    margin: 0 0 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__body strong {
+    font-weight: 600;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 58px;
+    margin-top: 48px;
+    padding: 0 40px;
+    border-radius: 100px;
+    background-color: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__button:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  /* Image: full card height, anchored bottom right, overlapping the text area */
+  #shopify-section-{{ section.id }} .lt-vsl-promo__media {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 49%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__media img,
+  #shopify-section-{{ section.id }} .lt-vsl-promo__media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: right bottom;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-promo__media svg {
+    fill: rgba(255, 255, 255, 0.35);
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-vsl-promo__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .lt-vsl-promo__card {
+      border-radius: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__content {
+      max-width: 58%;
+      padding: 56px 0 56px 44px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__heading {
+      font-size: 38px;
+      line-height: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__body {
+      margin-top: 22px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__body p {
+      margin-bottom: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__button {
+      min-height: 52px;
+      margin-top: 36px;
+      padding: 0 32px;
+      font-size: 15px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__media {
+      width: 46%;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__card {
+      display: flex;
+      flex-direction: column;
+      border-width: 2px;
+      border-radius: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__content {
+      max-width: none;
+      padding: 40px 28px 0;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__heading {
+      max-width: none;
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__body {
+      margin-top: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__body p {
+      margin-bottom: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__button {
+      margin-top: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__media {
+      position: relative;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__media img,
+    #shopify-section-{{ section.id }} .lt-vsl-promo__media svg {
+      width: 78%;
+      max-width: 380px;
+      height: auto;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-vsl-promo__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__card {
+      border-radius: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__content {
+      padding: 32px 20px 0;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__body {
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-promo__media img,
+    #shopify-section-{{ section.id }} .lt-vsl-promo__media svg {
+      width: 86%;
+    }
+  }
+</style>
+
+<div class="lt-vsl-promo">
+  <div class="page-width lt-vsl-promo__inner">
+    <div class="lt-vsl-promo__card">
+      <div class="lt-vsl-promo__content">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-vsl-promo__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.body != blank -%}
+          <div class="lt-vsl-promo__body">{{ section.settings.body }}</div>
+        {%- endif -%}
+        {%- if section.settings.button_text != blank -%}
+          <a class="lt-vsl-promo__button" href="{{ section.settings.button_url | default: '#' }}">{{ section.settings.button_text | escape }}</a>
+        {%- endif -%}
+      </div>
+
+      <div class="lt-vsl-promo__media">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 1200 }}"
+            srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 1200 }} 1200w"
+            sizes="(max-width: 767px) 380px, 600px"
+            alt="{{ section.settings.image.alt | default: section.settings.image_alt | escape }}"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag }}
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT VSL Promo",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Card"
+    },
+    {
+      "type": "color_background",
+      "id": "card_background",
+      "label": "Card background",
+      "info": "Supports solid colors and gradients.",
+      "default": "linear-gradient(110deg, #bc6970 0%, #d4838f 40%, #ea9caf 70%, #f6c2d3 100%)"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Less Than $1 Per Night With Our 3-Pack."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Think about what we spend trying to improve our sleep.</p><p>Expensive pillows. Supplements. Sleep trackers. Nighttime skincare.</p><p>Muzzle Beauty Tape gives you a simple sleep-supporting habit <strong>plus</strong> an overnight beauty benefit for less than the price of a cup of coffee.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Get 3 Packs"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#f25ca8"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Use a cut-out image with a transparent background (PNG or WebP), cropped so the subject touches the bottom and right edges. Recommended: 1200 x 1200 px."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Woman holding a mouth tape patch next to her face"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL Promo",
+      "settings": {
+        "padding_top": 60,
+        "padding_bottom": 80
+      }
+    }
+  ]
+}
+{% endschema %}

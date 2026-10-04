@@ -1,0 +1,885 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign opened_count = 0
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba,
+  #shopify-section-{{ section.id }} .lt-ba *,
+  #shopify-section-{{ section.id }} .lt-ba *::before,
+  #shopify-section-{{ section.id }} .lt-ba *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 84px;
+    max-width: 1228px;
+    margin: 0 auto;
+  }
+
+  /* Accordion */
+  #shopify-section-{{ section.id }} .lt-ba__accordion {
+    padding-top: 92px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__item {
+    margin: 0 0 28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__item:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__heading {
+    margin: 0;
+    font-family: inherit;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-height: 59px;
+    margin: 0;
+    padding: 15px 20px;
+    border: 0;
+    border-radius: 0;
+    background-color: {{ section.settings.accordion_background }};
+    color: {{ section.settings.accordion_text_color }};
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: -0.2px;
+    text-align: left;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__trigger:hover {
+    filter: brightness(0.96);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__trigger:focus-visible {
+    outline: 3px solid {{ section.settings.text_color }};
+    outline-offset: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__chevron {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(180deg);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__item.is-open .lt-ba__chevron {
+    transform: rotate(0deg);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.4s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__item.is-open .lt-ba__panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__panel-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__content {
+    padding-top: 22px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.35s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__item.is-open .lt-ba__content {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.1s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__content p {
+    margin: 0 0 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__content p:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__content strong {
+    font-weight: 700;
+  }
+
+  /* Before / after slider */
+  #shopify-section-{{ section.id }} .lt-ba__slider {
+    --lt-ba-pos: {{ section.settings.initial_position }}%;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 519 / 610;
+    border: 3px solid rgba(190, 170, 165, 0.85);
+    border-radius: 28px;
+    overflow: hidden;
+    background-color: #d9d9d9;
+    cursor: ew-resize;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    isolation: isolate;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer--before {
+    z-index: 2;
+    clip-path: inset(0 calc(100% - var(--lt-ba-pos)) 0 0);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer img,
+  #shopify-section-{{ section.id }} .lt-ba__layer svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    -webkit-user-drag: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer svg {
+    fill: rgba(0, 0, 0, 0.2);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer--before svg {
+    background-color: #cfcfcf;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer--after svg {
+    background-color: #ebebeb;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__label {
+    position: absolute;
+    bottom: 28px;
+    transform: translateX(-50%);
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer--before .lt-ba__label {
+    left: 25%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__layer--after .lt-ba__label {
+    left: 75%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--lt-ba-pos);
+    z-index: 3;
+    width: 4px;
+    background-color: #ffffff;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__knob {
+    position: absolute;
+    top: 50%;
+    left: var(--lt-ba-pos);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    color: #222222;
+    transform: translate(-50%, -50%);
+    outline: none;
+    transition: box-shadow 0.2s ease, scale 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__knob svg {
+    display: block;
+    width: 30px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__slider.is-dragging .lt-ba__knob {
+    scale: 1.08;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__knob:focus-visible {
+    box-shadow: 0 0 0 4px rgba(255, 92, 179, 0.7), 0 2px 10px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Eased movement for taps/clicks and keyboard; instant while dragging */
+  #shopify-section-{{ section.id }} .lt-ba__slider.is-animating .lt-ba__layer--before {
+    transition: clip-path 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  #shopify-section-{{ section.id }} .lt-ba__slider.is-animating .lt-ba__divider,
+  #shopify-section-{{ section.id }} .lt-ba__slider.is-animating .lt-ba__knob {
+    transition: left 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, scale 0.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .lt-ba__panel,
+    #shopify-section-{{ section.id }} .lt-ba__content,
+    #shopify-section-{{ section.id }} .lt-ba__chevron,
+    #shopify-section-{{ section.id }} .lt-ba__slider.is-animating .lt-ba__layer--before,
+    #shopify-section-{{ section.id }} .lt-ba__slider.is-animating .lt-ba__divider,
+    #shopify-section-{{ section.id }} .lt-ba__slider.is-animating .lt-ba__knob {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-ba__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .lt-ba__grid {
+      gap: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__accordion {
+      padding-top: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__heading {
+      font-size: 19px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__content {
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__content p {
+      margin-bottom: 26px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__accordion {
+      padding-top: 0;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__item {
+      margin-bottom: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__trigger {
+      min-height: 54px;
+      padding: 13px 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__heading {
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__content {
+      padding-top: 18px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__content p {
+      margin-bottom: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__slider {
+      max-width: 520px;
+      margin: 0 auto;
+      border-width: 2px;
+      border-radius: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__label {
+      bottom: 22px;
+      font-size: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__knob {
+      width: 48px;
+      height: 48px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-ba__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__heading {
+      font-size: 17px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-ba__content {
+      font-size: 15px;
+      line-height: 24px;
+    }
+  }
+</style>
+
+<div class="lt-ba">
+  <div class="page-width lt-ba__inner">
+    <div class="lt-ba__grid">
+      <div class="lt-ba__accordion">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign is_open = false
+            if block.settings.open
+              if section.settings.allow_multiple or opened_count == 0
+                assign is_open = true
+                assign opened_count = opened_count | plus: 1
+              endif
+            endif
+          -%}
+          <div class="lt-ba__item{% if is_open %} is-open{% endif %}" {{ block.shopify_attributes }}>
+            <h3 class="lt-ba__heading">
+              <button
+                class="lt-ba__trigger"
+                type="button"
+                id="lt-ba-trigger-{{ block.id }}"
+                aria-expanded="{{ is_open }}"
+                aria-controls="lt-ba-panel-{{ block.id }}"
+              >
+                <span>{{ block.settings.title | escape }}</span>
+                <svg class="lt-ba__chevron" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
+                  <path d="M2 2l10 10L22 2"/>
+                </svg>
+              </button>
+            </h3>
+            <div
+              class="lt-ba__panel"
+              id="lt-ba-panel-{{ block.id }}"
+              role="region"
+              aria-labelledby="lt-ba-trigger-{{ block.id }}"
+            >
+              <div class="lt-ba__panel-inner">
+                <div class="lt-ba__content">{{ block.settings.text }}</div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="lt-ba__compare">
+        <div class="lt-ba__slider">
+          <div class="lt-ba__layer lt-ba__layer--after">
+            {%- if section.settings.after_image != blank -%}
+              <img
+                src="{{ section.settings.after_image | image_url: width: 1040 }}"
+                srcset="{{ section.settings.after_image | image_url: width: 520 }} 520w, {{ section.settings.after_image | image_url: width: 1040 }} 1040w"
+                sizes="(max-width: 767px) 520px, 519px"
+                alt="{{ section.settings.after_image.alt | default: section.settings.after_label | escape }}"
+                width="{{ section.settings.after_image.width }}"
+                height="{{ section.settings.after_image.height }}"
+                loading="lazy"
+                draggable="false"
+              >
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag }}
+            {%- endif -%}
+            {%- if section.settings.after_label != blank -%}
+              <span class="lt-ba__label">{{ section.settings.after_label | escape }}</span>
+            {%- endif -%}
+          </div>
+
+          <div class="lt-ba__layer lt-ba__layer--before">
+            {%- if section.settings.before_image != blank -%}
+              <img
+                src="{{ section.settings.before_image | image_url: width: 1040 }}"
+                srcset="{{ section.settings.before_image | image_url: width: 520 }} 520w, {{ section.settings.before_image | image_url: width: 1040 }} 1040w"
+                sizes="(max-width: 767px) 520px, 519px"
+                alt="{{ section.settings.before_image.alt | default: section.settings.before_label | escape }}"
+                width="{{ section.settings.before_image.width }}"
+                height="{{ section.settings.before_image.height }}"
+                loading="lazy"
+                draggable="false"
+              >
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag }}
+            {%- endif -%}
+            {%- if section.settings.before_label != blank -%}
+              <span class="lt-ba__label">{{ section.settings.before_label | escape }}</span>
+            {%- endif -%}
+          </div>
+
+          <div class="lt-ba__divider" aria-hidden="true"></div>
+          <div
+            class="lt-ba__knob"
+            role="slider"
+            tabindex="0"
+            aria-label="Before and after comparison"
+            aria-orientation="horizontal"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="{{ section.settings.initial_position }}"
+          >
+            <svg viewBox="0 0 30 16" aria-hidden="true" focusable="false">
+              <path d="M2 8h26M2 8l6-5.5M2 8l6 5.5M28 8l-6-5.5M28 8l-6 5.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    if (typeof root.ltBaDestroy === 'function') root.ltBaDestroy();
+
+    var allowMultiple = {{ section.settings.allow_multiple | json }};
+    var accordion = null;
+    var slider = null;
+    var knob = null;
+    var pos = {{ section.settings.initial_position }};
+    var dragging = false;
+    var startX = 0;
+    var rafId = 0;
+    var pending = null;
+    var animTimer = 0;
+    var bound = false;
+
+    /* Accordion */
+    function setOpen(item, open) {
+      var trigger = item.querySelector('.lt-ba__trigger');
+      item.classList.toggle('is-open', open);
+      if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    function closeOthers(current) {
+      var items = accordion.querySelectorAll('.lt-ba__item.is-open');
+      for (var i = 0; i < items.length; i++) {
+        if (items[i] !== current) setOpen(items[i], false);
+      }
+    }
+
+    function onAccordionClick(event) {
+      var trigger = event.target.closest('.lt-ba__trigger');
+      if (!trigger || !accordion.contains(trigger)) return;
+      var item = trigger.closest('.lt-ba__item');
+      var willOpen = !item.classList.contains('is-open');
+      if (willOpen && !allowMultiple) closeOthers(item);
+      setOpen(item, willOpen);
+    }
+
+    function onBlockSelect(event) {
+      var item = event.target && event.target.closest ? event.target.closest('.lt-ba__item') : null;
+      if (!item || !accordion.contains(item)) return;
+      if (!allowMultiple) closeOthers(item);
+      setOpen(item, true);
+    }
+
+    /* Slider */
+    function setPos(value) {
+      pos = Math.min(100, Math.max(0, value));
+      slider.style.setProperty('--lt-ba-pos', pos + '%');
+      knob.setAttribute('aria-valuenow', String(Math.round(pos)));
+    }
+
+    function schedule(value) {
+      pending = value;
+      if (rafId) return;
+      rafId = requestAnimationFrame(function () {
+        rafId = 0;
+        if (pending !== null) {
+          setPos(pending);
+          pending = null;
+        }
+      });
+    }
+
+    function posFromEvent(event) {
+      var rect = slider.getBoundingClientRect();
+      var left = rect.left + slider.clientLeft;
+      return ((event.clientX - left) / slider.clientWidth) * 100;
+    }
+
+    function animateOnce() {
+      slider.classList.add('is-animating');
+      clearTimeout(animTimer);
+      animTimer = setTimeout(function () {
+        slider.classList.remove('is-animating');
+      }, 300);
+    }
+
+    function stopAnimating() {
+      clearTimeout(animTimer);
+      slider.classList.remove('is-animating');
+    }
+
+    function onPointerDown(event) {
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      dragging = true;
+      startX = event.clientX;
+      slider.classList.add('is-dragging');
+      try { slider.setPointerCapture(event.pointerId); } catch (e) {}
+      animateOnce();
+      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; pending = null; }
+      setPos(posFromEvent(event));
+    }
+
+    function onPointerMove(event) {
+      if (!dragging) return;
+      if (Math.abs(event.clientX - startX) > 4) stopAnimating();
+      schedule(posFromEvent(event));
+    }
+
+    function onPointerEnd(event) {
+      if (!dragging) return;
+      dragging = false;
+      slider.classList.remove('is-dragging');
+      try { slider.releasePointerCapture(event.pointerId); } catch (e) {}
+    }
+
+    function onKeyDown(event) {
+      var step = event.shiftKey ? 10 : 5;
+      var next = null;
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next = pos - step;
+      else if (event.key === 'ArrowRight' || event.key === 'ArrowUp') next = pos + step;
+      else if (event.key === 'Home') next = 0;
+      else if (event.key === 'End') next = 100;
+      if (next === null) return;
+      event.preventDefault();
+      animateOnce();
+      setPos(next);
+    }
+
+    function init() {
+      if (bound) return;
+      accordion = root.querySelector('.lt-ba__accordion');
+      slider = root.querySelector('.lt-ba__slider');
+      knob = root.querySelector('.lt-ba__knob');
+      if (!accordion || !slider || !knob) return;
+
+      accordion.addEventListener('click', onAccordionClick);
+      root.addEventListener('shopify:block:select', onBlockSelect);
+      slider.addEventListener('pointerdown', onPointerDown);
+      slider.addEventListener('pointermove', onPointerMove);
+      slider.addEventListener('pointerup', onPointerEnd);
+      slider.addEventListener('pointercancel', onPointerEnd);
+      knob.addEventListener('keydown', onKeyDown);
+      bound = true;
+    }
+
+    function destroy() {
+      if (accordion) accordion.removeEventListener('click', onAccordionClick);
+      root.removeEventListener('shopify:block:select', onBlockSelect);
+      root.removeEventListener('shopify:section:load', init);
+      root.removeEventListener('shopify:section:unload', destroy);
+      if (slider) {
+        slider.removeEventListener('pointerdown', onPointerDown);
+        slider.removeEventListener('pointermove', onPointerMove);
+        slider.removeEventListener('pointerup', onPointerEnd);
+        slider.removeEventListener('pointercancel', onPointerEnd);
+      }
+      if (knob) knob.removeEventListener('keydown', onKeyDown);
+      if (rafId) cancelAnimationFrame(rafId);
+      clearTimeout(animTimer);
+      rafId = 0;
+      pending = null;
+      dragging = false;
+      bound = false;
+      accordion = slider = knob = null;
+      delete root.ltBaDestroy;
+    }
+
+    root.ltBaDestroy = destroy;
+    root.addEventListener('shopify:section:load', init);
+    root.addEventListener('shopify:section:unload', destroy);
+    init();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "LT Before After",
+  "tag": "div",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Accordion"
+    },
+    {
+      "type": "color",
+      "id": "accordion_background",
+      "label": "Header background",
+      "default": "#ff5cb3"
+    },
+    {
+      "type": "color",
+      "id": "accordion_text_color",
+      "label": "Header text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_multiple",
+      "label": "Allow multiple items open",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Before / after images"
+    },
+    {
+      "type": "image_picker",
+      "id": "before_image",
+      "label": "Before image",
+      "info": "Both images should share the same framing. Recommended: 1040 x 1220 px."
+    },
+    {
+      "type": "image_picker",
+      "id": "after_image",
+      "label": "After image"
+    },
+    {
+      "type": "text",
+      "id": "before_label",
+      "label": "Before label",
+      "default": "Before"
+    },
+    {
+      "type": "text",
+      "id": "after_label",
+      "label": "After label",
+      "default": "After"
+    },
+    {
+      "type": "range",
+      "id": "initial_position",
+      "label": "Initial handle position",
+      "min": 10,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Accordion heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Add a short description for this item.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Before After",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": [
+        {
+          "type": "accordion",
+          "settings": {
+            "title": "Hydrate Your Lips Overnight",
+            "text": "<p>Wake up to lips that feel soft, smooth, and hydrated. Beauty Tape is infused with <strong>Collagen, Vitamin E &amp; Hyaluronic Acid</strong> to help lock in moisture while you sleep.</p>",
+            "open": true
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "title": "Support a Fresher Morning",
+            "text": "<p>Encouraging nasal breathing overnight can help you start the day feeling more comfortable and refreshed.</p>"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "title": "Support Better Sleep",
+            "text": "<p>Gently encourage your lips to stay closed so you can focus on breathing through your nose while you sleep.</p>"
+          }
+        },
+        {
+          "type": "accordion",
+          "settings": {
+            "title": "Wake Up Feeling Refreshed",
+            "text": "<p>Make it part of your nightly routine and wake up ready for the day.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

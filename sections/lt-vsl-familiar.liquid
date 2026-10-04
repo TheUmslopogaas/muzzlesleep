@@ -1,0 +1,369 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign image_right = false
+  if section.settings.image_position == 'right'
+    assign image_right = true
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar,
+  #shopify-section-{{ section.id }} .lt-familiar *,
+  #shopify-section-{{ section.id }} .lt-familiar *::before,
+  #shopify-section-{{ section.id }} .lt-familiar *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: 84px;
+    max-width: 1228px;
+    margin: 0 auto;
+  }
+
+  {%- if image_right %}
+  #shopify-section-{{ section.id }} .lt-familiar__grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__media {
+    order: 2;
+  }
+  {%- endif %}
+
+  /* Image */
+  #shopify-section-{{ section.id }} .lt-familiar__media {
+    width: 100%;
+    aspect-ratio: 520 / 610;
+    border: 3px solid rgba(226, 196, 190, 0.9);
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #f3e6e3;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__media img,
+  #shopify-section-{{ section.id }} .lt-familiar__media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__media svg {
+    fill: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Text */
+  #shopify-section-{{ section.id }} .lt-familiar__heading {
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__items {
+    margin-top: 28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__item {
+    margin: 0 0 29px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__item:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-familiar__item strong {
+    font-weight: 600;
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-familiar__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .lt-familiar__grid {
+      gap: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__heading {
+      font-size: 38px;
+      line-height: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__item {
+      margin-bottom: 24px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__media {
+      order: 0;
+      max-width: 520px;
+      margin: 0 auto;
+      border-width: 2px;
+      border-radius: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__items {
+      margin-top: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__item {
+      margin-bottom: 20px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-familiar__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-familiar__item {
+      font-size: 15px;
+      line-height: 24px;
+    }
+  }
+</style>
+
+<div class="lt-familiar">
+  <div class="page-width lt-familiar__inner">
+    <div class="lt-familiar__grid">
+      <div class="lt-familiar__media">
+        {%- if section.settings.image != blank -%}
+          <img
+            src="{{ section.settings.image | image_url: width: 1040 }}"
+            srcset="{{ section.settings.image | image_url: width: 520 }} 520w, {{ section.settings.image | image_url: width: 1040 }} 1040w"
+            sizes="(max-width: 767px) 520px, 520px"
+            alt="{{ section.settings.image.alt | default: section.settings.image_alt | escape }}"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag }}
+        {%- endif -%}
+      </div>
+
+      <div class="lt-familiar__text">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-familiar__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <div class="lt-familiar__items">
+            {%- for block in section.blocks -%}
+              <p class="lt-familiar__item" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT Familiar",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Does This Sound Familiar?"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Displayed at about 6:7 (portrait). Recommended: 1040 x 1220 px."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Woman holding a mouth tape patch below her lips"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Text item",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Add a short line of text."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Familiar",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": [
+        { "type": "item", "settings": { "text": "You wake up with your mouth completely dry." } },
+        { "type": "item", "settings": { "text": "Your partner complains about your snoring." } },
+        { "type": "item", "settings": { "text": "You wake up throughout the night needing water." } },
+        { "type": "item", "settings": { "text": "Your lips constantly feel dry in the morning." } },
+        { "type": "item", "settings": { "text": "You spend money on lip treatments you forget to apply." } },
+        { "type": "item", "settings": { "text": "You wake up feeling like your sleep could have been better." } },
+        { "type": "item", "settings": { "text": "Beauty Tape was created for exactly this kind of nighttime routine." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

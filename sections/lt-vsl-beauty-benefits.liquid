@@ -1,0 +1,594 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign overlay = section.settings.overlay_color
+  assign overlay_0 = overlay | color_modify: 'alpha', 0
+  assign overlay_1 = overlay | color_modify: 'alpha', 0.38
+  assign overlay_2 = overlay | color_modify: 'alpha', 0.8
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits *,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits *::before,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  /* Header */
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__eyebrow {
+    margin: 0 0 18px;
+    color: {{ section.settings.eyebrow_color }};
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__heading {
+    max-width: 800px;
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__intro {
+    max-width: 840px;
+    margin-top: 28px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__intro p,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__footer p {
+    margin: 0 0 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__intro p:last-child,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__footer p:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__intro strong {
+    font-weight: 600;
+  }
+
+  /* Cards */
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    max-width: 1228px;
+    margin: 64px auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__card {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    margin: 0;
+    padding: 0;
+    aspect-ratio: 395 / 410;
+    border: 3px solid rgba(160, 140, 152, 0.65);
+    border-radius: 44px;
+    overflow: hidden;
+    background-color: #e8a3c4;
+    color: #ffffff;
+    isolation: isolate;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__media img,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__media svg,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media img,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__media svg,
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media svg {
+    background-color: #f3c3d9;
+    fill: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Frosted blur fading in from the sharp upper image */
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__blur {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    height: 52%;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000000 55%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000000 55%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__shade {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    height: 58%;
+    background: linear-gradient(to bottom, {{ overlay_0 }} 0%, {{ overlay_1 }} 45%, {{ overlay_2 }} 100%);
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding: 0 32px 28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__title {
+    margin: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__text {
+    margin: 10px 0 0;
+    color: rgba(255, 255, 255, 0.94);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 25px;
+  }
+
+  /* Wide image */
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__wide {
+    max-width: 1228px;
+    margin: 22px auto 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media {
+    aspect-ratio: 1228 / 410;
+    border: 3px solid rgba(130, 130, 130, 0.8);
+    border-radius: 48px;
+    overflow: hidden;
+    background-color: #2b2b2b;
+  }
+
+  /* Footer */
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__footer {
+    max-width: 840px;
+    margin: 64px auto 0;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__eyebrow {
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__intro {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__intro p,
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__footer p {
+      margin-bottom: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__card {
+      aspect-ratio: 16 / 10;
+      border-width: 2px;
+      border-radius: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__content {
+      padding: 0 24px 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__title {
+      font-size: 22px;
+      line-height: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__text {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__wide {
+      margin-top: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media {
+      aspect-ratio: 16 / 9;
+      border-width: 2px;
+      border-radius: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__footer {
+      margin-top: 40px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__card {
+      aspect-ratio: 5 / 4;
+      border-radius: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__content {
+      padding: 0 20px 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media {
+      aspect-ratio: 4 / 3;
+      border-radius: 28px;
+    }
+  }
+</style>
+
+<div class="lt-vsl-benefits">
+  <div class="page-width lt-vsl-benefits__inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.intro != blank -%}
+      <div class="lt-vsl-benefits__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-vsl-benefits__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-vsl-benefits__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="lt-vsl-benefits__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="lt-vsl-benefits__grid">
+        {%- for block in section.blocks -%}
+          <li class="lt-vsl-benefits__card" {{ block.shopify_attributes }}>
+            <div class="lt-vsl-benefits__media">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 790 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 790 }} 790w"
+                  sizes="(max-width: 767px) 100vw, 395px"
+                  alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+            <div class="lt-vsl-benefits__blur" aria-hidden="true"></div>
+            <div class="lt-vsl-benefits__shade" aria-hidden="true"></div>
+            <div class="lt-vsl-benefits__content">
+              {%- if block.settings.title != blank -%}
+                <h3 class="lt-vsl-benefits__title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="lt-vsl-benefits__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="lt-vsl-benefits__wide">
+      <div class="lt-vsl-benefits__wide-media">
+        {%- if section.settings.wide_image != blank -%}
+          <img
+            src="{{ section.settings.wide_image | image_url: width: 1228 }}"
+            srcset="{{ section.settings.wide_image | image_url: width: 640 }} 640w, {{ section.settings.wide_image | image_url: width: 1228 }} 1228w, {{ section.settings.wide_image | image_url: width: 2456 }} 2456w"
+            sizes="(max-width: 1440px) calc(100vw - 80px), 1228px"
+            alt="{{ section.settings.wide_image.alt | default: section.settings.wide_image_alt | escape }}"
+            width="{{ section.settings.wide_image.width }}"
+            height="{{ section.settings.wide_image.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          {{ 'lifestyle-1' | placeholder_svg_tag }}
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.settings.footer_text != blank -%}
+      <div class="lt-vsl-benefits__footer">{{ section.settings.footer_text }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT VSL Beauty Benefits",
+  "tag": "div",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Meet Muzzle Beauty Tape"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#f25ca8"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Everything You Want From Your Nighttime Mouth Tape — With An Added Beauty Benefit."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Beauty Tape was designed first and foremost to help encourage nasal breathing while you sleep.</p><p>But we thought:<br><strong>If something is going to sit over your lips for eight hours every night... why shouldn’t it care for them too?</strong></p><p>So we added beauty-focused ingredients including:</p>"
+    },
+    {
+      "type": "header",
+      "content": "Ingredient cards"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Card text overlay color",
+      "info": "Tint of the darkened, blurred area behind the card text.",
+      "default": "#46143a"
+    },
+    {
+      "type": "header",
+      "content": "Large image"
+    },
+    {
+      "type": "image_picker",
+      "id": "wide_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "wide_image_alt",
+      "label": "Image alt text",
+      "default": "Woman applying black mouth tape over her lips"
+    },
+    {
+      "type": "header",
+      "content": "Closing text"
+    },
+    {
+      "type": "richtext",
+      "id": "footer_text",
+      "label": "Text below image",
+      "default": "<p>Instead of adding another step to your bedtime routine, your mouth tape becomes part of it.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Ingredient card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Ingredient"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Describe what this ingredient does."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL Beauty Benefits",
+      "settings": {
+        "background_color": "#fff5fb",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "Hyaluronic Acid",
+            "text": "Known for its ability to attract and retain moisture, helping lips feel softer and more hydrated."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Vitamin E",
+            "text": "Helps condition and nourish dry-feeling lips."
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "title": "Collagen",
+            "text": "Included as part of our beauty-focused formula to support smoother, healthier-looking lips."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

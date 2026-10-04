@@ -1,0 +1,731 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign highlight_bg = section.settings.highlight_background | default: '#ff5aae'
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing,
+  #shopify-section-{{ section.id }} .lt-vsl-pricing *,
+  #shopify-section-{{ section.id }} .lt-vsl-pricing *::before,
+  #shopify-section-{{ section.id }} .lt-vsl-pricing *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  /* Header */
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__header {
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__heading {
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__subheading {
+    margin: 28px 0 0;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  /* Grid */
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 20px;
+    max-width: 1228px;
+    margin: 100px auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 24px;
+    border-radius: 32px;
+    background: {{ section.settings.card_background }};
+    box-shadow: 0 8px 28px rgba(190, 58, 125, 0.06);
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__card--highlight {
+    z-index: 1;
+    background: {{ highlight_bg }};
+    color: {{ section.settings.highlight_text_color }};
+    box-shadow: 0 24px 60px rgba(255, 90, 175, 0.28);
+    transform: translateY(-31px);
+  }
+
+  /* Badge */
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__badge {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 231px;
+    height: 39px;
+    padding: 0 24px;
+    border-radius: 100px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Card content */
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__media {
+    height: 375px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__media img,
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__media svg {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    fill: rgba(0, 0, 0, 0.2);
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__title {
+    margin: 24px 0 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 32px;
+    letter-spacing: -0.3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__text {
+    min-height: 42px;
+    margin: 12px 0 0;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__prices {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 24px;
+    min-height: 36px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__price-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__price {
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 36px;
+    letter-spacing: -0.3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__compare {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 32px;
+    text-decoration: line-through;
+    opacity: 0.55;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__save {
+    flex: 0 0 auto;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    opacity: 0.75;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 58px;
+    margin-top: auto;
+    padding: 0 24px;
+    border-radius: 100px;
+    background-color: {{ section.settings.button_background }};
+    color: {{ section.settings.button_text_color }};
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__card-body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__card--highlight .lt-vsl-pricing__button {
+    background-color: {{ section.settings.highlight_button_background }};
+    color: {{ section.settings.highlight_button_text_color }};
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(255, 90, 175, 0.3);
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__button:focus-visible {
+    outline: 3px solid #222222;
+    outline-offset: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-pricing__spacer {
+    flex: 1 1 auto;
+    min-height: 24px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__grid {
+      gap: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__card {
+      padding: 18px;
+      border-radius: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__card--highlight {
+      transform: translateY(-24px);
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__badge {
+      min-width: 0;
+      height: 34px;
+      padding: 0 20px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__media {
+      height: 260px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__title {
+      margin-top: 18px;
+      font-size: 21px;
+      line-height: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__text {
+      min-height: 48px;
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__price {
+      font-size: 22px;
+      line-height: 30px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__compare {
+      font-size: 17px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__save {
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__prices {
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__button {
+      min-height: 52px;
+      font-size: 15px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__heading {
+      font-size: 36px;
+      line-height: 44px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__subheading {
+      margin-top: 14px;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+      max-width: 440px;
+      margin-top: 56px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__card {
+      padding: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__card--highlight {
+      transform: none;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__badge {
+      min-width: 190px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__media {
+      height: 300px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__title {
+      font-size: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__text {
+      min-height: 0;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__price {
+      font-size: 26px;
+      line-height: 34px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__compare {
+      font-size: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__save {
+      font-size: 13px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__spacer {
+      min-height: 20px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__heading {
+      font-size: 32px;
+      line-height: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__card {
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-pricing__media {
+      height: 260px;
+    }
+  }
+</style>
+
+<div class="lt-vsl-pricing">
+  <div class="page-width lt-vsl-pricing__inner">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="lt-vsl-pricing__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-vsl-pricing__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="lt-vsl-pricing__subheading">{{ section.settings.subheading | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <ul class="lt-vsl-pricing__grid">
+        {%- for block in section.blocks -%}
+          <li
+            class="lt-vsl-pricing__card{% if block.settings.highlight %} lt-vsl-pricing__card--highlight{% endif %}"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.badge_text != blank -%}
+              <span class="lt-vsl-pricing__badge" style="background-color: {{ block.settings.badge_background }};">{{ block.settings.badge_text | escape }}</span>
+            {%- endif -%}
+
+            <div class="lt-vsl-pricing__media">
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 800 }}"
+                  srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 800 }} 800w"
+                  sizes="(max-width: 767px) 400px, 348px"
+                  alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+
+            <div class="lt-vsl-pricing__card-body">
+              {%- if block.settings.title != blank -%}
+                <h3 class="lt-vsl-pricing__title">{{ block.settings.title | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <p class="lt-vsl-pricing__text">{{ block.settings.text | escape }}</p>
+              {%- endif -%}
+
+              {%- if block.settings.price != blank -%}
+                <div class="lt-vsl-pricing__prices">
+                  <div class="lt-vsl-pricing__price-wrap">
+                    <span class="lt-vsl-pricing__price">{{ block.settings.price | escape }}</span>
+                    {%- if block.settings.compare_price != blank -%}
+                      <s class="lt-vsl-pricing__compare">{{ block.settings.compare_price | escape }}</s>
+                    {%- endif -%}
+                  </div>
+                  {%- if block.settings.save_text != blank -%}
+                    <span class="lt-vsl-pricing__save">{{ block.settings.save_text | escape }}</span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              <div class="lt-vsl-pricing__spacer" aria-hidden="true"></div>
+
+              {%- if block.settings.button_text != blank -%}
+                <a class="lt-vsl-pricing__button" href="{{ block.settings.button_url | default: '#' }}">{{ block.settings.button_text | escape }}</a>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT VSL Pricing",
+  "tag": "div",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Start Tonight."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Choose Your Beauty Sleep Supply"
+    },
+    {
+      "type": "header",
+      "content": "Standard cards"
+    },
+    {
+      "type": "color_background",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffeff6"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#ff58ae"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Highlighted card"
+    },
+    {
+      "type": "color_background",
+      "id": "highlight_background",
+      "label": "Card background",
+      "info": "Supports solid colors and gradients.",
+      "default": "linear-gradient(180deg, #e89aab 0%, #ff63b1 55%, #ff56ad 100%)"
+    },
+    {
+      "type": "color",
+      "id": "highlight_text_color",
+      "label": "Card text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "highlight_button_background",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "highlight_button_text_color",
+      "label": "Button text color",
+      "default": "#ff58ae"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Pricing card",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "highlight",
+          "label": "Highlight this card",
+          "info": "Uses the highlighted card style and lifts the card above the others.",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge text"
+        },
+        {
+          "type": "color",
+          "id": "badge_background",
+          "label": "Badge background",
+          "default": "#ff59ac"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "1 Pack - 30 nights"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Perfect for trying Muzzle Beauty Tape."
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$34.95"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Original price"
+        },
+        {
+          "type": "text",
+          "id": "save_text",
+          "label": "Savings text"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Get 1 Pack"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL Pricing",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 40
+      },
+      "blocks": [
+        {
+          "type": "card",
+          "settings": {
+            "title": "1 Pack - 30 nights",
+            "text": "Perfect for trying Muzzle Beauty Tape.",
+            "price": "$34.95",
+            "button_text": "Get 1 Pack"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "highlight": true,
+            "badge_text": "Most Popular",
+            "badge_background": "#ff59ac",
+            "title": "2 Packs - 60 nights",
+            "text": "Great for turning Beauty Tape into a consistent nightly routine.",
+            "price": "$59.95",
+            "compare_price": "$69.90",
+            "save_text": "Save $9.95",
+            "button_text": "Get 2 Packs"
+          }
+        },
+        {
+          "type": "card",
+          "settings": {
+            "badge_text": "Best Value",
+            "badge_background": "#28244f",
+            "title": "3 Packs - 90 nights",
+            "text": "The lowest cost per night.",
+            "price": "$79.95",
+            "compare_price": "$104.85",
+            "save_text": "Save $24.90",
+            "button_text": "Get 3 Packs"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

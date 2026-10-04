@@ -1,0 +1,418 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign image_left = false
+  if section.settings.image_position == 'left'
+    assign image_left = true
+  endif
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal,
+  #shopify-section-{{ section.id }} .lt-vsl-nasal *,
+  #shopify-section-{{ section.id }} .lt-vsl-nasal *::before,
+  #shopify-section-{{ section.id }} .lt-vsl-nasal *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.21fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 80px;
+    max-width: 1228px;
+    margin: 0 auto;
+  }
+
+  {%- if image_left %}
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.21fr);
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__visual {
+    order: -1;
+  }
+  {%- endif %}
+
+  /* Text */
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__eyebrow {
+    margin: 0 0 18px;
+    color: {{ section.settings.eyebrow_color }};
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__heading {
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__body {
+    margin-top: 28px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__body p {
+    margin: 0 0 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__body strong {
+    font-weight: 600;
+  }
+
+  /* Connected image block */
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__visual {
+    width: 100%;
+    border: 2px solid rgba(150, 150, 150, 0.5);
+    border-radius: 36px;
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__image {
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__image + .lt-vsl-nasal__image {
+    border-top: 3px solid #111111;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__image img,
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__image svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-nasal__image svg {
+    background-color: #f1f1f1;
+    fill: rgba(0, 0, 0, 0.2);
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__grid {
+      gap: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__heading {
+      font-size: 40px;
+      line-height: 52px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__body {
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__body p {
+      margin-bottom: 26px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__visual {
+      order: 0;
+      max-width: 560px;
+      margin: 0 auto;
+      border-radius: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__eyebrow {
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__body {
+      margin-top: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__body p {
+      margin-bottom: 20px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__body {
+      font-size: 15px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-vsl-nasal__visual {
+      border-radius: 24px;
+    }
+  }
+</style>
+
+<div class="lt-vsl-nasal">
+  <div class="page-width lt-vsl-nasal__inner">
+    <div class="lt-vsl-nasal__grid">
+      <div class="lt-vsl-nasal__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-vsl-nasal__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-vsl-nasal__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.body != blank -%}
+          <div class="lt-vsl-nasal__body">{{ section.settings.body }}</div>
+        {%- endif -%}
+      </div>
+
+      <div class="lt-vsl-nasal__visual">
+        <div class="lt-vsl-nasal__image">
+          {%- if section.settings.image_top != blank -%}
+            <img
+              src="{{ section.settings.image_top | image_url: width: 1038 }}"
+              srcset="{{ section.settings.image_top | image_url: width: 520 }} 520w, {{ section.settings.image_top | image_url: width: 1038 }} 1038w"
+              sizes="(max-width: 767px) 560px, 519px"
+              alt="{{ section.settings.image_top.alt | default: section.settings.image_top_alt | escape }}"
+              width="{{ section.settings.image_top.width }}"
+              height="{{ section.settings.image_top.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+        <div class="lt-vsl-nasal__image">
+          {%- if section.settings.image_bottom != blank -%}
+            <img
+              src="{{ section.settings.image_bottom | image_url: width: 1038 }}"
+              srcset="{{ section.settings.image_bottom | image_url: width: 520 }} 520w, {{ section.settings.image_bottom | image_url: width: 1038 }} 1038w"
+              sizes="(max-width: 767px) 560px, 519px"
+              alt="{{ section.settings.image_bottom.alt | default: section.settings.image_bottom_alt | escape }}"
+              width="{{ section.settings.image_bottom.width }}"
+              height="{{ section.settings.image_bottom.height }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "LT VSL Nasal Breathing",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Why nasal breathing?"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#f25ca8"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your Nose Was Designed For Breathing."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p><strong>Your Nose Was Designed For Breathing.</strong></p><p>Nasal breathing naturally filters, humidifies and warms the air you breathe before it reaches your lungs.</p><p>And while you sleep, keeping your mouth comfortably closed can help support a more consistent nasal-breathing routine.</p><p>That’s why so many people add mouth tape to their nightly sleep routine.</p><p>Muzzle makes it incredibly simple:</p><p><strong>Apply. Sleep. Peel Off In The Morning.</strong></p><p>No complicated routine.<br>No bulky device.<br>Just one small habit before bed.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_top",
+      "label": "Top image"
+    },
+    {
+      "type": "text",
+      "id": "image_top_alt",
+      "label": "Top image alt text",
+      "default": "Diagram of airflow when breathing through the mouth"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bottom",
+      "label": "Bottom image"
+    },
+    {
+      "type": "text",
+      "id": "image_bottom_alt",
+      "label": "Bottom image alt text",
+      "default": "Diagram of airflow when breathing through the nose"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL Nasal Breathing",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    }
+  ]
+}
+{% endschema %}
