@@ -458,6 +458,7 @@
         "text_color": "#222222",
         "heading": "Does This Sound Familiar?",
         "heading_color": "#be3a7d",
+        "image": "shopify://shop_images/vsl-sound-familiar.jpg",
         "image_alt": "Woman holding a mouth tape patch below her lips",
         "image_position": "left",
         "padding_top": 80,
@@ -481,7 +482,7 @@
           "type": "accordion",
           "settings": {
             "title": "Support a Fresher Morning",
-            "text": "<p>Encouraging nasal breathing overnight can help you start the day feeling more comfortable and refreshed.</p>",
+            "text": "<p>Encouraging your mouth to stay gently closed overnight can help reduce dry mouth, so you can wake up feeling fresher and more comfortable.</p>",
             "open": false
           }
         },
@@ -489,7 +490,7 @@
           "type": "accordion",
           "settings": {
             "title": "Support Better Sleep",
-            "text": "<p>Gently encourage your lips to stay closed so you can focus on breathing through your nose while you sleep.</p>",
+            "text": "<p>Beauty Tape encourages <strong>nasal breathing while you sleep</strong>, helping support a calmer, more comfortable night and fewer disruptions from sleeping with your mouth open.</p>",
             "open": false
           }
         },
@@ -497,7 +498,7 @@
           "type": "accordion",
           "settings": {
             "title": "Wake Up Feeling Refreshed",
-            "text": "<p>Make it part of your nightly routine and wake up ready for the day.</p>",
+            "text": "<p>Better nighttime breathing habits can make for better mornings. Support nasal breathing overnight and wake up feeling <strong>rested, refreshed, and ready for your day.</strong></p>",
             "open": false
           }
         }
