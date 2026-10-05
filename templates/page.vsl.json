@@ -529,6 +529,7 @@
         "step_1": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/vsl-carousel-images_4.jpg",
             "title": "Get Ready For Bed",
             "text": "Wash and dry the skin around your lips."
           }
@@ -536,6 +537,7 @@
         "step_2": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/vsl-carousel-images_3.jpg",
             "title": "Apply Your Beauty Tape",
             "text": "Place Muzzle comfortably across your lips before going to sleep."
           }
@@ -543,6 +545,15 @@
         "step_3": {
           "type": "step",
           "settings": {
+            "image": "shopify://shop_images/vsl-carousel-images_2.jpg",
+            "title": "Breathe Easy",
+            "text": "Relax and breathe naturally through your nose as you fall asleep."
+          }
+        },
+        "step_7aett9": {
+          "type": "step",
+          "settings": {
+            "image": "shopify://shop_images/vsl-carousel-images_1.jpg",
             "title": "Breathe Easy",
             "text": "Relax and breathe naturally through your nose as you fall asleep."
           }
@@ -551,7 +562,8 @@
       "block_order": [
         "step_1",
         "step_2",
-        "step_3"
+        "step_3",
+        "step_7aett9"
       ],
       "settings": {
         "background_color": "#fff5fb",
