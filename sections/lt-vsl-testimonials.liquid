@@ -1,0 +1,712 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi,
+  #shopify-section-{{ section.id }} .lt-testi *,
+  #shopify-section-{{ section.id }} .lt-testi *::before,
+  #shopify-section-{{ section.id }} .lt-testi *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi {
+    --lt-testi-gutter: 106px;
+    --lt-testi-gap: 20px;
+    --lt-testi-card-w: calc((min(100vw, 1440px) - 2 * var(--lt-testi-gutter) - 2 * var(--lt-testi-gap)) / 3);
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__inner.page-width {
+    max-width: 1440px;
+    padding: 0 var(--lt-testi-gutter);
+  }
+
+  /* Header */
+  #shopify-section-{{ section.id }} .lt-testi__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__eyebrow {
+    margin: 0 0 18px;
+    color: {{ section.settings.eyebrow_color }};
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__heading {
+    max-width: 800px;
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__intro {
+    max-width: 840px;
+    margin-top: 28px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__intro p {
+    margin: 0 0 29px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Carousel: full-bleed, cards centre-snap so neighbours peek at both edges */
+  #shopify-section-{{ section.id }} .lt-testi__viewport {
+    margin-top: 64px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__viewport.lt-is-grabbing {
+    scroll-snap-type: none;
+    cursor: grabbing;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__viewport:focus-visible {
+    outline: 3px solid {{ section.settings.heading_color }};
+    outline-offset: -3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__track {
+    display: flex;
+    width: max-content;
+    gap: var(--lt-testi-gap);
+    margin: 0;
+    padding: 0 calc((100% - var(--lt-testi-card-w)) / 2);
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__card {
+    position: relative;
+    flex: 0 0 var(--lt-testi-card-w);
+    width: var(--lt-testi-card-w);
+    margin: 0;
+    padding: 0;
+    aspect-ratio: 396 / 561;
+    border-radius: 28px;
+    overflow: hidden;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    scroll-snap-align: center;
+    isolation: isolate;
+    transform: translateZ(0);
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__video,
+  #shopify-section-{{ section.id }} .lt-testi__media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__media svg {
+    background-color: #5a5a5a;
+    fill: rgba(255, 255, 255, 0.25);
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__shade {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1;
+    height: 120px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.32) 0%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+  }
+
+  /* Profile overlay */
+  #shopify-section-{{ section.id }} .lt-testi__profile {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    left: 26px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__avatar {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.35);
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__avatar img,
+  #shopify-section-{{ section.id }} .lt-testi__avatar svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__meta {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 18px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__name span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__verified {
+    flex: 0 0 auto;
+    width: 13px;
+    height: 13px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__followers {
+    margin: 1px 0 0;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 14px;
+    opacity: 0.92;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-testi {
+      --lt-testi-gutter: 40px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi {
+      --lt-testi-gutter: 20px;
+      --lt-testi-gap: 12px;
+      --lt-testi-card-w: min(72vw, 340px);
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__eyebrow {
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__intro {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__intro p {
+      margin-bottom: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__viewport {
+      margin-top: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__card {
+      border-radius: 24px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-testi {
+      --lt-testi-gutter: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__card {
+      border-radius: 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__profile {
+      top: 16px;
+      left: 18px;
+    }
+  }
+</style>
+
+<div class="lt-testi">
+  <div class="page-width lt-testi__inner">
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.intro != blank -%}
+      <div class="lt-testi__header">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-testi__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-testi__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="lt-testi__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="lt-testi__viewport" tabindex="0" role="region" aria-label="{{ section.settings.eyebrow | default: 'Testimonials' | escape }}">
+      <ul class="lt-testi__track">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign video = block.settings.video
+            assign src = nil
+            if video != blank
+              for s in video.sources
+                if s.format == 'mp4' and s.width <= 720
+                  if src == nil or s.width > src.width
+                    assign src = s
+                  endif
+                endif
+              endfor
+              if src == nil
+                for s in video.sources
+                  if s.format == 'mp4'
+                    assign src = s
+                    break
+                  endif
+                endfor
+              endif
+            endif
+          -%}
+          <li class="lt-testi__card" {{ block.shopify_attributes }}>
+            <div class="lt-testi__media">
+              {%- if video != blank and src != nil -%}
+                <video
+                  class="lt-testi__video"
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  poster="{{ video.preview_image | image_url: width: 800 }}"
+                  aria-label="{{ block.settings.username | escape }}"
+                >
+                  <source src="{{ src.url }}" type="{{ src.mime_type }}">
+                </video>
+              {%- elsif video != blank and video.preview_image != blank -%}
+                <img
+                  class="lt-testi__video"
+                  src="{{ video.preview_image | image_url: width: 800 }}"
+                  alt="{{ block.settings.username | escape }}"
+                  loading="lazy"
+                  draggable="false"
+                >
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+
+            <div class="lt-testi__shade" aria-hidden="true"></div>
+
+            <div class="lt-testi__profile">
+              <div class="lt-testi__avatar">
+                {%- if block.settings.profile_image != blank -%}
+                  <img
+                    src="{{ block.settings.profile_image | image_url: width: 68, height: 68, crop: 'center' }}"
+                    alt=""
+                    width="34"
+                    height="34"
+                    loading="lazy"
+                    draggable="false"
+                  >
+                {%- else -%}
+                  {{ 'image' | placeholder_svg_tag }}
+                {%- endif -%}
+              </div>
+              <div class="lt-testi__meta">
+                {%- if block.settings.username != blank -%}
+                  <p class="lt-testi__name">
+                    <span>{{ block.settings.username | escape }}</span>
+                    {%- if section.settings.show_verified -%}
+                      <svg class="lt-testi__verified" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="12" fill="#3b82f6"/>
+                        <path d="M7 12.4l3.2 3.2L17 8.8" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    {%- endif -%}
+                  </p>
+                {%- endif -%}
+                {%- if block.settings.followers != blank -%}
+                  <p class="lt-testi__followers">{{ block.settings.followers | escape }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+</div>
+
+{% if section.blocks.size > 0 %}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+      if (typeof root.ltTestiDestroy === 'function') root.ltTestiDestroy();
+
+      var viewport = null;
+      var cards = [];
+      var observer = null;
+      var bound = false;
+      var dragging = false;
+      var startX = 0;
+      var startScroll = 0;
+      var initTimer = 0;
+      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function cardCenter(card) {
+        return card.offsetLeft + card.offsetWidth / 2;
+      }
+
+      function scrollToCard(index, smooth) {
+        var card = cards[index];
+        if (!card) return;
+        viewport.scrollTo({
+          left: cardCenter(card) - viewport.clientWidth / 2,
+          behavior: smooth ? 'smooth' : 'auto'
+        });
+      }
+
+      /* Desktop starts on the third card so a neighbour peeks on both edges */
+      function setStartPosition() {
+        if (window.innerWidth <= 767) return;
+        scrollToCard(Math.min(2, Math.floor((cards.length - 1) / 2)), false);
+      }
+
+      function snapToNearest() {
+        var center = viewport.scrollLeft + viewport.clientWidth / 2;
+        var best = 0;
+        var bestDistance = Infinity;
+        for (var i = 0; i < cards.length; i++) {
+          var distance = Math.abs(cardCenter(cards[i]) - center);
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = i;
+          }
+        }
+        scrollToCard(best, true);
+      }
+
+      /* Mouse drag (touch uses native scrolling) */
+      function onPointerDown(event) {
+        if (event.pointerType !== 'mouse' || event.button !== 0) return;
+        dragging = true;
+        startX = event.clientX;
+        startScroll = viewport.scrollLeft;
+        viewport.classList.add('lt-is-grabbing');
+        try { viewport.setPointerCapture(event.pointerId); } catch (e) {}
+      }
+
+      function onPointerMove(event) {
+        if (!dragging) return;
+        viewport.scrollLeft = startScroll - (event.clientX - startX);
+      }
+
+      function onPointerEnd(event) {
+        if (!dragging) return;
+        dragging = false;
+        viewport.classList.remove('lt-is-grabbing');
+        try { viewport.releasePointerCapture(event.pointerId); } catch (e) {}
+        snapToNearest();
+      }
+
+      /* Only play the videos that are actually on screen */
+      function onIntersect(entries) {
+        entries.forEach(function (entry) {
+          var video = entry.target.querySelector('video');
+          if (!video) return;
+          if (entry.isIntersecting && !reduceMotion) {
+            var attempt = video.play();
+            if (attempt && typeof attempt.catch === 'function') attempt.catch(function () {});
+          } else {
+            video.pause();
+          }
+        });
+      }
+
+      function init() {
+        if (bound) return;
+        viewport = root.querySelector('.lt-testi__viewport');
+        if (!viewport) return;
+        cards = Array.prototype.slice.call(viewport.querySelectorAll('.lt-testi__card'));
+
+        viewport.addEventListener('pointerdown', onPointerDown);
+        viewport.addEventListener('pointermove', onPointerMove);
+        viewport.addEventListener('pointerup', onPointerEnd);
+        viewport.addEventListener('pointercancel', onPointerEnd);
+
+        if ('IntersectionObserver' in window) {
+          observer = new IntersectionObserver(onIntersect, { root: viewport, threshold: 0.5 });
+          cards.forEach(function (card) { observer.observe(card); });
+        }
+
+        initTimer = requestAnimationFrame(setStartPosition);
+        bound = true;
+      }
+
+      function destroy() {
+        if (viewport) {
+          viewport.removeEventListener('pointerdown', onPointerDown);
+          viewport.removeEventListener('pointermove', onPointerMove);
+          viewport.removeEventListener('pointerup', onPointerEnd);
+          viewport.removeEventListener('pointercancel', onPointerEnd);
+          var videos = viewport.querySelectorAll('video');
+          for (var i = 0; i < videos.length; i++) videos[i].pause();
+        }
+        if (observer) observer.disconnect();
+        if (initTimer) cancelAnimationFrame(initTimer);
+        root.removeEventListener('shopify:section:load', init);
+        root.removeEventListener('shopify:section:unload', destroy);
+        observer = null;
+        initTimer = 0;
+        dragging = false;
+        bound = false;
+        viewport = null;
+        cards = [];
+        delete root.ltTestiDestroy;
+      }
+
+      root.ltTestiDestroy = destroy;
+      root.addEventListener('shopify:section:load', init);
+      root.addEventListener('shopify:section:unload', destroy);
+      init();
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "LT VSL Testimonials",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Testimonials"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#f25ca8"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Imagine Your Morning Feeling Different."
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Imagine waking up without reaching for water first thing, without lips that feel dried out, after a quieter, calmer night — feeling like your nighttime routine finally worked while you slept.</p><p>That's why Muzzle isn't another complicated sleep hack. It's something you'll actually use every night.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Testimonial cards"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_verified",
+      "label": "Show verified badge",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Select a video from Shopify Files. Vertical (9:16) videos work best."
+        },
+        {
+          "type": "image_picker",
+          "id": "profile_image",
+          "label": "Profile image"
+        },
+        {
+          "type": "text",
+          "id": "username",
+          "label": "Username",
+          "default": "usernamehere"
+        },
+        {
+          "type": "text",
+          "id": "followers",
+          "label": "Follower count",
+          "default": "10k followers"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL Testimonials",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 60
+      },
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,612 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto,
+  #shopify-section-{{ section.id }} .lt-howto *,
+  #shopify-section-{{ section.id }} .lt-howto *::before,
+  #shopify-section-{{ section.id }} .lt-howto *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto {
+    --lt-howto-gutter: 106px;
+    --lt-howto-gap: 22px;
+    --lt-howto-card-w: calc((min(100vw, 1440px) - 2 * var(--lt-howto-gutter) - var(--lt-howto-gap)) / 2);
+    --lt-howto-offset: calc(max(0px, (100% - 1440px) / 2) + var(--lt-howto-gutter));
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__inner.page-width {
+    max-width: 1440px;
+    padding: 0 var(--lt-howto-gutter);
+  }
+
+  /* Header */
+  #shopify-section-{{ section.id }} .lt-howto__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__eyebrow {
+    margin: 0 0 18px;
+    color: {{ section.settings.eyebrow_color }};
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__heading {
+    max-width: 640px;
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  /* Navigation */
+  #shopify-section-{{ section.id }} .lt-howto__nav {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__nav[hidden] {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: {{ section.settings.accent_color }};
+    color: #ffffff;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__arrow:hover:not(:disabled) {
+    transform: scale(1.06);
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__arrow:disabled {
+    opacity: 0.28;
+    cursor: default;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__arrow:focus-visible {
+    outline: 3px solid {{ section.settings.text_color }};
+    outline-offset: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__arrow svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Carousel: starts at the page gutter, bleeds off the right edge */
+  #shopify-section-{{ section.id }} .lt-howto__viewport {
+    margin-top: 48px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: var(--lt-howto-offset);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__viewport:focus-visible {
+    outline: 3px solid {{ section.settings.accent_color }};
+    outline-offset: -3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__track {
+    display: flex;
+    width: max-content;
+    gap: var(--lt-howto-gap);
+    margin: 0;
+    padding: 0 var(--lt-howto-offset);
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__card {
+    flex: 0 0 var(--lt-howto-card-w);
+    width: var(--lt-howto-card-w);
+    margin: 0;
+    padding: 0;
+    scroll-snap-align: start;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__media {
+    position: relative;
+    aspect-ratio: 603 / 412;
+    border: 3px solid rgba(160, 155, 155, 0.7);
+    border-radius: 40px;
+    overflow: hidden;
+    background-color: #ecdde5;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__media img,
+  #shopify-section-{{ section.id }} .lt-howto__media svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-user-drag: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__media svg {
+    fill: rgba(0, 0, 0, 0.2);
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__number {
+    position: absolute;
+    top: 17px;
+    left: 17px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: {{ section.settings.accent_color }};
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__title {
+    margin: 24px 0 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 32px;
+    letter-spacing: -0.3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-howto__text {
+    margin: 12px 0 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    opacity: 0.75;
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-howto {
+      --lt-howto-gutter: 40px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__media {
+      border-radius: 32px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto {
+      --lt-howto-gutter: 20px;
+      --lt-howto-gap: 16px;
+      --lt-howto-card-w: calc(100vw - 2 * var(--lt-howto-gutter) - 36px);
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__eyebrow {
+      margin-bottom: 14px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__arrow {
+      width: 42px;
+      height: 42px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__arrow svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__viewport {
+      margin-top: 32px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__media {
+      border-width: 2px;
+      border-radius: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__number {
+      top: 14px;
+      left: 14px;
+      width: 34px;
+      height: 34px;
+      font-size: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__title {
+      margin-top: 18px;
+      font-size: 22px;
+      line-height: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__text {
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-howto {
+      --lt-howto-gutter: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-howto__media {
+      border-radius: 24px;
+    }
+  }
+</style>
+
+<div class="lt-howto">
+  <div class="page-width lt-howto__inner">
+    <div class="lt-howto__header">
+      <div class="lt-howto__titles">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lt-howto__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-howto__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 1 -%}
+        <div class="lt-howto__nav">
+          <button class="lt-howto__arrow lt-howto__arrow--prev" type="button" aria-label="Previous step" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 4.5L7.5 12 15 19.5"/></svg>
+          </button>
+          <button class="lt-howto__arrow lt-howto__arrow--next" type="button" aria-label="Next step">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4.5l7.5 7.5L9 19.5"/></svg>
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if section.blocks.size > 0 -%}
+    <div class="lt-howto__viewport" tabindex="0" role="region" aria-label="{{ section.settings.heading | strip_html | escape }}">
+      <ol class="lt-howto__track">
+        {%- for block in section.blocks -%}
+          <li class="lt-howto__card" {{ block.shopify_attributes }}>
+            <div class="lt-howto__media">
+              <span class="lt-howto__number" aria-hidden="true">{{ forloop.index }}</span>
+              {%- if block.settings.image != blank -%}
+                <img
+                  src="{{ block.settings.image | image_url: width: 1206 }}"
+                  srcset="{{ block.settings.image | image_url: width: 600 }} 600w, {{ block.settings.image | image_url: width: 1206 }} 1206w"
+                  sizes="(max-width: 767px) 85vw, 603px"
+                  alt="{{ block.settings.image.alt | default: block.settings.title | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                  draggable="false"
+                >
+              {%- else -%}
+                {{ 'lifestyle-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+            {%- if block.settings.title != blank -%}
+              <h3 class="lt-howto__title">{{ block.settings.title | escape }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <p class="lt-howto__text">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ol>
+    </div>
+  {%- endif -%}
+</div>
+
+{% if section.blocks.size > 1 %}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+      if (typeof root.ltHowtoDestroy === 'function') root.ltHowtoDestroy();
+
+      var viewport = null;
+      var nav = null;
+      var prev = null;
+      var next = null;
+      var rafId = 0;
+      var bound = false;
+
+      function stepSize() {
+        var cards = viewport.querySelectorAll('.lt-howto__card');
+        if (cards.length > 1) return cards[1].offsetLeft - cards[0].offsetLeft;
+        return viewport.clientWidth;
+      }
+
+      function update() {
+        rafId = 0;
+        var max = viewport.scrollWidth - viewport.clientWidth;
+        nav.hidden = max <= 2;
+        prev.disabled = viewport.scrollLeft <= 2;
+        next.disabled = viewport.scrollLeft >= max - 2;
+      }
+
+      function requestUpdate() {
+        if (!rafId) rafId = requestAnimationFrame(update);
+      }
+
+      function go(direction) {
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        viewport.scrollBy({ left: direction * stepSize(), behavior: reduce ? 'auto' : 'smooth' });
+      }
+
+      function onPrev() { go(-1); }
+      function onNext() { go(1); }
+
+      function init() {
+        if (bound) return;
+        viewport = root.querySelector('.lt-howto__viewport');
+        nav = root.querySelector('.lt-howto__nav');
+        prev = root.querySelector('.lt-howto__arrow--prev');
+        next = root.querySelector('.lt-howto__arrow--next');
+        if (!viewport || !nav || !prev || !next) return;
+
+        prev.addEventListener('click', onPrev);
+        next.addEventListener('click', onNext);
+        viewport.addEventListener('scroll', requestUpdate, { passive: true });
+        window.addEventListener('resize', requestUpdate);
+        bound = true;
+        update();
+      }
+
+      function destroy() {
+        if (prev) prev.removeEventListener('click', onPrev);
+        if (next) next.removeEventListener('click', onNext);
+        if (viewport) viewport.removeEventListener('scroll', requestUpdate);
+        window.removeEventListener('resize', requestUpdate);
+        root.removeEventListener('shopify:section:load', init);
+        root.removeEventListener('shopify:section:unload', destroy);
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+        bound = false;
+        viewport = nav = prev = next = null;
+        delete root.ltHowtoDestroy;
+      }
+
+      root.ltHowtoDestroy = destroy;
+      root.addEventListener('shopify:section:load', init);
+      root.addEventListener('shopify:section:unload', destroy);
+      init();
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "LT VSL How To Use",
+  "tag": "div",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "How to use"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#f25ca8"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your New 10-Second Bedtime Habit"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "header",
+      "content": "Steps"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Arrows and number color",
+      "default": "#ff58ae"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Displayed at about 3:2. Recommended: 1206 x 824 px."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Step title"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description",
+          "default": "Describe this step in a sentence."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL How To Use",
+      "settings": {
+        "background_color": "#fff5fb",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Get Ready For Bed",
+            "text": "Wash and dry the skin around your lips."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Apply Your Beauty Tape",
+            "text": "Place Muzzle comfortably across your lips before going to sleep."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Breathe Easy",
+            "text": "Relax and breathe naturally through your nose as you fall asleep."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

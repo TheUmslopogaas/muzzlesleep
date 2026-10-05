@@ -1,0 +1,523 @@
+{
+  "sections": {
+    "lt_vsl_hero": {
+      "type": "lt-vsl-hero",
+      "settings": {
+        "text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 90
+      },
+      "blocks": {
+        "logo_1": {
+          "type": "logo",
+          "settings": {
+            "name": "FOX"
+          }
+        },
+        "logo_2": {
+          "type": "logo",
+          "settings": {
+            "name": "abc"
+          }
+        },
+        "logo_3": {
+          "type": "logo",
+          "settings": {
+            "name": "CBS"
+          }
+        },
+        "logo_4": {
+          "type": "logo",
+          "settings": {
+            "name": "Wall Street Select"
+          }
+        },
+        "logo_5": {
+          "type": "logo",
+          "settings": {
+            "name": "The Times"
+          }
+        },
+        "logo_6": {
+          "type": "logo",
+          "settings": {
+            "name": "Union-Tribune"
+          }
+        }
+      },
+      "block_order": [
+        "logo_1",
+        "logo_2",
+        "logo_3",
+        "logo_4",
+        "logo_5",
+        "logo_6"
+      ]
+    },
+    "lt_vsl_problem": {
+      "type": "lt-vsl-problem",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 70
+      },
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "title": "Dry mouth and throat",
+            "text": "You wake up reaching for water because your mouth feels completely dried out."
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "title": "Snoring",
+            "text": "Sleeping with your mouth open can contribute to noisy nighttime breathing for some people."
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "title": "Poor-quality sleep",
+            "text": "You may spend the whole night in bed and still wake up feeling like your sleep wasn’t as restorative as it should have been."
+          }
+        },
+        "card_4": {
+          "type": "card",
+          "settings": {
+            "title": "Morning breath",
+            "text": "Less saliva and a dry mouth overnight can make morning breath more noticeable."
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4"
+      ]
+    },
+    "lt_vsl_beauty_benefits": {
+      "type": "lt-vsl-beauty-benefits",
+      "settings": {
+        "background_color": "#fff5fb",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "title": "Hyaluronic Acid",
+            "text": "Known for its ability to attract and retain moisture, helping lips feel softer and more hydrated."
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "title": "Vitamin E",
+            "text": "Helps condition and nourish dry-feeling lips."
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "title": "Collagen",
+            "text": "Included as part of our beauty-focused formula to support smoother, healthier-looking lips."
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ]
+    },
+    "lt_vsl_nasal_breathing": {
+      "type": "lt-vsl-nasal-breathing",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "lt_vsl_pricing": {
+      "type": "lt-vsl-pricing",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "title": "1 Pack - 30 nights",
+            "text": "Perfect for trying Muzzle Beauty Tape.",
+            "price": "$34.95",
+            "button_text": "Get 1 Pack"
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "highlight": true,
+            "badge_text": "Most Popular",
+            "badge_background": "#ff59ac",
+            "title": "2 Packs - 60 nights",
+            "text": "Great for turning Beauty Tape into a consistent nightly routine.",
+            "price": "$59.95",
+            "compare_price": "$69.90",
+            "save_text": "Save $9.95",
+            "button_text": "Get 2 Packs"
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "badge_text": "Best Value",
+            "badge_background": "#28244f",
+            "title": "3 Packs - 90 nights",
+            "text": "The lowest cost per night.",
+            "price": "$79.95",
+            "compare_price": "$104.85",
+            "save_text": "Save $24.90",
+            "button_text": "Get 3 Packs"
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3"
+      ]
+    },
+    "lt_vsl_promo": {
+      "type": "lt-vsl-promo",
+      "settings": {
+        "padding_top": 60,
+        "padding_bottom": 80
+      }
+    },
+    "lt_vsl_benefits": {
+      "type": "lt-vsl-benefits",
+      "settings": {
+        "text_color": "#ffffff",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "benefit_1": {
+          "type": "benefit",
+          "settings": {
+            "icon": "waves",
+            "title": "Encourages Nasal Breathing",
+            "text": "Gently helps keep your lips closed so nasal breathing can become the focus while you sleep."
+          }
+        },
+        "benefit_2": {
+          "type": "benefit",
+          "settings": {
+            "icon": "lips",
+            "title": "Helps Reduce Dry Mouth",
+            "text": "Keeping your mouth closed may help prevent some of the moisture loss associated with sleeping with your mouth open."
+          }
+        },
+        "benefit_3": {
+          "type": "benefit",
+          "settings": {
+            "icon": "moon",
+            "title": "Helps With Nighttime Snoring",
+            "text": "For people whose snoring is associated with mouth breathing, encouraging nasal breathing may help support quieter sleep."
+          }
+        },
+        "benefit_4": {
+          "type": "benefit",
+          "settings": {
+            "icon": "battery",
+            "title": "Wake Up Feeling More Refreshed",
+            "text": "Create a more consistent nighttime breathing routine without complicated equipment or devices."
+          }
+        },
+        "benefit_5": {
+          "type": "benefit",
+          "settings": {
+            "icon": "drop",
+            "title": "Helps Keep Lips Feeling Hydrated",
+            "text": "Hyaluronic Acid, Vitamin E and Collagen add a skincare-inspired benefit while you sleep."
+          }
+        },
+        "benefit_6": {
+          "type": "benefit",
+          "settings": {
+            "icon": "clock",
+            "title": "Fits Into Your Routine In Seconds",
+            "text": "Apply it right before bed and remove it when you wake up."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_1",
+        "benefit_2",
+        "benefit_3",
+        "benefit_4",
+        "benefit_5",
+        "benefit_6"
+      ]
+    },
+    "lt_vsl_familiar": {
+      "type": "lt-vsl-familiar",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "text": "You wake up with your mouth completely dry."
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "text": "Your partner complains about your snoring."
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "text": "You wake up throughout the night needing water."
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "text": "Your lips constantly feel dry in the morning."
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "text": "You spend money on lip treatments you forget to apply."
+          }
+        },
+        "item_6": {
+          "type": "item",
+          "settings": {
+            "text": "You wake up feeling like your sleep could have been better."
+          }
+        },
+        "item_7": {
+          "type": "item",
+          "settings": {
+            "text": "Beauty Tape was created for exactly this kind of nighttime routine."
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4",
+        "item_5",
+        "item_6",
+        "item_7"
+      ]
+    },
+    "lt_vsl_ba": {
+      "type": "lt-vsl-ba",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "accordion_1": {
+          "type": "accordion",
+          "settings": {
+            "title": "Hydrate Your Lips Overnight",
+            "text": "<p>Wake up to lips that feel soft, smooth, and hydrated. Beauty Tape is infused with <strong>Collagen, Vitamin E &amp; Hyaluronic Acid</strong> to help lock in moisture while you sleep.</p>",
+            "open": true
+          }
+        },
+        "accordion_2": {
+          "type": "accordion",
+          "settings": {
+            "title": "Support a Fresher Morning",
+            "text": "<p>Encouraging nasal breathing overnight can help you start the day feeling more comfortable and refreshed.</p>"
+          }
+        },
+        "accordion_3": {
+          "type": "accordion",
+          "settings": {
+            "title": "Support Better Sleep",
+            "text": "<p>Gently encourage your lips to stay closed so you can focus on breathing through your nose while you sleep.</p>"
+          }
+        },
+        "accordion_4": {
+          "type": "accordion",
+          "settings": {
+            "title": "Wake Up Feeling Refreshed",
+            "text": "<p>Make it part of your nightly routine and wake up ready for the day.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "accordion_1",
+        "accordion_2",
+        "accordion_3",
+        "accordion_4"
+      ]
+    },
+    "lt_vsl_how_to_use": {
+      "type": "lt-vsl-how-to-use",
+      "settings": {
+        "background_color": "#fff5fb",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Get Ready For Bed",
+            "text": "Wash and dry the skin around your lips."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "Apply Your Beauty Tape",
+            "text": "Place Muzzle comfortably across your lips before going to sleep."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Breathe Easy",
+            "text": "Relax and breathe naturally through your nose as you fall asleep."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ]
+    },
+    "lt_vsl_testimonials": {
+      "type": "lt-vsl-testimonials",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 60
+      },
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial"
+        },
+        "testimonial_2": {
+          "type": "testimonial"
+        },
+        "testimonial_3": {
+          "type": "testimonial"
+        },
+        "testimonial_4": {
+          "type": "testimonial"
+        },
+        "testimonial_5": {
+          "type": "testimonial"
+        },
+        "testimonial_6": {
+          "type": "testimonial"
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3",
+        "testimonial_4",
+        "testimonial_5",
+        "testimonial_6"
+      ]
+    },
+    "lt_vsl_product_cta": {
+      "type": "lt-vsl-product-cta",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "lt_vsl_faq": {
+      "type": "lt-vsl-faq",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 60
+      },
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "What does Beauty Tape actually do?",
+            "answer": "<p>Beauty Tape is designed to gently encourage you to keep your lips closed while sleeping, supporting nasal breathing instead of habitual mouth breathing.</p><p>It also contains beauty-focused ingredients including Hyaluronic Acid, Vitamin E and Collagen to help care for your lips overnight.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "Can it help with snoring?",
+            "answer": "<p>Beauty Tape encourages nasal breathing, which may help support quieter nighttime breathing for people whose snoring is associated with mouth breathing.</p>"
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "Does it help with dry mouth?",
+            "answer": "<p>By gently encouraging your lips to stay closed, it may help reduce some of the moisture loss associated with sleeping with your mouth open.</p>"
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "What makes Beauty Tape different?",
+            "answer": "<p>Beauty Tape pairs a simple nightly mouth-tape routine with beauty-focused ingredients — Hyaluronic Acid, Vitamin E and Collagen — to help care for your lips overnight.</p>"
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "question": "Will my lips feel sticky?",
+            "answer": "<p>Beauty Tape is designed to feel comfortable overnight and to peel off easily in the morning.</p>"
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "question": "Who shouldn’t use mouth tape?",
+            "answer": "<p>If you have difficulty breathing through your nose, are congested, or have a medical condition that affects your breathing or sleep, talk to your doctor before using mouth tape. Remove it right away if you feel uncomfortable.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6"
+      ]
+    }
+  },
+  "order": [
+    "lt_vsl_hero",
+    "lt_vsl_problem",
+    "lt_vsl_beauty_benefits",
+    "lt_vsl_nasal_breathing",
+    "lt_vsl_pricing",
+    "lt_vsl_promo",
+    "lt_vsl_benefits",
+    "lt_vsl_familiar",
+    "lt_vsl_ba",
+    "lt_vsl_how_to_use",
+    "lt_vsl_testimonials",
+    "lt_vsl_product_cta",
+    "lt_vsl_faq"
+  ]
+}

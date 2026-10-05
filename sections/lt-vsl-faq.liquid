@@ -1,0 +1,536 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+-%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq,
+  #shopify-section-{{ section.id }} .lt-faq *,
+  #shopify-section-{{ section.id }} .lt-faq *::before,
+  #shopify-section-{{ section.id }} .lt-faq *::after {
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq {
+    font-family: Inter, var(--font-body-family), sans-serif;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__inner.page-width {
+    max-width: 1440px;
+    padding: 0 106px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: 84px;
+    max-width: 1228px;
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__heading {
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+    font-family: inherit;
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 62px;
+    letter-spacing: -1px;
+  }
+
+  /* Accordion */
+  #shopify-section-{{ section.id }} .lt-faq__item {
+    margin: 0;
+    border-bottom: 1px solid #d8d8d8;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__item:last-child {
+    border-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__question {
+    margin: 0;
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 38px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    margin: 0;
+    padding: 26px 4px 22px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: -0.2px;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__item:first-child .lt-faq__trigger {
+    padding-top: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__trigger:focus-visible {
+    outline: 3px solid {{ section.settings.accent_color }};
+    outline-offset: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__chevron {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 14px;
+    fill: none;
+    stroke: {{ section.settings.accent_color }};
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(180deg);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__item.lt-is-open .lt-faq__chevron {
+    transform: rotate(0deg);
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.4s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__item.lt-is-open .lt-faq__panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__panel-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__answer {
+    padding-bottom: 22px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 28px;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.35s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__item.lt-is-open .lt-faq__answer {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.1s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__answer p {
+    margin: 0 0 28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-faq__answer p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .lt-faq__panel,
+    #shopify-section-{{ section.id }} .lt-faq__answer,
+    #shopify-section-{{ section.id }} .lt-faq__chevron {
+      transition: none;
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    #shopify-section-{{ section.id }} .lt-faq__inner.page-width {
+      padding: 0 40px;
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .lt-faq__grid {
+      gap: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__heading {
+      font-size: 38px;
+      line-height: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__question {
+      font-size: 20px;
+      line-height: 30px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_m }}px;
+      padding-bottom: {{ pb_m }}px;
+      margin-top: {{ mt_m }}px;
+      margin-bottom: {{ mb_m }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__inner.page-width {
+      padding: 0 20px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__heading {
+      font-size: 32px;
+      line-height: 40px;
+      letter-spacing: -0.6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__question {
+      font-size: 18px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__trigger,
+    #shopify-section-{{ section.id }} .lt-faq__item:first-child .lt-faq__trigger {
+      padding: 20px 2px 18px 0;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__answer {
+      padding-bottom: 20px;
+      font-size: 15px;
+      line-height: 26px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__answer p {
+      margin-bottom: 20px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-faq__inner.page-width {
+      padding: 0 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__heading {
+      font-size: 28px;
+      line-height: 36px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__question {
+      font-size: 17px;
+      line-height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-faq__chevron {
+      width: 20px;
+      height: 12px;
+    }
+  }
+</style>
+
+<div class="lt-faq">
+  <div class="page-width lt-faq__inner">
+    <div class="lt-faq__grid">
+      <div class="lt-faq__title">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-faq__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+      </div>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="lt-faq__list">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign is_open = false
+              if forloop.first and section.settings.first_open
+                assign is_open = true
+              endif
+            -%}
+            <div class="lt-faq__item{% if is_open %} lt-is-open{% endif %}" {{ block.shopify_attributes }}>
+              <h3 class="lt-faq__question">
+                <button
+                  class="lt-faq__trigger"
+                  type="button"
+                  id="lt-faq-trigger-{{ block.id }}"
+                  aria-expanded="{{ is_open }}"
+                  aria-controls="lt-faq-panel-{{ block.id }}"
+                >
+                  <span>{{ block.settings.question | escape }}</span>
+                  <svg class="lt-faq__chevron" viewBox="0 0 24 14" aria-hidden="true" focusable="false">
+                    <path d="M2 2l10 10L22 2"/>
+                  </svg>
+                </button>
+              </h3>
+              <div
+                class="lt-faq__panel"
+                id="lt-faq-panel-{{ block.id }}"
+                role="region"
+                aria-labelledby="lt-faq-trigger-{{ block.id }}"
+              >
+                <div class="lt-faq__panel-inner">
+                  <div class="lt-faq__answer">{{ block.settings.answer }}</div>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% if section.blocks.size > 0 %}
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+      if (typeof root.ltFaqDestroy === 'function') root.ltFaqDestroy();
+
+      var list = null;
+      var bound = false;
+
+      function setOpen(item, open) {
+        var trigger = item.querySelector('.lt-faq__trigger');
+        item.classList.toggle('lt-is-open', open);
+        if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      function onClick(event) {
+        var trigger = event.target.closest('.lt-faq__trigger');
+        if (!trigger || !list.contains(trigger)) return;
+        var item = trigger.closest('.lt-faq__item');
+        setOpen(item, !item.classList.contains('lt-is-open'));
+      }
+
+      function onBlockSelect(event) {
+        var item = event.target && event.target.closest ? event.target.closest('.lt-faq__item') : null;
+        if (item && list.contains(item)) setOpen(item, true);
+      }
+
+      function init() {
+        if (bound) return;
+        list = root.querySelector('.lt-faq__list');
+        if (!list) return;
+        list.addEventListener('click', onClick);
+        root.addEventListener('shopify:block:select', onBlockSelect);
+        bound = true;
+      }
+
+      function destroy() {
+        if (list) list.removeEventListener('click', onClick);
+        root.removeEventListener('shopify:block:select', onBlockSelect);
+        root.removeEventListener('shopify:section:load', init);
+        root.removeEventListener('shopify:section:unload', destroy);
+        list = null;
+        bound = false;
+        delete root.ltFaqDestroy;
+      }
+
+      root.ltFaqDestroy = destroy;
+      root.addEventListener('shopify:section:load', init);
+      root.addEventListener('shopify:section:unload', destroy);
+      init();
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "LT VSL FAQ",
+  "tag": "div",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#be3a7d"
+    },
+    {
+      "type": "header",
+      "content": "Accordion"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Chevron color",
+      "default": "#ff5cb3"
+    },
+    {
+      "type": "checkbox",
+      "id": "first_open",
+      "label": "Open first item by default",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question goes here?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Answer goes here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT VSL FAQ",
+      "settings": {
+        "padding_top": 80,
+        "padding_bottom": 60
+      },
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What does Beauty Tape actually do?",
+            "answer": "<p>Beauty Tape is designed to gently encourage you to keep your lips closed while sleeping, supporting nasal breathing instead of habitual mouth breathing.</p><p>It also contains beauty-focused ingredients including Hyaluronic Acid, Vitamin E and Collagen to help care for your lips overnight.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can it help with snoring?",
+            "answer": "<p>Beauty Tape encourages nasal breathing, which may help support quieter nighttime breathing for people whose snoring is associated with mouth breathing.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Does it help with dry mouth?",
+            "answer": "<p>By gently encouraging your lips to stay closed, it may help reduce some of the moisture loss associated with sleeping with your mouth open.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What makes Beauty Tape different?",
+            "answer": "<p>Beauty Tape pairs a simple nightly mouth-tape routine with beauty-focused ingredients — Hyaluronic Acid, Vitamin E and Collagen — to help care for your lips overnight.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Will my lips feel sticky?",
+            "answer": "<p>Beauty Tape is designed to feel comfortable overnight and to peel off easily in the morning.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Who shouldn’t use mouth tape?",
+            "answer": "<p>If you have difficulty breathing through your nose, are congested, or have a medical condition that affects your breathing or sleep, talk to your doctor before using mouth tape. Remove it right away if you feel uncomfortable.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
