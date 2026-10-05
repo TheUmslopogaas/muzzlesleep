@@ -658,7 +658,7 @@
       "settings": {
         "background_color": "#ffffff",
         "text_color": "#222222",
-        "card_background": "linear-gradient(180deg, #b5656a 0%, #cf8590 50%, #eca3b5 100%)",
+        "card_background": "linear-gradient(180deg, rgba(181, 101, 106, 1), rgba(207, 133, 144, 1) 50%, rgba(236, 163, 181, 1) 100%)",
         "card_text_color": "#ffffff",
         "eyebrow": "",
         "heading": "You Already Spend About One-Third Of Your Life Sleeping.",
@@ -667,7 +667,9 @@
         "button_url": "",
         "button_background": "#ffffff",
         "button_text_color": "#f25ca8",
+        "image": "shopify://shop_images/prd-cta-vsl.jpg",
         "image_alt": "Pink tote bag with a pouch of Muzzle Beauty Tape on a bed",
+        "overlay_image": "shopify://shop_images/prd-cta-thumbnail.png",
         "overlay_title": "Muzzle® Beauty Patch Mouth Tape",
         "overlay_text": "Experience the gentle, effective solution for peaceful sleep with Muzzle Sleep Strips. Our doctor-recommended design helps you breathe through your nose.",
         "overlay_link": "",
