@@ -15,6 +15,7 @@
         "logo_1": {
           "type": "logo",
           "settings": {
+            "image": "shopify://shop_images/vsl-logo_6.png",
             "name": "FOX",
             "link": ""
           }
@@ -22,6 +23,7 @@
         "logo_2": {
           "type": "logo",
           "settings": {
+            "image": "shopify://shop_images/vsl-logo_5.png",
             "name": "abc",
             "link": ""
           }
@@ -29,6 +31,7 @@
         "logo_3": {
           "type": "logo",
           "settings": {
+            "image": "shopify://shop_images/vsl-logo_4.png",
             "name": "CBS",
             "link": ""
           }
@@ -36,6 +39,7 @@
         "logo_4": {
           "type": "logo",
           "settings": {
+            "image": "shopify://shop_images/vsl-logo_3.png",
             "name": "Wall Street Select",
             "link": ""
           }
@@ -43,6 +47,7 @@
         "logo_5": {
           "type": "logo",
           "settings": {
+            "image": "shopify://shop_images/vsl-logo_2.png",
             "name": "The Times",
             "link": ""
           }
@@ -50,6 +55,7 @@
         "logo_6": {
           "type": "logo",
           "settings": {
+            "image": "shopify://shop_images/vsl-logo_1.png",
             "name": "Union-Tribune",
             "link": ""
           }
@@ -67,6 +73,7 @@
         "background_color": "#ffffff",
         "text_color": "#ffffff",
         "background_image": "shopify://shop_images/vsl-hero-desktop.jpg",
+        "background_image_mobile": "shopify://shop_images/iPhone_13_14_-_1_1.jpg",
         "show_rating": true,
         "avatar_1": "shopify://shop_images/Ellipse_6.png",
         "avatar_2": "shopify://shop_images/Ellipse_7.png",
@@ -214,9 +221,11 @@
         "eyebrow_color": "#f25ca8",
         "heading": "Your Nose Was Designed For Breathing.",
         "heading_color": "#be3a7d",
-        "body": "<p><strong>Your Nose Was Designed For Breathing.</strong></p><p>Nasal breathing naturally filters, humidifies and warms the air you breathe before it reaches your lungs.</p><p>And while you sleep, keeping your mouth comfortably closed can help support a more consistent nasal-breathing routine.</p><p>That’s why so many people add mouth tape to their nightly sleep routine.</p><p>Muzzle makes it incredibly simple:</p><p><strong>Apply. Sleep. Peel Off In The Morning.</strong></p><p>No complicated routine.<br>No bulky device.<br>Just one small habit before bed.</p>",
+        "body": "<p><strong>Your Nose Was Designed For Breathing.</strong></p><p>Nasal breathing naturally filters, humidifies and warms the air you breathe before it reaches your lungs.</p><p>And while you sleep, keeping your mouth comfortably closed can help support a more consistent nasal-breathing routine.</p><p>That’s why so many people add mouth tape to their nightly sleep routine.</p><p>Muzzle makes it incredibly simple:</p><p><strong>Apply. Sleep. Peel Off In The Morning.</strong></p><p>No complicated routine.<br/>No bulky device.<br/>Just one small habit before bed.</p>",
         "image_position": "right",
+        "image_top": "shopify://shop_images/vsl-top-img.jpg",
         "image_top_alt": "Diagram of airflow when breathing through the mouth",
+        "image_bottom": "shopify://shop_images/vsl-bottom.jpg",
         "image_bottom_alt": "Diagram of airflow when breathing through the nose",
         "padding_top": 80,
         "padding_bottom": 80,
