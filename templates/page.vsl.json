@@ -66,6 +66,7 @@
       "settings": {
         "background_color": "#ffffff",
         "text_color": "#ffffff",
+        "background_image": "shopify://shop_images/vsl-hero-desktop.jpg",
         "show_rating": true,
         "avatar_1": "shopify://shop_images/Ellipse_6.png",
         "avatar_2": "shopify://shop_images/Ellipse_7.png",
