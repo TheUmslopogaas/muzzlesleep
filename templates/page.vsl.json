@@ -380,6 +380,7 @@
       "settings": {
         "background_color": "#ffffff",
         "text_color": "#ffffff",
+        "background_image": "shopify://shop_images/Desktop_-_19_1.jpg",
         "eyebrow": "Core Benefits",
         "heading": "One Tiny Strip.\nA Better Nighttime Routine.",
         "padding_top": 80,
