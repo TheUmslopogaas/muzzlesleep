@@ -314,7 +314,7 @@
       "settings": {
         "background_color": "#ffffff",
         "text_color": "#222222",
-        "card_background": "linear-gradient(110deg, #bc6970 0%, #d4838f 40%, #ea9caf 70%, #f6c2d3 100%)",
+        "card_background": "linear-gradient(110deg, rgba(188, 105, 112, 1), rgba(212, 131, 143, 1) 40%, rgba(234, 156, 175, 1) 70%, rgba(246, 194, 211, 1) 100%)",
         "card_text_color": "#ffffff",
         "heading": "Less Than $1 Per Night With Our 3-Pack.",
         "body": "<p>Think about what we spend trying to improve our sleep.</p><p>Expensive pillows. Supplements. Sleep trackers. Nighttime skincare.</p><p>Muzzle Beauty Tape gives you a simple sleep-supporting habit <strong>plus</strong> an overnight beauty benefit for less than the price of a cup of coffee.</p>",
@@ -322,6 +322,7 @@
         "button_url": "",
         "button_background": "#ffffff",
         "button_text_color": "#f25ca8",
+        "image": "shopify://shop_images/promo-img.png",
         "image_alt": "Woman holding a mouth tape patch next to her face",
         "padding_top": 60,
         "padding_bottom": 80,
