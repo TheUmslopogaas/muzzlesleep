@@ -159,6 +159,7 @@
         "card_1": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Frame_2147230341.png",
             "title": "Hyaluronic Acid",
             "text": "Known for its ability to attract and retain moisture, helping lips feel softer and more hydrated."
           }
@@ -166,6 +167,7 @@
         "card_2": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Frame_2147230342.png",
             "title": "Vitamin E",
             "text": "Helps condition and nourish dry-feeling lips."
           }
@@ -173,6 +175,7 @@
         "card_3": {
           "type": "card",
           "settings": {
+            "image": "shopify://shop_images/Frame_2147230343.png",
             "title": "Collagen",
             "text": "Included as part of our beauty-focused formula to support smoother, healthier-looking lips."
           }
@@ -190,8 +193,9 @@
         "eyebrow_color": "#f25ca8",
         "heading": "Everything You Want From Your Nighttime Mouth Tape — With An Added Beauty Benefit.",
         "heading_color": "#be3a7d",
-        "intro": "<p>Beauty Tape was designed first and foremost to help encourage nasal breathing while you sleep.</p><p>But we thought:<br><strong>If something is going to sit over your lips for eight hours every night... why shouldn’t it care for them too?</strong></p><p>So we added beauty-focused ingredients including:</p>",
+        "intro": "<p>Beauty Tape was designed first and foremost to help encourage nasal breathing while you sleep.</p><p>But we thought:<br/><strong>If something is going to sit over your lips for eight hours every night... why shouldn’t it care for them too?</strong></p><p>So we added beauty-focused ingredients including:</p>",
         "overlay_color": "#46143a",
+        "wide_image": "shopify://shop_images/mouth-tape-horizontal-vsl.jpg",
         "wide_image_alt": "Woman applying black mouth tape over her lips",
         "footer_text": "<p>Instead of adding another step to your bedtime routine, your mouth tape becomes part of it.</p>",
         "padding_top": 80,
