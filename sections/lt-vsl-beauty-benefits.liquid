@@ -10,8 +10,8 @@
 
   assign overlay = section.settings.overlay_color
   assign overlay_0 = overlay | color_modify: 'alpha', 0
-  assign overlay_1 = overlay | color_modify: 'alpha', 0.38
-  assign overlay_2 = overlay | color_modify: 'alpha', 0.8
+  assign overlay_1 = overlay | color_modify: 'alpha', 0.4
+  assign overlay_2 = overlay | color_modify: 'alpha', 0.9
 -%}
 
 <style>
@@ -71,7 +71,7 @@
   }
 
   #shopify-section-{{ section.id }} .lt-vsl-benefits__intro {
-    max-width: 840px;
+    max-width: 860px;
     margin-top: 28px;
     font-size: 18px;
     font-weight: 400;
@@ -147,11 +147,11 @@
     bottom: 0;
     left: 0;
     z-index: 1;
-    height: 52%;
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000000 55%);
-    mask-image: linear-gradient(to bottom, transparent 0%, #000000 55%);
+    height: 56%;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000000 40%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000000 40%);
     pointer-events: none;
   }
 
@@ -161,7 +161,7 @@
     bottom: 0;
     left: 0;
     z-index: 2;
-    height: 58%;
+    height: 65%;
     background: linear-gradient(to bottom, {{ overlay_0 }} 0%, {{ overlay_1 }} 45%, {{ overlay_2 }} 100%);
     pointer-events: none;
   }
