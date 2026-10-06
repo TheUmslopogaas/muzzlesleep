@@ -1,0 +1,591 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign lt_count = 0
+  for block in section.blocks
+    if block.settings.enabled and block.settings.text != blank
+      assign lt_count = lt_count | plus: 1
+    endif
+  endfor
+
+  assign lt_multi = false
+  if lt_count > 1
+    assign lt_multi = true
+  endif
+
+  assign lt_arrows = false
+  if lt_multi and section.settings.show_arrows
+    assign lt_arrows = true
+  endif
+-%}
+
+{%- if lt_count > 0 -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      background-color: {{ section.settings.background_color }};
+      color: {{ section.settings.text_color }};
+      padding-top: {{ pt }}px;
+      padding-bottom: {{ pb }}px;
+      margin-top: {{ mt }}px;
+      margin-bottom: {{ mb }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar,
+    #shopify-section-{{ section.id }} .lt-annbar *,
+    #shopify-section-{{ section.id }} .lt-annbar *::before,
+    #shopify-section-{{ section.id }} .lt-annbar *::after {
+      box-sizing: border-box;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar {
+      --lt-annbar-arrow: {{ section.settings.arrow_color }};
+      font-family: inherit;
+      color: inherit;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* Slides are stacked in one grid cell so the bar always fits the tallest slide */
+    #shopify-section-{{ section.id }} .lt-annbar__viewport {
+      display: grid;
+      flex: 1 1 auto;
+      min-width: 0;
+      text-align: center;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__slide {
+      grid-area: 1 / 1;
+      font-size: 14px;
+      line-height: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__slide--active {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.35s ease, visibility 0s linear 0s;
+    }
+
+    /* Rich text */
+    #shopify-section-{{ section.id }} .lt-annbar__text > * {
+      margin: 0;
+      padding: 0;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      list-style: none;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__text > * + * {
+      margin-top: 2px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__text strong,
+    #shopify-section-{{ section.id }} .lt-annbar__text b {
+      font-weight: 700;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__text a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__text a:hover {
+      opacity: 0.75;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__text a:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    /* Arrows */
+    #shopify-section-{{ section.id }} .lt-annbar__arrow {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: var(--lt-annbar-arrow);
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__arrow:hover {
+      opacity: 0.6;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__arrow:focus-visible {
+      outline: 2px solid var(--lt-annbar-arrow);
+      outline-offset: 0;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar__arrow svg {
+      display: block;
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Arrow positions: sides (default DOM order), left, right, beside text */
+    #shopify-section-{{ section.id }} .lt-annbar[data-lt-arrows="left"] .lt-annbar__arrow--next {
+      order: 1;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar[data-lt-arrows="left"] .lt-annbar__viewport {
+      order: 2;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar[data-lt-arrows="right"] .lt-annbar__viewport {
+      order: -1;
+    }
+
+    #shopify-section-{{ section.id }} .lt-annbar[data-lt-arrows="text"] .lt-annbar__viewport {
+      flex: 0 1 auto;
+    }
+
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ pt_m }}px;
+        padding-bottom: {{ pb_m }}px;
+        margin-top: {{ mt_m }}px;
+        margin-bottom: {{ mb_m }}px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-annbar__slide {
+        font-size: 13px;
+        line-height: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #shopify-section-{{ section.id }} .lt-annbar__inner {
+        gap: 2px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-annbar__arrow {
+        width: 24px;
+        height: 24px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-annbar__arrow svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .lt-annbar__slide,
+      #shopify-section-{{ section.id }} .lt-annbar__slide--active,
+      #shopify-section-{{ section.id }} .lt-annbar__arrow {
+        transition: none;
+      }
+    }
+  </style>
+
+  <div
+    class="lt-annbar"
+    data-lt-arrows="{{ section.settings.arrow_position }}"
+    {%- if lt_multi %}
+    role="region"
+    aria-roledescription="carousel"
+    aria-label="Announcements"
+    {%- unless lt_arrows %}
+    tabindex="0"
+    {%- endunless %}
+    {%- endif %}
+  >
+    <div class="lt-annbar__inner page-width">
+      {%- if lt_arrows -%}
+        <button type="button" class="lt-annbar__arrow lt-annbar__arrow--prev" aria-label="Previous announcement">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+
+      <div
+        class="lt-annbar__viewport"
+        {%- if lt_multi %}
+        aria-live="{% if section.settings.autoplay %}off{% else %}polite{% endif %}"
+        {%- endif %}
+      >
+        {%- assign lt_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.enabled and block.settings.text != blank -%}
+            {%- assign lt_index = lt_index | plus: 1 -%}
+            <div
+              class="lt-annbar__slide{% if lt_index == 1 %} lt-annbar__slide--active{% endif %}"
+              data-lt-block-id="{{ block.id }}"
+              {%- if lt_multi %}
+              role="group"
+              aria-roledescription="slide"
+              aria-label="{{ lt_index }} of {{ lt_count }}"
+              {%- endif %}
+              {{ block.shopify_attributes }}
+            >
+              <div class="lt-annbar__text">{{ block.settings.text }}</div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      {%- if lt_arrows -%}
+        <button type="button" class="lt-annbar__arrow lt-annbar__arrow--next" aria-label="Next announcement">
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if lt_multi -%}
+    <script>
+      (function () {
+        var root = document.getElementById('shopify-section-{{ section.id }}');
+        if (!root) return;
+        if (typeof root.ltAnnBarDestroy === 'function') root.ltAnnBarDestroy();
+
+        var AUTOPLAY = {% if section.settings.autoplay %}true{% else %}false{% endif %};
+        var DELAY = {{ section.settings.autoplay_interval | times: 1000 }};
+        var bar = null;
+        var viewport = null;
+        var slides = [];
+        var current = 0;
+        var timer = 0;
+        var hovering = false;
+        var focused = false;
+        var selected = false;
+        var reduceMotion = false;
+
+        function show(index) {
+          current = (index + slides.length) % slides.length;
+          slides.forEach(function (slide, i) {
+            slide.classList.toggle('lt-annbar__slide--active', i === current);
+          });
+        }
+
+        function stop() {
+          if (timer) {
+            clearInterval(timer);
+            timer = 0;
+          }
+          if (viewport) viewport.setAttribute('aria-live', 'polite');
+        }
+
+        function start() {
+          if (timer || !AUTOPLAY || reduceMotion || slides.length < 2) return;
+          timer = setInterval(function () { show(current + 1); }, DELAY);
+          if (viewport) viewport.setAttribute('aria-live', 'off');
+        }
+
+        /* Autoplay only runs while the visitor is not hovering, focused, or editing the block */
+        function sync() {
+          if (hovering || focused || selected) stop();
+          else start();
+        }
+
+        function go(index) {
+          show(index);
+          stop();
+          sync();
+        }
+
+        function onClick(e) {
+          if (e.target.closest('.lt-annbar__arrow--prev')) go(current - 1);
+          else if (e.target.closest('.lt-annbar__arrow--next')) go(current + 1);
+        }
+
+        function onKeydown(e) {
+          if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+          if (e.key === 'ArrowLeft') go(current - 1);
+          else if (e.key === 'ArrowRight') go(current + 1);
+          else if (e.key === 'Home') go(0);
+          else if (e.key === 'End') go(slides.length - 1);
+          else return;
+          e.preventDefault();
+        }
+
+        function onMouseEnter() { hovering = true; sync(); }
+        function onMouseLeave() { hovering = false; sync(); }
+
+        function onFocusIn(e) {
+          try {
+            focused = e.target.matches(':focus-visible');
+          } catch (err) {
+            focused = true;
+          }
+          sync();
+        }
+
+        function onFocusOut() { focused = false; sync(); }
+
+        function onBlockSelect(e) {
+          var id = e.detail && e.detail.blockId;
+          for (var i = 0; i < slides.length; i++) {
+            if (slides[i].getAttribute('data-lt-block-id') === id) {
+              selected = true;
+              show(i);
+              sync();
+              return;
+            }
+          }
+        }
+
+        function onBlockDeselect() { selected = false; sync(); }
+
+        function teardown() {
+          stop();
+          if (bar) {
+            bar.removeEventListener('click', onClick);
+            bar.removeEventListener('keydown', onKeydown);
+            bar.removeEventListener('mouseenter', onMouseEnter);
+            bar.removeEventListener('mouseleave', onMouseLeave);
+            bar.removeEventListener('focusin', onFocusIn);
+            bar.removeEventListener('focusout', onFocusOut);
+          }
+          bar = null;
+          viewport = null;
+          slides = [];
+          hovering = false;
+          focused = false;
+          selected = false;
+        }
+
+        function init() {
+          teardown();
+          bar = root.querySelector('.lt-annbar');
+          if (!bar) return;
+          viewport = bar.querySelector('.lt-annbar__viewport');
+          slides = Array.prototype.slice.call(bar.querySelectorAll('.lt-annbar__slide'));
+          if (!viewport || slides.length < 2) return;
+
+          reduceMotion = !!(window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+          bar.addEventListener('click', onClick);
+          bar.addEventListener('keydown', onKeydown);
+          bar.addEventListener('mouseenter', onMouseEnter);
+          bar.addEventListener('mouseleave', onMouseLeave);
+          bar.addEventListener('focusin', onFocusIn);
+          bar.addEventListener('focusout', onFocusOut);
+
+          show(0);
+          start();
+        }
+
+        function destroy() {
+          teardown();
+          root.removeEventListener('shopify:section:load', init);
+          root.removeEventListener('shopify:section:unload', destroy);
+          root.removeEventListener('shopify:block:select', onBlockSelect);
+          root.removeEventListener('shopify:block:deselect', onBlockDeselect);
+          root.ltAnnBarDestroy = null;
+        }
+
+        root.ltAnnBarDestroy = destroy;
+        root.addEventListener('shopify:section:load', init);
+        root.addEventListener('shopify:section:unload', destroy);
+        root.addEventListener('shopify:block:select', onBlockSelect);
+        root.addEventListener('shopify:block:deselect', onBlockDeselect);
+        init();
+      })();
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "LT Announcement Bar",
+  "tag": "div",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "header",
+      "content": "Auto-slide"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable auto-slide",
+      "info": "Pauses on hover and keyboard focus. Disabled for visitors who prefer reduced motion.",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Slide interval",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5,
+      "visible_if": "{{ section.settings.autoplay }}"
+    },
+    {
+      "type": "header",
+      "content": "Arrows"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show previous / next arrows",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "arrow_position",
+      "label": "Arrow position",
+      "options": [
+        { "value": "sides", "label": "Either side of the bar" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" },
+        { "value": "text", "label": "Either side of the text" }
+      ],
+      "default": "sides",
+      "visible_if": "{{ section.settings.show_arrows }}"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#222222",
+      "visible_if": "{{ section.settings.show_arrows }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enabled",
+          "label": "Enable slide",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Free shipping on all orders over $50</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Announcement Bar",
+      "settings": {
+        "padding_top": 10,
+        "padding_bottom": 10
+      },
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "text": "<p><strong>Free shipping</strong> on all orders over $50</p>"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "text": "<p>Save <em>20%</em> on your first order - <a href=\"/collections/all\">Shop now</a></p>"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "text": "<p>30-day money-back guarantee</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
