@@ -1,0 +1,521 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_m = pt | times: 0.6 | round
+  assign pb_m = pb | times: 0.6 | round
+  assign mt_m = mt | times: 0.6 | round
+  assign mb_m = mb | times: 0.6 | round
+
+  assign lt_count = 0
+  for block in section.blocks
+    if block.settings.text != blank
+      assign lt_count = lt_count | plus: 1
+    endif
+  endfor
+
+  assign lt_repeat = 1
+  if lt_count > 0
+    assign lt_repeat = 8.0 | divided_by: lt_count | ceil
+  endif
+-%}
+
+{%- capture lt_set_main -%}
+  {%- for block in section.blocks -%}
+    {%- if block.settings.text != blank -%}
+      <div class="lt-mq__item" {{ block.shopify_attributes }}>
+        <div class="lt-mq__text">{{ block.settings.text }}</div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- capture lt_set_clone -%}
+  {%- for block in section.blocks -%}
+    {%- if block.settings.text != blank -%}
+      <div class="lt-mq__item">
+        <div class="lt-mq__text">{{ block.settings.text }}</div>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if lt_count > 0 -%}
+  <style>
+    #shopify-section-{{ section.id }} {
+      {%- if section.settings.use_gradient %}
+      background: linear-gradient(
+        90deg,
+        {{ section.settings.background_color }} 0%,
+        {{ section.settings.gradient_end_color }} 100%
+      );
+      {%- else %}
+      background-color: {{ section.settings.background_color }};
+      {%- endif %}
+      color: {{ section.settings.text_color }};
+      padding-top: {{ pt }}px;
+      padding-bottom: {{ pb }}px;
+      margin-top: {{ mt }}px;
+      margin-bottom: {{ mb }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq,
+    #shopify-section-{{ section.id }} .lt-mq *,
+    #shopify-section-{{ section.id }} .lt-mq *::before,
+    #shopify-section-{{ section.id }} .lt-mq *::after {
+      box-sizing: border-box;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.2px;
+      color: inherit;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq--upper {
+      text-transform: uppercase;
+    }
+
+    /* Track holds two identical groups; moving it by -50% loops exactly one group */
+    #shopify-section-{{ section.id }} .lt-mq__track {
+      display: flex;
+      width: max-content;
+      will-change: transform;
+      animation: lt-mq-scroll-{{ section.id }} var(--lt-mq-duration, 40s) linear infinite;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq[data-lt-direction="right"] .lt-mq__track {
+      animation-direction: reverse;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq--paused .lt-mq__track,
+    #shopify-section-{{ section.id }} .lt-mq:focus-within .lt-mq__track {
+      animation-play-state: paused;
+    }
+
+    @media (hover: hover) {
+      #shopify-section-{{ section.id }} .lt-mq[data-lt-pause="true"]:hover .lt-mq__track {
+        animation-play-state: paused;
+      }
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq__group,
+    #shopify-section-{{ section.id }} .lt-mq__set {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+    }
+
+    /* Each item carries its own side padding so the gap after the last item matches the rest */
+    #shopify-section-{{ section.id }} .lt-mq__item {
+      flex: 0 0 auto;
+      padding: 4px 17px;
+      white-space: nowrap;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq__text,
+    #shopify-section-{{ section.id }} .lt-mq__text > * {
+      display: inline;
+      margin: 0;
+      padding: 0;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      list-style: none;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq__text li {
+      display: inline;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq__text a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq__text a:hover {
+      opacity: 0.75;
+    }
+
+    #shopify-section-{{ section.id }} .lt-mq__text a:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+
+    @keyframes lt-mq-scroll-{{ section.id }} {
+      from {
+        transform: translate3d(0, 0, 0);
+      }
+
+      to {
+        transform: translate3d(-50%, 0, 0);
+      }
+    }
+
+    @media (max-width: 767px) {
+      #shopify-section-{{ section.id }} {
+        padding-top: {{ pt_m }}px;
+        padding-bottom: {{ pb_m }}px;
+        margin-top: {{ mt_m }}px;
+        margin-bottom: {{ mb_m }}px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-mq {
+        font-size: 14px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-mq__item {
+        padding: 4px 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #shopify-section-{{ section.id }} .lt-mq {
+        font-size: 13px;
+      }
+
+      #shopify-section-{{ section.id }} .lt-mq__item {
+        padding: 4px 14px;
+      }
+    }
+
+    /* Reduced motion: no scrolling, show the original items centered and wrapped */
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .lt-mq__track {
+        width: 100%;
+        animation: none;
+      }
+
+      #shopify-section-{{ section.id }} .lt-mq__group,
+      #shopify-section-{{ section.id }} .lt-mq__set {
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      #shopify-section-{{ section.id }} .lt-mq__group--clone,
+      #shopify-section-{{ section.id }} .lt-mq__set--clone {
+        display: none;
+      }
+    }
+  </style>
+
+  <div
+    class="lt-mq{% if section.settings.uppercase %} lt-mq--upper{% endif %}"
+    data-lt-direction="{{ section.settings.direction }}"
+    data-lt-pause="{{ section.settings.pause_on_hover }}"
+    role="region"
+    aria-label="Announcements"
+  >
+    <div class="lt-mq__track">
+      <div class="lt-mq__group">
+        <div class="lt-mq__set">{{ lt_set_main }}</div>
+        {%- for i in (2..lt_repeat) -%}
+          <div class="lt-mq__set lt-mq__set--clone" aria-hidden="true" inert>
+            {{- lt_set_clone -}}
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="lt-mq__group lt-mq__group--clone" aria-hidden="true">
+        {%- for i in (1..lt_repeat) -%}
+          <div class="lt-mq__set lt-mq__set--clone" aria-hidden="true" inert>
+            {{- lt_set_clone -}}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.getElementById('shopify-section-{{ section.id }}');
+      if (!root) return;
+      if (typeof root.ltMqDestroy === 'function') root.ltMqDestroy();
+
+      var SPEED = {{ section.settings.speed }};
+      var bar = null;
+      var track = null;
+      var groups = [];
+      var observer = null;
+      var frame = 0;
+      var lastDuration = 0;
+      var hasObserver = typeof window.ResizeObserver === 'function';
+
+      function countSets(group) {
+        return group.querySelectorAll('.lt-mq__set').length;
+      }
+
+      /* Add clone sets until one group is at least as wide as the bar, then derive the duration */
+      function layout() {
+        frame = 0;
+        if (!bar || !track || groups.length < 2) return;
+
+        var main = groups[0].querySelector('.lt-mq__set');
+        var setWidth = main ? main.getBoundingClientRect().width : 0;
+        if (!setWidth) return;
+
+        var need = Math.ceil(bar.clientWidth / setWidth);
+        var have = Math.min(countSets(groups[0]), countSets(groups[1]));
+        var template = groups[1].querySelector('.lt-mq__set');
+
+        if (template && need > have) {
+          for (var i = have; i < need; i++) {
+            groups[0].appendChild(template.cloneNode(true));
+            groups[1].appendChild(template.cloneNode(true));
+          }
+        }
+
+        var width = groups[0].getBoundingClientRect().width;
+        var duration = Math.round((width / SPEED) * 100) / 100;
+        if (duration > 0 && duration !== lastDuration) {
+          track.style.setProperty('--lt-mq-duration', duration + 's');
+          lastDuration = duration;
+        }
+      }
+
+      function schedule() {
+        if (!frame) frame = window.requestAnimationFrame(layout);
+      }
+
+      function onBlockSelect() {
+        if (bar) bar.classList.add('lt-mq--paused');
+      }
+
+      function onBlockDeselect() {
+        if (bar) bar.classList.remove('lt-mq--paused');
+      }
+
+      function teardown() {
+        if (frame) {
+          window.cancelAnimationFrame(frame);
+          frame = 0;
+        }
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+        window.removeEventListener('resize', schedule);
+        if (bar) bar.classList.remove('lt-mq--paused');
+        bar = null;
+        track = null;
+        groups = [];
+        lastDuration = 0;
+      }
+
+      function init() {
+        teardown();
+        bar = root.querySelector('.lt-mq');
+        if (!bar) return;
+        track = bar.querySelector('.lt-mq__track');
+        groups = Array.prototype.slice.call(bar.querySelectorAll('.lt-mq__group'));
+        if (!track || groups.length < 2) return;
+
+        layout();
+
+        if (hasObserver) {
+          observer = new window.ResizeObserver(schedule);
+          observer.observe(bar);
+          observer.observe(groups[0].querySelector('.lt-mq__set'));
+        } else {
+          window.addEventListener('resize', schedule);
+        }
+
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+      }
+
+      function destroy() {
+        teardown();
+        root.removeEventListener('shopify:section:load', init);
+        root.removeEventListener('shopify:section:unload', destroy);
+        root.removeEventListener('shopify:block:select', onBlockSelect);
+        root.removeEventListener('shopify:block:deselect', onBlockDeselect);
+        root.ltMqDestroy = null;
+      }
+
+      root.ltMqDestroy = destroy;
+      root.addEventListener('shopify:section:load', init);
+      root.addEventListener('shopify:section:unload', destroy);
+      root.addEventListener('shopify:block:select', onBlockSelect);
+      root.addEventListener('shopify:block:deselect', onBlockDeselect);
+      init();
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "LT Marquee Announcement",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_gradient",
+      "label": "Use gradient background",
+      "info": "Blends from the background color on the left to the end color on the right.",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "gradient_end_color",
+      "label": "Gradient end color",
+      "default": "#ffffff",
+      "visible_if": "{{ section.settings.use_gradient }}"
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Scroll direction",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed",
+      "info": "Pixels per second. Higher is faster.",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "checkbox",
+      "id": "pause_on_hover",
+      "label": "Pause on hover",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "uppercase",
+      "label": "Uppercase text",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "info": "Supports bold, italic, links and emoji.",
+          "default": "<p>Free shipping on all orders</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Marquee Announcement",
+      "settings": {
+        "background_color": "#4dc8e9",
+        "text_color": "#111111",
+        "use_gradient": true,
+        "gradient_end_color": "#ffffff",
+        "padding_top": 10,
+        "padding_bottom": 10
+      },
+      "blocks": [
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>1,500+ 5-star reviews ⭐</p>"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>🚀 Free shipping over $85 🚀</p>"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>⚡ Free gift on $110+ ⚡</p>"
+          }
+        },
+        {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>⭐ 1,500+ 5-star reviews ⭐</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
