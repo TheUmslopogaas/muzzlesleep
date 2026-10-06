@@ -97,7 +97,7 @@
         "show_logos": true,
         "logos_label": "As seen in",
         "logos_label_color": "#222222",
-        "logo_height": 60,
+        "logo_height": 28,
         "padding_top": 80,
         "padding_bottom": 90,
         "margin_top": 0,
