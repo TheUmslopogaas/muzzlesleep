@@ -1,1 +1,163 @@
-{"name":"t:sections.header.name","type":"header","sections":{"announcement_bar_RtMGqw":{"type":"announcement-bar","blocks":{"announcement_dLAcKa":{"type":"announcement","settings":{"text":"Enjoy 25% off storewide with code BF25!","link":"shopify:\/\/collections\/products"}}},"block_order":["announcement_dLAcKa"],"disabled":true,"name":"t:sections.announcement-bar.presets.name","settings":{"color_scheme":"scheme-9e2241d5-4bc3-4c69-b22a-99262548984b","show_line_separator":true,"show_social":false,"auto_rotate":false,"change_slides_speed":5,"enable_country_selector":false,"enable_language_selector":false}},"header":{"type":"header","custom_css":[],"settings":{"logo_position":"middle-left","menu":"header-menu","menu_type_desktop":"dropdown","sticky_header_type":"on-scroll-up","show_line_separator":true,"color_scheme":"scheme-1","menu_color_scheme":"scheme-1","enable_country_selector":true,"enable_language_selector":true,"enable_customer_avatar":true,"mobile_logo_position":"center","margin_bottom":0,"padding_top":20,"padding_bottom":20}}},"order":["announcement_bar_RtMGqw","header"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement_bar_RtMGqw": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement_dLAcKa": {
+          "type": "announcement",
+          "settings": {
+            "text": "Enjoy 25% off storewide with code BF25!",
+            "link": "shopify://collections/products"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_dLAcKa"
+      ],
+      "disabled": true,
+      "name": "t:sections.announcement-bar.presets.name",
+      "settings": {
+        "color_scheme": "scheme-9e2241d5-4bc3-4c69-b22a-99262548984b",
+        "show_line_separator": true,
+        "show_social": false,
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "lt_announement_bar_6VFXVy": {
+      "type": "lt-announement-bar",
+      "blocks": {
+        "slide_TJxGcP": {
+          "type": "slide",
+          "settings": {
+            "enabled": true,
+            "text": "<p><strong>Free shipping</strong> on all orders over $50</p>"
+          }
+        },
+        "slide_FzDkEH": {
+          "type": "slide",
+          "settings": {
+            "enabled": true,
+            "text": "<p>Save <em>20%</em> on your first order - <a href=\"/collections/all\">Shop now</a></p>"
+          }
+        },
+        "slide_NTCKeB": {
+          "type": "slide",
+          "settings": {
+            "enabled": true,
+            "text": "<p>30-day money-back guarantee</p>"
+          }
+        }
+      },
+      "block_order": [
+        "slide_TJxGcP",
+        "slide_FzDkEH",
+        "slide_NTCKeB"
+      ],
+      "disabled": true,
+      "name": "LT Announcement Bar",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#222222",
+        "autoplay": true,
+        "autoplay_interval": 5,
+        "show_arrows": true,
+        "arrow_position": "sides",
+        "arrow_color": "#222222",
+        "padding_top": 10,
+        "padding_bottom": 10,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "lt_marquee_announcement_bar_488ed7": {
+      "type": "lt-marquee-announcement-bar",
+      "blocks": {
+        "announcement_apG4N3": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>1,500+ 5-star reviews ⭐</p>"
+          }
+        },
+        "announcement_FNG8yM": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>🚀 Free shipping over $85 🚀</p>"
+          }
+        },
+        "announcement_UU8Faj": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>⚡ Free gift on $110+ ⚡</p>"
+          }
+        },
+        "announcement_F6dVpA": {
+          "type": "announcement",
+          "settings": {
+            "text": "<p>⭐ 1,500+ 5-star reviews ⭐</p>"
+          }
+        }
+      },
+      "block_order": [
+        "announcement_apG4N3",
+        "announcement_FNG8yM",
+        "announcement_UU8Faj",
+        "announcement_F6dVpA"
+      ],
+      "name": "LT Marquee Announcement",
+      "settings": {
+        "background_color": "#27214D",
+        "text_color": "#FFFFFF",
+        "use_gradient": false,
+        "gradient_end_color": "#ffffff",
+        "direction": "left",
+        "speed": 60,
+        "pause_on_hover": true,
+        "uppercase": true,
+        "padding_top": 10,
+        "padding_bottom": 10,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [],
+      "settings": {
+        "logo_position": "middle-left",
+        "menu": "header-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "mobile_logo_position": "center",
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 20
+      }
+    }
+  },
+  "order": [
+    "announcement_bar_RtMGqw",
+    "lt_announement_bar_6VFXVy",
+    "lt_marquee_announcement_bar_488ed7",
+    "header"
+  ]
+}
