@@ -16,38 +16,30 @@
           "type": "slide",
           "settings": {
             "enabled": true,
-            "text": "<p><strong>Free shipping</strong> on all orders over $50</p>"
-          }
-        },
-        "slide_a8gNyw": {
-          "type": "slide",
-          "settings": {
-            "enabled": true,
-            "text": "<p>Save <em>20%</em> on your first order - <a href=\"/collections/all\">Shop now</a></p>"
+            "text": "<p>Spend $100+ Get A <strong>Free Gift</strong></p>"
           }
         },
         "slide_RNhRdw": {
           "type": "slide",
           "settings": {
             "enabled": true,
-            "text": "<p>30-day money-back guarantee</p>"
+            "text": "<p>Free Shipping Over $40</p>"
           }
         }
       },
       "block_order": [
         "slide_7xN9tD",
-        "slide_a8gNyw",
         "slide_RNhRdw"
       ],
       "name": "LT Announcement Bar",
       "settings": {
-        "background_color": "#27214D",
-        "text_color": "#FFFFFF",
+        "background_color": "#27214d",
+        "text_color": "#ffffff",
         "autoplay": true,
         "autoplay_interval": 5,
         "show_arrows": true,
         "arrow_position": "sides",
-        "arrow_color": "#FFFFFF",
+        "arrow_color": "#ffffff",
         "padding_top": 10,
         "padding_bottom": 10,
         "margin_top": 0,
