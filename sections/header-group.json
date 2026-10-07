@@ -86,45 +86,45 @@
     "lt_marquee_announcement_bar_488ed7": {
       "type": "lt-marquee-announcement-bar",
       "blocks": {
-        "announcement_apG4N3": {
+        "announcement_UU8Faj": {
           "type": "announcement",
           "settings": {
-            "text": "<p>1,500+ 5-star reviews ⭐</p>"
+            "text": "<p>⚡Spend $100+ Get A Free Gift⚡</p>"
           }
         },
         "announcement_FNG8yM": {
           "type": "announcement",
           "settings": {
-            "text": "<p>🚀 Free shipping over $85 🚀</p>"
+            "text": "<p>🚀 Free Shipping Over $40 🚀</p>"
           }
         },
-        "announcement_UU8Faj": {
+        "announcement_apG4N3": {
           "type": "announcement",
           "settings": {
-            "text": "<p>⚡ Free gift on $110+ ⚡</p>"
+            "text": "<p>🤝Trusted by 11,000+ Customers🤝</p>"
           }
         },
         "announcement_F6dVpA": {
           "type": "announcement",
           "settings": {
-            "text": "<p>⭐ 1,500+ 5-star reviews ⭐</p>"
+            "text": "<p>⭐ 4.9+ rating ⭐</p>"
           }
         }
       },
       "block_order": [
-        "announcement_apG4N3",
-        "announcement_FNG8yM",
         "announcement_UU8Faj",
+        "announcement_FNG8yM",
+        "announcement_apG4N3",
         "announcement_F6dVpA"
       ],
       "name": "LT Marquee Announcement",
       "settings": {
-        "background_color": "#27214D",
-        "text_color": "#FFFFFF",
+        "background_color": "#27214d",
+        "text_color": "#ffffff",
         "use_gradient": false,
         "gradient_end_color": "#ffffff",
         "direction": "left",
-        "speed": 60,
+        "speed": 50,
         "pause_on_hover": true,
         "uppercase": true,
         "padding_top": 10,
