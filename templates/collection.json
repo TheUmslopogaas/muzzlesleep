@@ -12,7 +12,7 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "custom_css": [
-        ".card__media {border: 1px solid #000;}"
+        ".card__media {border: 1px solid #000; padding: 8px; box-sizing: border-box;}"
       ],
       "settings": {
         "products_per_page": 16,
