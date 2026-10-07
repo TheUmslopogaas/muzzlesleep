@@ -12,7 +12,8 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "custom_css": [
-        ".card__media {border: 1px solid #000; padding: 8px; box-sizing: border-box;}"
+        ".card__media {border: 1px solid #000; padding: 0; box-sizing: border-box;}",
+        ".card__media img {transform: scale(0.96);}"
       ],
       "settings": {
         "products_per_page": 16,
