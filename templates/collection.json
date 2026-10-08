@@ -1,1 +1,162 @@
-{"sections":{"product-grid":{"type":"main-collection-product-grid","settings":{"products_per_page":16,"columns_desktop":3,"color_scheme":"scheme-1","image_ratio":"square","image_shape":"default","show_secondary_image":false,"show_vendor":false,"show_rating":false,"quick_add":"none","enable_filtering":true,"filter_type":"horizontal","enable_sorting":true,"columns_mobile":"2","padding_top":36,"padding_bottom":36}},"banner":{"type":"main-collection-banner","disabled":true,"settings":{"show_collection_description":true,"show_collection_image":false,"color_scheme":"scheme-1"}},"faq_MzDdnw":{"type":"faq","blocks":{"block_YP7fzR":{"type":"block","settings":{"q":"What does mouth tape do?","a":"It gently supports closed lips during sleep to encourage nasal breathing, which may reduce open-mouth snoring, mouth leaks, and morning dryness."}},"block_GTggTi":{"type":"block","settings":{"q":"Is mouth taping safe for daily use?","a":"For most healthy adults, yes. Patch-test first and stop if irritation occurs. Do not use when congested, nauseated, or if you have breathing disorders. Mouth tape is not a medical device—consult your clinician if unsure."}},"block_GNcgEw":{"type":"block","settings":{"q":"Which hold should I choose—Medium or Strong?","a":"Start with Medium. Choose Strong if you frequently open your mouth, have facial hair, or need extra staying power."}},"block_9h7Ddq":{"type":"block","settings":{"q":"How do I apply it?","a":"Clean, dry skin. Center the strip over closed lips. In the morning, peel slowly while supporting the skin with a fingertip."}},"block_gBQhfQ":{"type":"block","settings":{"q":"Can kids use mouth tape?","a":"Youth options are for children age 6+ with active adult supervision. Consult a pediatrician if unsure."}},"block_xbYahW":{"type":"block","settings":{"q":"Will this cure snoring or sleep apnea?","a":"No. Mouth tape is not a treatment for medical conditions. It can help promote nasal breathing, which may reduce open-mouth snoring for some users. Always follow your clinician’s advice."}},"block_yPNk8N":{"type":"block","settings":{"q":"What if I wake up congested or need to cough?","a":"Remove the strip immediately. Skip mouth taping on nights you’re unwell or congested."}},"block_73Q3w3":{"type":"block","settings":{"q":"Can I reuse a strip?","a":"No - single use only for hygiene and adhesion."}},"block_pRihGV":{"type":"block","settings":{"q":"Any tips for sensitive skin?","a":"Patch-test on the cheek for 15–30 minutes first. Remove slowly. Consider a barrier layer (e.g., light moisturizer) and allow it to fully absorb before use."}},"block_YUfLr9":{"type":"block","settings":{"q":"How many hours can I wear it?","a":"Typical overnight use is 6–9 hours. Remove sooner if uncomfortable."}},"cloud_BEwbaU":{"type":"cloud","settings":{"image":"shopify:\/\/shop_images\/37d8af1c52cd6876369fb9fc44e077e5.png","width_desktop":210,"width_mobile":150}}},"block_order":["block_YP7fzR","block_GTggTi","block_GNcgEw","block_9h7Ddq","block_gBQhfQ","block_xbYahW","block_yPNk8N","block_73Q3w3","block_pRihGV","block_YUfLr9","cloud_BEwbaU"],"custom_css":[],"name":"FAQ Mouth Tape","settings":{"background":"#FFFFF0","max_with":1920,"padding_top":100,"padding_bottom":100,"padding_top_mobile":50,"padding_bottom_mobile":50,"muzzle_icon":"shopify:\/\/shop_images\/Layer_2.svg","heading":"<span>Got Questions?<\/span> We’ve got answers.","text_above_link":"Still no answer?","link_txt":"Send us a message","link_target":""}}},"order":["product-grid","banner","faq_MzDdnw"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "custom_css": [
+        "/* Purple border and shadow around entire card */.collection .card-wrapper,.collection .product-card {background: #fff !important; padding: 10px !important; border: 1px solid #655A96 !important; outline: none !important; border-radius: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); box-sizing: border-box;}",
+        "/* Remove border around product image */.collection .card__inner,.collection .card__media {border: none !important; outline: none !important; box-shadow: none !important;}"
+      ],
+      "settings": {
+        "products_per_page": 16,
+        "columns_desktop": 3,
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": false,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "horizontal",
+        "enable_sorting": true,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "banner": {
+      "type": "main-collection-banner",
+      "disabled": true,
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "faq_MzDdnw": {
+      "type": "faq",
+      "blocks": {
+        "block_YP7fzR": {
+          "type": "block",
+          "settings": {
+            "q": "What does mouth tape do?",
+            "a": "It gently supports closed lips during sleep to encourage nasal breathing, which may reduce open-mouth snoring, mouth leaks, and morning dryness."
+          }
+        },
+        "block_GTggTi": {
+          "type": "block",
+          "settings": {
+            "q": "Is mouth taping safe for daily use?",
+            "a": "For most healthy adults, yes. Patch-test first and stop if irritation occurs. Do not use when congested, nauseated, or if you have breathing disorders. Mouth tape is not a medical device—consult your clinician if unsure."
+          }
+        },
+        "block_GNcgEw": {
+          "type": "block",
+          "settings": {
+            "q": "Which hold should I choose—Medium or Strong?",
+            "a": "Start with Medium. Choose Strong if you frequently open your mouth, have facial hair, or need extra staying power."
+          }
+        },
+        "block_9h7Ddq": {
+          "type": "block",
+          "settings": {
+            "q": "How do I apply it?",
+            "a": "Clean, dry skin. Center the strip over closed lips. In the morning, peel slowly while supporting the skin with a fingertip."
+          }
+        },
+        "block_gBQhfQ": {
+          "type": "block",
+          "settings": {
+            "q": "Can kids use mouth tape?",
+            "a": "Youth options are for children age 6+ with active adult supervision. Consult a pediatrician if unsure."
+          }
+        },
+        "block_xbYahW": {
+          "type": "block",
+          "settings": {
+            "q": "Will this cure snoring or sleep apnea?",
+            "a": "No. Mouth tape is not a treatment for medical conditions. It can help promote nasal breathing, which may reduce open-mouth snoring for some users. Always follow your clinician’s advice."
+          }
+        },
+        "block_yPNk8N": {
+          "type": "block",
+          "settings": {
+            "q": "What if I wake up congested or need to cough?",
+            "a": "Remove the strip immediately. Skip mouth taping on nights you’re unwell or congested."
+          }
+        },
+        "block_73Q3w3": {
+          "type": "block",
+          "settings": {
+            "q": "Can I reuse a strip?",
+            "a": "No - single use only for hygiene and adhesion."
+          }
+        },
+        "block_pRihGV": {
+          "type": "block",
+          "settings": {
+            "q": "Any tips for sensitive skin?",
+            "a": "Patch-test on the cheek for 15–30 minutes first. Remove slowly. Consider a barrier layer (e.g., light moisturizer) and allow it to fully absorb before use."
+          }
+        },
+        "block_YUfLr9": {
+          "type": "block",
+          "settings": {
+            "q": "How many hours can I wear it?",
+            "a": "Typical overnight use is 6–9 hours. Remove sooner if uncomfortable."
+          }
+        },
+        "cloud_BEwbaU": {
+          "type": "cloud",
+          "settings": {
+            "image": "shopify://shop_images/37d8af1c52cd6876369fb9fc44e077e5.png",
+            "width_desktop": 210,
+            "width_mobile": 150
+          }
+        }
+      },
+      "block_order": [
+        "block_YP7fzR",
+        "block_GTggTi",
+        "block_GNcgEw",
+        "block_9h7Ddq",
+        "block_gBQhfQ",
+        "block_xbYahW",
+        "block_yPNk8N",
+        "block_73Q3w3",
+        "block_pRihGV",
+        "block_YUfLr9",
+        "cloud_BEwbaU"
+      ],
+      "custom_css": [],
+      "name": "FAQ Mouth Tape",
+      "settings": {
+        "background": "#FFFFF0",
+        "max_with": 1920,
+        "padding_top": 100,
+        "padding_bottom": 100,
+        "padding_top_mobile": 50,
+        "padding_bottom_mobile": 50,
+        "muzzle_icon": "shopify://shop_images/Layer_2.svg",
+        "heading": "<span>Got Questions?</span> We’ve got answers.",
+        "text_above_link": "Still no answer?",
+        "link_txt": "Send us a message",
+        "link_target": ""
+      }
+    }
+  },
+  "order": [
+    "product-grid",
+    "banner",
+    "faq_MzDdnw"
+  ]
+}
