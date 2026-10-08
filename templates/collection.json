@@ -12,10 +12,8 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "custom_css": [
-        "/* Shadow around entire product card */.collection .card-wrapper,.collection .product-card {background: #fff; padding: 10px; border-radius: 4px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);}",
-        " /* Black border at outer edge of image area */.collection .card__media,.collection .card__inner {border: none;}",
-        ".collection .card__inner {outline: 1px solid #000; outline-offset: 10px;}",
-        ".collection .card__inner,.collection .card__media {border-color: #655A96 !important; outline-color: #655A96 !important;}"
+        "/* Purple border and shadow around entire card */.collection .card-wrapper,.collection .product-card {background: #fff !important; padding: 10px !important; border: 1px solid #655A96 !important; outline: none !important; border-radius: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); box-sizing: border-box;}",
+        "/* Remove border around product image */.collection .card__inner,.collection .card__media {border: none !important; outline: none !important; box-shadow: none !important;}"
       ],
       "settings": {
         "products_per_page": 16,
