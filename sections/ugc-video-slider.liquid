@@ -439,7 +439,14 @@
 
     function scrollToTarget(scroll_id, p_handle) {
         closeVideoPreview();
-        reRenderDynamicPart(p_handle);
+
+        // Let an LT buy box that contains this product select it and scroll itself into view
+        var selectEvent = new CustomEvent('lt:buybox:select', { detail: { handle: p_handle, handled: false } });
+        document.dispatchEvent(selectEvent);
+        if (selectEvent.detail.handled) return;
+
+        // Fallback for pages still using the legacy product-main section
+        if (typeof reRenderDynamicPart === 'function') reRenderDynamicPart(p_handle);
         if(scroll_id) {
             document.querySelector(`[cs-id="${scroll_id}"]`)?.scrollIntoView({
                 behavior: 'smooth'

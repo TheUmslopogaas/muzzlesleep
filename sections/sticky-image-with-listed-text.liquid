@@ -59,6 +59,32 @@
     left: 50%;
   }
 
+  {{ _section }} .section_quote {
+    margin: 24px 0 0;
+  }
+
+  {{ _section }} .section_quote_text {
+    margin: 0;
+    color: #27214D;
+    font-family: Manrope;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 150%;
+    letter-spacing: -0.32px;
+  }
+
+  {{ _section }} .section_quote_author {
+    margin-top: 12px;
+    color: #9487DF;
+    font-family: Manrope;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    letter-spacing: -0.28px;
+  }
+
   {{ _section }} .section_text_part {
     width: 40%;
     padding: 28px 56px;
@@ -196,6 +222,19 @@
       width: 100%;
     }
 
+    {{ _section }} .section_quote {
+      margin-top: 20px;
+    }
+
+    {{ _section }} .section_quote_text {
+      font-size: 14px;
+    }
+
+    {{ _section }} .section_quote_author {
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
     {{ _section }} .section_text_part {
       width: 100%;
       padding: 0;
@@ -240,15 +279,25 @@
 
 <div {{ _name }} id="{{ _id }}">
   <div class="section_holder">
-    {%- if _ss.image -%}
+    {%- if _ss.image or _ss.quote != blank -%}
       <div class="section_image_part">
         <div class="section_image">
-          <div class="image_wrapper{% if _ss.other_half_image %} two_piece_wrapper{% endif %}">
-            <img src="{{ _ss.image | image_url: width: 1200 }}" alt="banner image">
-            {% if _ss.other_half_image %}
-              <img src="{{ _ss.other_half_image | image_url: width: 1200 }}" alt="banner image">
-            {% endif %}
-          </div>
+          {%- if _ss.image -%}
+            <div class="image_wrapper{% if _ss.other_half_image %} two_piece_wrapper{% endif %}">
+              <img src="{{ _ss.image | image_url: width: 1200 }}" alt="banner image">
+              {% if _ss.other_half_image %}
+                <img src="{{ _ss.other_half_image | image_url: width: 1200 }}" alt="banner image">
+              {% endif %}
+            </div>
+          {%- endif -%}
+          {%- if _ss.quote != blank -%}
+            <figure class="section_quote">
+              <blockquote class="section_quote_text">{{ _ss.quote | newline_to_br }}</blockquote>
+              {%- if _ss.quote_author != blank -%}
+                <figcaption class="section_quote_author">{{ _ss.quote_author }}</figcaption>
+              {%- endif -%}
+            </figure>
+          {%- endif -%}
         </div>
       </div>
     {%- endif -%}
@@ -330,6 +379,19 @@
         "id": "other_half_image",
         "label": "Other Half Image",
         "info": "If you want to use the other half image, please upload the image here. Otherwise, leave it empty."
+      },
+      {
+        "type": "textarea",
+        "id": "quote",
+        "label": "Quote",
+        "default": "\"Our myofunctional therapist recommended gentle mouth taping as part of our son’s nightly routine. After five months, we personally noticed improvements in his oral posture and nighttime breathing habits. Every child is different — this was simply our family’s experience.\"",
+        "info": "Shown under the image. Leave empty to hide."
+      },
+      {
+        "type": "text",
+        "id": "quote_author",
+        "label": "Quote author",
+        "default": "Kelley, Mom and Co-Founder of Muzzle"
       },
       {
         "type": "textarea",

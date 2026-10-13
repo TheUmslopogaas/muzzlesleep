@@ -1,0 +1,2065 @@
+{%- liquid
+  assign s = section.settings
+
+  assign pt = s.padding_top
+  assign pb = s.padding_bottom
+  assign mt = s.margin_top
+  assign mb = s.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+
+  assign product_blocks = section.blocks | where: 'type', 'product'
+  assign perk_blocks = section.blocks | where: 'type', 'perk'
+  assign review_blocks = section.blocks | where: 'type', 'review'
+  assign dropdown_blocks = section.blocks | where: 'type', 'dropdown'
+
+  assign selected_id = ''
+  assign selected_available = false
+  assign product_count = 0
+  for b in product_blocks
+    if b.settings.product == blank
+      continue
+    endif
+    assign product_count = product_count | plus: 1
+    if selected_id == ''
+      assign selected_id = b.id
+      assign selected_available = b.settings.product.available
+    endif
+  endfor
+
+  if template.name == 'product'
+    for b in product_blocks
+      if b.settings.product != blank and b.settings.product.id == product.id
+        assign selected_id = b.id
+        assign selected_available = b.settings.product.available
+      endif
+    endfor
+  endif
+
+  assign selector_cols = product_count
+  if request.design_mode
+    assign selector_cols = product_blocks.size
+  endif
+
+  assign perks_attrs_done = false
+-%}
+
+{%- capture star_svg -%}
+  <svg class="lt-buybox__star" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false"><path d="M6.43813 0.745106C6.68069 0.300343 7.31931 0.300344 7.56187 0.745107L9.34675 4.0179C9.4388 4.18668 9.60185 4.30514 9.79082 4.34053L13.455 5.0267C13.9529 5.11995 14.1503 5.72732 13.8022 6.09545L11.2412 8.80432C11.1091 8.94402 11.0468 9.1357 11.0716 9.32635L11.5513 13.0232C11.6165 13.5256 11.0998 13.901 10.6421 13.6837L7.27445 12.0851C7.10077 12.0027 6.89923 12.0027 6.72555 12.0851L3.35786 13.6837C2.9002 13.901 2.38354 13.5256 2.44873 13.0232L2.92843 9.32635C2.95317 9.1357 2.89089 8.94402 2.75881 8.80432L0.197757 6.09545C-0.150282 5.72732 0.0470655 5.11995 0.545015 5.0267L4.20918 4.34053C4.39815 4.30514 4.5612 4.18668 4.65325 4.01789L6.43813 0.745106Z" fill="#FFCF9B"/></svg>
+{%- endcapture -%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --lt-bg: {{ s.background_color }};
+    --lt-text: {{ s.text_color }};
+    --lt-accent: {{ s.accent_color }};
+    --lt-muted: #9793B0;
+    --lt-line: #E3DAEF;
+    --lt-soft: #F6F5FF;
+    --lt-soft-line: #E9E6FF;
+    --lt-thumb-active: #8E8BA6;
+    background: var(--lt-bg);
+    color: var(--lt-text);
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  #shopify-section-{{ section.id }} [hidden] {
+    display: none !important;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox {
+    font-family: Manrope, sans-serif;
+  }
+
+  /* :where() keeps these resets at low specificity so component classes win */
+  #shopify-section-{{ section.id }} :where(.lt-buybox p, .lt-buybox h2, .lt-buybox h3) {
+    margin: 0;
+  }
+
+  #shopify-section-{{ section.id }} :where(.lt-buybox button) {
+    font-family: inherit;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__empty {
+    padding: 40px 20px;
+    border: 1px dashed var(--lt-line);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  /* ---------- Layout ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 51fr) minmax(0, 43fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "gallery summary"
+      "gallery info";
+    column-gap: 60px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__summary { grid-area: summary; min-width: 0; }
+  #shopify-section-{{ section.id }} .lt-buybox__media-col { grid-area: gallery; min-width: 0; }
+  #shopify-section-{{ section.id }} .lt-buybox__info { grid-area: info; min-width: 0; }
+
+  #shopify-section-{{ section.id }} .lt-buybox__media-sticky {
+    position: sticky;
+    top: 40px;
+  }
+
+  /* ---------- Gallery ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__main {
+    position: relative;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__frame {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--lt-soft);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__main .lt-buybox__frame {
+    border-radius: 12px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__frame img,
+  #shopify-section-{{ section.id }} .lt-buybox__frame video,
+  #shopify-section-{{ section.id }} .lt-buybox__frame iframe,
+  #shopify-section-{{ section.id }} .lt-buybox__frame svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__arrows {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    z-index: 2;
+    display: flex;
+    gap: 6px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__arrow {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__arrow img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__thumbs {
+    margin-top: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__thumbs .swiper-slide {
+    width: 74px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    overflow: hidden;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__thumbs .swiper-slide-thumb-active {
+    border-color: var(--lt-thumb-active);
+  }
+
+  /* ---------- Summary ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__summary-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__summary-text {
+    min-width: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 5px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__stars {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__star {
+    width: 16px;
+    height: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__rating-score {
+    margin-left: 2px;
+    font-weight: 600;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__rating-caption {
+    width: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__title {
+    margin-top: 7px;
+    font-family: inherit;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.6px;
+    color: inherit;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__subtitle {
+    margin-top: 7px;
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: -0.32px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__badge {
+    flex: 0 0 60px;
+    width: 60px;
+    margin-left: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__badge img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__tag {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    padding: 0 8px;
+    border: 1px solid var(--lt-soft-line);
+    border-radius: 5px;
+    background: var(--lt-soft);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.2px;
+  }
+
+  /* ---------- Selectors ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__info {
+    margin-top: 50px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__group + .lt-buybox__group {
+    margin-top: 35px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__divider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__divider::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--lt-line);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__divider span {
+    position: relative;
+    padding: 0 16px;
+    background: var(--lt-bg);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strengths {
+    display: grid;
+    grid-template-columns: repeat(var(--lt-cols, 2), minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 18px 20px;
+    border: 1px solid var(--lt-line);
+    border-radius: 10px;
+    background: #FFFFFF;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength:hover {
+    border-color: var(--lt-muted);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength.is-selected {
+    border-color: var(--lt-accent);
+    background: var(--lt-soft);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength:focus-visible,
+  #shopify-section-{{ section.id }} .lt-buybox__atc:focus-visible,
+  #shopify-section-{{ section.id }} .lt-buybox__acc-btn:focus-visible,
+  #shopify-section-{{ section.id }} .lt-buybox__arrow:focus-visible,
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav:focus-visible {
+    outline: 2px solid var(--lt-accent);
+    outline-offset: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength--empty {
+    justify-content: center;
+    min-height: 120px;
+    color: var(--lt-muted);
+    font-size: 14px;
+    cursor: default;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength img {
+    display: block;
+    width: 50%;
+    height: auto;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength-title {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.32px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__strength-sub {
+    max-width: 150px;
+    margin-top: 5px;
+    color: var(--lt-muted);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.26px;
+  }
+
+  /* ---------- Purchase options ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__plans {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan {
+    margin-top: 10px;
+    padding: 10px 13px;
+    border: 1px solid var(--lt-line);
+    border-radius: 10px;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan.is-selected {
+    border-color: var(--lt-accent);
+    background: var(--lt-soft);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan.is-disabled {
+    background: #EEEEEE;
+    opacity: 0.7;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan.is-disabled .lt-buybox__plan-row {
+    cursor: not-allowed;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__radio {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__dot {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--lt-line);
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__radio:checked + .lt-buybox__dot {
+    border-color: var(--lt-accent);
+    background: var(--lt-accent);
+    box-shadow: inset 0 0 0 3px #FFFFFF;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__radio:focus-visible + .lt-buybox__dot {
+    outline: 2px solid var(--lt-accent);
+    outline-offset: 2px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan-name {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin: 0 12px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.32px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan-desc {
+    margin-top: 7px;
+    color: var(--lt-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.24px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    height: 22px;
+    margin-right: 12px;
+    padding: 0 9px;
+    border-radius: 5px;
+    background: var(--lt-accent);
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.24px;
+    white-space: nowrap;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin-left: auto;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__price-now {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.4px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__price-was {
+    margin-top: 7px;
+    color: var(--lt-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.24px;
+    text-decoration: line-through;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__perks {
+    display: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__plan.is-selected .lt-buybox__perks {
+    display: grid;
+    gap: 4px;
+    margin: 15px 0 0;
+    padding: 12px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    list-style: none;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__perk {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__perk img {
+    display: block;
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+  }
+
+  /* ---------- Add to cart ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__atc {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 58px;
+    margin-top: 35px;
+    border: 0;
+    border-radius: 35px;
+    background: var(--lt-accent);
+    box-shadow: -24px 18px 11px 0 rgba(153, 145, 189, 0.04), -14px 10px 10px 0 rgba(153, 145, 189, 0.13), -6px 5px 7px 0 rgba(153, 145, 189, 0.23), -1px 1px 5px 0 rgba(153, 145, 189, 0.25);
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__atc:hover {
+    opacity: 0.92;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__atc:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__atc.is-loading {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__atc-label {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.36px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__atc img {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__error {
+    margin-top: 10px;
+    color: #C0392B;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__caption {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.28px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__caption img {
+    display: block;
+    width: 24px;
+    height: 18px;
+  }
+
+  /* ---------- Reviews ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__reviews {
+    position: relative;
+    margin-top: 50px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review {
+    display: flex;
+    align-items: center;
+    padding: 13px;
+    border: 1px solid var(--lt-line);
+    border-radius: 9px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-img {
+    position: relative;
+    flex: 0 0 70px;
+    width: 70px;
+    height: 80px;
+    margin-right: 13px;
+    border-radius: 9px;
+    overflow: hidden;
+    background: var(--lt-soft);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-img img,
+  #shopify-section-{{ section.id }} .lt-buybox__review-img svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-head {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-name {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.32px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-text {
+    margin-top: 7px;
+    font-size: 13px;
+    line-height: 1.3;
+    letter-spacing: -0.26px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav {
+    position: absolute;
+    top: calc(50% - 13px);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--lt-soft);
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav--prev { left: -13px; }
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav--next { right: -13px; }
+
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav.swiper-button-disabled,
+  #shopify-section-{{ section.id }} .lt-buybox__review-nav.swiper-button-lock {
+    display: none;
+  }
+
+  /* ---------- Accordion ---------- */
+  #shopify-section-{{ section.id }} .lt-buybox__acc {
+    margin-top: 15px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--lt-line);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-item:last-child {
+    border-bottom: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.32px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s linear;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-item.is-open .lt-buybox__acc-icon {
+    transform: rotate(135deg);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition: grid-template-rows 0.3s ease, visibility 0.3s;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-item.is-open .lt-buybox__acc-panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-body {
+    padding: 20px 0 0 10px;
+    font-size: 13px;
+    line-height: 1.3;
+    letter-spacing: -0.26px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-body p {
+    margin: 5px 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__acc-body a {
+    color: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .lt-buybox__acc-panel,
+    #shopify-section-{{ section.id }} .lt-buybox__acc-icon {
+      transition: none;
+    }
+  }
+
+  /* ---------- Tablet / mobile ---------- */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mob }}px;
+      padding-bottom: {{ pb_mob }}px;
+      margin-top: {{ mt_mob }}px;
+      margin-bottom: {{ mb_mob }}px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto;
+      grid-template-areas:
+        "summary"
+        "gallery"
+        "info";
+      row-gap: 25px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__media-sticky {
+      position: static;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__arrows {
+      display: none;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__thumbs {
+      margin-top: 6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__thumbs .swiper-slide {
+      width: 60px;
+      border-radius: 6px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__rating { font-size: 12px; }
+    #shopify-section-{{ section.id }} .lt-buybox__title { font-size: 24px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__subtitle {
+      font-size: 14px;
+      letter-spacing: -0.28px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__badge {
+      flex-basis: 48px;
+      width: 48px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__tags { margin-top: 15px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__tag {
+      height: 25px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__info { margin-top: 2px; }
+    #shopify-section-{{ section.id }} .lt-buybox__group + .lt-buybox__group { margin-top: 30px; }
+    #shopify-section-{{ section.id }} .lt-buybox__divider { font-size: 13px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__strength {
+      padding: 16px 12px;
+      border-radius: 8px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__strength img { width: 75%; }
+    #shopify-section-{{ section.id }} .lt-buybox__strength-title { font-size: 14px; }
+    #shopify-section-{{ section.id }} .lt-buybox__strength-sub { font-size: 11px; }
+    #shopify-section-{{ section.id }} .lt-buybox__plan-title { font-size: 14px; }
+    #shopify-section-{{ section.id }} .lt-buybox__price-now { font-size: 16px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__price-was {
+      margin-top: 5px;
+      font-size: 10px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__plan.is-selected .lt-buybox__perks {
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__perk { font-size: 12px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__perk img {
+      width: 22px;
+      height: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__atc {
+      height: 50px;
+      margin-top: 30px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__atc-label { font-size: 16px; }
+    #shopify-section-{{ section.id }} .lt-buybox__caption { font-size: 12px; }
+    #shopify-section-{{ section.id }} .lt-buybox__reviews { margin-top: 44px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__review {
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__review-img {
+      flex-basis: 60px;
+      width: 60px;
+      height: 70px;
+      border-radius: 8px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__review-name { font-size: 14px; }
+    #shopify-section-{{ section.id }} .lt-buybox__review-text { font-size: 12px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__review-nav {
+      top: calc(50% - 12px);
+      width: 24px;
+      height: 24px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__review-nav--prev { left: -12px; }
+    #shopify-section-{{ section.id }} .lt-buybox__review-nav--next { right: -12px; }
+    #shopify-section-{{ section.id }} .lt-buybox__acc { margin-top: 10px; }
+    #shopify-section-{{ section.id }} .lt-buybox__acc-btn { font-size: 14px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__acc-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__acc-body { font-size: 12px; }
+  }
+
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-buybox__title { font-size: 22px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__strength { padding: 14px 8px; }
+    #shopify-section-{{ section.id }} .lt-buybox__strength-title { font-size: 13px; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__plan { padding: 8px 10px; }
+    #shopify-section-{{ section.id }} .lt-buybox__plan-name { margin: 0 8px; }
+    #shopify-section-{{ section.id }} .lt-buybox__save { margin-right: 8px; padding: 0 6px; }
+    #shopify-section-{{ section.id }} .lt-buybox__price-now { font-size: 15px; }
+  }
+</style>
+
+<div class="lt-buybox"{% if s.custom_id != blank %} cs-id="{{ s.custom_id | escape }}"{% endif %}>
+  <div class="page-width">
+    {%- if product_count == 0 -%}
+      {%- if request.design_mode -%}
+        <p class="lt-buybox__empty">Add a Product block and choose a product to show this buy box.</p>
+      {%- endif -%}
+    {%- else -%}
+      <div class="lt-buybox__grid">
+
+        {%- comment -%} Summary: rating, title, subtitle, badge, tags {%- endcomment -%}
+        <div class="lt-buybox__summary">
+          <div class="lt-buybox__summary-top">
+            <div class="lt-buybox__summary-text">
+              <div class="lt-buybox__rating">
+                <span class="lt-buybox__stars" role="img" aria-label="5 out of 5 stars">
+                  {%- for i in (1..5) -%}{{ star_svg }}{%- endfor -%}
+                </span>
+                {%- if s.rating_text != blank -%}
+                  <span class="lt-buybox__rating-score">{{ s.rating_text | escape }}</span>
+                {%- endif -%}
+                {%- if s.rating_caption != blank -%}
+                  <span class="lt-buybox__rating-caption">{{ s.rating_caption | escape }}</span>
+                {%- endif -%}
+              </div>
+
+              {%- if s.title != blank -%}
+                <h2 class="lt-buybox__title">{{ s.title | escape }}</h2>
+              {%- endif -%}
+              {%- if s.subtitle != blank -%}
+                <p class="lt-buybox__subtitle">{{ s.subtitle | escape }}</p>
+              {%- endif -%}
+              {%- if s.show_frontrow -%}
+                {% render 'frontrow-landing' %}
+              {%- endif -%}
+            </div>
+
+            {%- if s.badge != blank -%}
+              <div class="lt-buybox__badge">
+                <img
+                  src="{{ s.badge | image_url: width: 160 }}"
+                  width="160"
+                  height="{{ 160 | divided_by: s.badge.aspect_ratio | round }}"
+                  alt="{{ s.badge.alt | default: 'Product badge' | escape }}"
+                  loading="lazy"
+                >
+              </div>
+            {%- endif -%}
+          </div>
+
+          {%- if s.tags != blank -%}
+            {%- assign tag_list = s.tags | split: ',' -%}
+            <ul class="lt-buybox__tags">
+              {%- for tag in tag_list -%}
+                {%- assign tag_text = tag | strip -%}
+                {%- if tag_text != blank -%}
+                  <li class="lt-buybox__tag">{{ tag_text | escape }}</li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Gallery: one per product, only the selected one is visible {%- endcomment -%}
+        <div class="lt-buybox__media-col">
+          <div class="lt-buybox__media-sticky">
+            {%- for block in product_blocks -%}
+              {%- assign p = block.settings.product -%}
+              {%- if p == blank -%}{%- continue -%}{%- endif -%}
+
+              <div class="lt-buybox__gallery" data-panel="{{ block.id }}" data-handle="{{ p.handle }}"{% if block.id != selected_id %} hidden{% endif %}>
+                {%- if p.media.size == 0 -%}
+                  <div class="lt-buybox__main">
+                    <div class="lt-buybox__frame">{{ 'product-1' | placeholder_svg_tag }}</div>
+                  </div>
+                {%- else -%}
+                  <div class="lt-buybox__main">
+                    <div class="swiper">
+                      <div class="swiper-wrapper">
+                        {%- for media in p.media -%}
+                          <div class="swiper-slide">
+                            <div class="lt-buybox__frame">
+                              {%- case media.media_type -%}
+                                {%- when 'video' -%}
+                                  {{ media | video_tag: image_size: '1100x', loop: true, muted: true, controls: true, preload: 'none' }}
+                                {%- when 'external_video' -%}
+                                  {{ media | external_video_tag }}
+                                {%- else -%}
+                                  {%- assign img = media.preview_image -%}
+                                  <img
+                                    src="{{ img | image_url: width: 1100 }}"
+                                    srcset="{{ img | image_url: width: 500 }} 500w, {{ img | image_url: width: 800 }} 800w, {{ img | image_url: width: 1100 }} 1100w"
+                                    sizes="(max-width: 767px) 100vw, 50vw"
+                                    width="1100"
+                                    height="{{ 1100 | divided_by: img.aspect_ratio | round }}"
+                                    alt="{{ media.alt | default: p.title | escape }}"
+                                    loading="lazy"
+                                  >
+                              {%- endcase -%}
+                            </div>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                    </div>
+
+                    {%- if p.media.size > 1 -%}
+                      <div class="lt-buybox__arrows">
+                        <button type="button" class="lt-buybox__arrow" data-prev aria-label="Previous image">
+                          <img src="{{ 'icon-caret-left.svg' | asset_url }}" alt="" width="38" height="38">
+                        </button>
+                        <button type="button" class="lt-buybox__arrow" data-next aria-label="Next image">
+                          <img src="{{ 'icon-caret-right.svg' | asset_url }}" alt="" width="38" height="38">
+                        </button>
+                      </div>
+                    {%- endif -%}
+                  </div>
+
+                  {%- if p.media.size > 1 -%}
+                    <div class="lt-buybox__thumbs">
+                      <div class="swiper">
+                        <div class="swiper-wrapper">
+                          {%- for media in p.media -%}
+                            <div class="swiper-slide">
+                              <div class="lt-buybox__frame">
+                                <img
+                                  src="{{ media.preview_image | image_url: width: 160 }}"
+                                  width="160"
+                                  height="160"
+                                  alt=""
+                                  loading="lazy"
+                                >
+                              </div>
+                            </div>
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- comment -%} Info: strength, purchase type, checkout, reviews, accordions {%- endcomment -%}
+        <div class="lt-buybox__info">
+          {%- if selector_cols > 1 -%}
+            <div class="lt-buybox__group">
+              {%- if s.selector_label != blank -%}
+                <p class="lt-buybox__divider"><span>{{ s.selector_label | escape }}</span></p>
+              {%- endif -%}
+              <div class="lt-buybox__strengths" style="--lt-cols: {{ selector_cols }};" role="group" aria-label="{{ s.selector_label | default: 'Select product' | escape }}">
+                {%- for block in product_blocks -%}
+                  {%- assign p = block.settings.product -%}
+                  {%- if p == blank -%}
+                    {%- if request.design_mode -%}
+                      <div class="lt-buybox__strength lt-buybox__strength--empty" {{ block.shopify_attributes }}>Choose a product</div>
+                    {%- endif -%}
+                    {%- continue -%}
+                  {%- endif -%}
+
+                  {%- assign is_selected = false -%}
+                  {%- if block.id == selected_id -%}{%- assign is_selected = true -%}{%- endif -%}
+                  {%- assign selector_img = block.settings.image | default: p.featured_image -%}
+
+                  <button
+                    type="button"
+                    class="lt-buybox__strength{% if is_selected %} is-selected{% endif %}"
+                    data-select="{{ block.id }}"
+                    aria-pressed="{{ is_selected }}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {%- if selector_img != blank -%}
+                      <img
+                        src="{{ selector_img | image_url: width: 300 }}"
+                        width="300"
+                        height="{{ 300 | divided_by: selector_img.aspect_ratio | round }}"
+                        alt=""
+                        loading="lazy"
+                      >
+                    {%- endif -%}
+                    <span class="lt-buybox__strength-title">{{ block.settings.heading | default: p.title | escape }}</span>
+                    {%- if block.settings.subheading != blank -%}
+                      <span class="lt-buybox__strength-sub">{{ block.settings.subheading | escape }}</span>
+                    {%- endif -%}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="lt-buybox__group">
+            {%- if s.purchase_label != blank -%}
+              <p class="lt-buybox__divider" aria-hidden="true"><span>{{ s.purchase_label | escape }}</span></p>
+            {%- endif -%}
+
+            {%- for block in product_blocks -%}
+              {%- assign p = block.settings.product -%}
+              {%- if p == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign has_checked = false -%}
+
+              <fieldset class="lt-buybox__plans" data-panel="{{ block.id }}"{% if block.id != selected_id %} hidden{% endif %}>
+                <legend class="lt-buybox__sr">{{ s.purchase_label | default: 'Purchase type' | escape }}: {{ p.title | escape }}</legend>
+
+                {%- for variant in p.variants -%}
+                  {%- for allocation in variant.selling_plan_allocations -%}
+                    {%- assign is_checked = false -%}
+                    {%- if has_checked == false and variant.available -%}
+                      {%- assign is_checked = true -%}
+                      {%- assign has_checked = true -%}
+                    {%- endif -%}
+
+                    <div class="lt-buybox__plan{% if is_checked %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}">
+                      <label class="lt-buybox__plan-row">
+                        <input
+                          type="radio"
+                          class="lt-buybox__radio"
+                          name="lt-plan-{{ section.id }}-{{ block.id }}"
+                          value="{{ variant.id }}"
+                          data-plan="{{ allocation.selling_plan.id }}"
+                          {% if is_checked %}checked{% endif %}
+                          {% unless variant.available %}disabled{% endunless %}
+                        >
+                        <span class="lt-buybox__dot" aria-hidden="true"></span>
+                        <span class="lt-buybox__plan-name">
+                          <span class="lt-buybox__plan-title">{{ s.subscribe_label | escape }}</span>
+                          <span class="lt-buybox__plan-desc">
+                            {{- allocation.selling_plan.name | escape -}}
+                            {%- unless p.has_only_default_variant %} · {{ variant.title | escape }}{% endunless -%}
+                          </span>
+                        </span>
+                        {%- if allocation.compare_at_price > allocation.price -%}
+                          {%- assign saving = allocation.compare_at_price | minus: allocation.price | times: 100 | divided_by: allocation.compare_at_price -%}
+                          <span class="lt-buybox__save">Save {{ saving }}%</span>
+                        {%- endif -%}
+                        <span class="lt-buybox__price">
+                          <span class="lt-buybox__price-now">{{ allocation.price | money }}</span>
+                          {%- if allocation.compare_at_price > allocation.price -%}
+                            <span class="lt-buybox__price-was"><span class="lt-buybox__sr">Regular price </span>{{ allocation.compare_at_price | money }}</span>
+                          {%- endif -%}
+                        </span>
+                      </label>
+
+                      {%- if perk_blocks.size > 0 -%}
+                        <ul class="lt-buybox__perks">
+                          {%- for perk in perk_blocks -%}
+                            <li class="lt-buybox__perk" {% unless perks_attrs_done %}{{ perk.shopify_attributes }}{% endunless %}>
+                              {%- if perk.settings.icon != blank -%}
+                                <img src="{{ perk.settings.icon | image_url: width: 60 }}" width="26" height="26" alt="" loading="lazy">
+                              {%- endif -%}
+                              <span>{{ perk.settings.text | escape }}</span>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                        {%- assign perks_attrs_done = true -%}
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+
+                  {%- unless p.requires_selling_plan -%}
+                    {%- assign is_checked = false -%}
+                    {%- if has_checked == false and variant.available -%}
+                      {%- assign is_checked = true -%}
+                      {%- assign has_checked = true -%}
+                    {%- endif -%}
+                    {%- assign v_desc = variant.metafields.custom.description.value -%}
+                    {%- assign v_badge = variant.metafields.custom.badge.value -%}
+
+                    <div class="lt-buybox__plan{% if is_checked %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}">
+                      <label class="lt-buybox__plan-row">
+                        <input
+                          type="radio"
+                          class="lt-buybox__radio"
+                          name="lt-plan-{{ section.id }}-{{ block.id }}"
+                          value="{{ variant.id }}"
+                          data-plan=""
+                          {% if is_checked %}checked{% endif %}
+                          {% unless variant.available %}disabled{% endunless %}
+                        >
+                        <span class="lt-buybox__dot" aria-hidden="true"></span>
+                        <span class="lt-buybox__plan-name">
+                          <span class="lt-buybox__plan-title">
+                            {%- if p.has_only_default_variant -%}{{ s.onetime_label | escape }}{%- else -%}{{ variant.title | escape }}{%- endif -%}
+                          </span>
+                          {%- if v_desc != blank -%}
+                            <span class="lt-buybox__plan-desc">{{ v_desc | escape }}</span>
+                          {%- elsif variant.available == false -%}
+                            <span class="lt-buybox__plan-desc">Sold out</span>
+                          {%- endif -%}
+                        </span>
+                        {%- if v_badge != blank -%}
+                          <span class="lt-buybox__save">{{ v_badge | escape }}</span>
+                        {%- endif -%}
+                        <span class="lt-buybox__price">
+                          <span class="lt-buybox__price-now">{{ variant.price | money }}</span>
+                          {%- if variant.compare_at_price > variant.price -%}
+                            <span class="lt-buybox__price-was"><span class="lt-buybox__sr">Regular price </span>{{ variant.compare_at_price | money }}</span>
+                          {%- endif -%}
+                        </span>
+                      </label>
+                    </div>
+                  {%- endunless -%}
+                {%- endfor -%}
+              </fieldset>
+            {%- endfor -%}
+
+            <button
+              type="button"
+              class="lt-buybox__atc"
+              data-atc
+              data-label="{{ s.button_label | escape }}"
+              data-soldout="Sold out"
+              {% unless selected_available %}disabled{% endunless %}
+            >
+              <span class="lt-buybox__atc-label" data-atc-label>
+                {%- if selected_available -%}{{ s.button_label | escape }}{%- else -%}Sold out{%- endif -%}
+              </span>
+              <img src="{{ 'icon-checkout-lock.svg' | asset_url }}" alt="" width="20" height="20">
+            </button>
+            <p class="lt-buybox__error" role="alert" data-error hidden></p>
+
+            {%- if s.caption != blank -%}
+              <p class="lt-buybox__caption">
+                <img src="{{ 'us.svg' | asset_url }}" alt="" width="24" height="18">
+                <span>{{ s.caption | escape }}</span>
+              </p>
+            {%- endif -%}
+          </div>
+
+          {%- if review_blocks.size > 0 -%}
+            <div class="lt-buybox__reviews">
+              <div class="swiper">
+                <div class="swiper-wrapper">
+                  {%- for block in review_blocks -%}
+                    <div class="swiper-slide" {{ block.shopify_attributes }}>
+                      <div class="lt-buybox__review">
+                        <div class="lt-buybox__review-img">
+                          {%- if block.settings.image != blank -%}
+                            <img
+                              src="{{ block.settings.image | image_url: width: 160 }}"
+                              width="160"
+                              height="{{ 160 | divided_by: block.settings.image.aspect_ratio | round }}"
+                              alt="{{ block.settings.image.alt | default: block.settings.name | escape }}"
+                              loading="lazy"
+                            >
+                          {%- else -%}
+                            {{ 'image' | placeholder_svg_tag }}
+                          {%- endif -%}
+                        </div>
+                        <div class="lt-buybox__review-main">
+                          <p class="lt-buybox__review-head">
+                            <span class="lt-buybox__review-name">{{ block.settings.name | escape }}</span>
+                            <span class="lt-buybox__stars" role="img" aria-label="5 out of 5 stars">
+                              {%- for i in (1..5) -%}{{ star_svg }}{%- endfor -%}
+                            </span>
+                          </p>
+                          <p class="lt-buybox__review-text">{{ block.settings.content | escape }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </div>
+              {%- if review_blocks.size > 1 -%}
+                <button type="button" class="lt-buybox__review-nav lt-buybox__review-nav--prev" data-review-prev aria-label="Previous review">
+                  <img src="{{ 'icon-left.svg' | asset_url }}" alt="" width="27" height="27">
+                </button>
+                <button type="button" class="lt-buybox__review-nav lt-buybox__review-nav--next" data-review-next aria-label="Next review">
+                  <img src="{{ 'icon-right.svg' | asset_url }}" alt="" width="27" height="27">
+                </button>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if s.description_label != blank or dropdown_blocks.size > 0 -%}
+            <div class="lt-buybox__acc">
+              {%- if s.description_label != blank -%}
+                <div class="lt-buybox__acc-item">
+                  <h3>
+                    <button type="button" class="lt-buybox__acc-btn" data-acc aria-expanded="false" aria-controls="lt-acc-{{ section.id }}-desc">
+                      <span>{{ s.description_label | escape }}</span>
+                      <img class="lt-buybox__acc-icon" src="{{ 'faq-icon-plus.svg' | asset_url }}" alt="" width="18" height="18">
+                    </button>
+                  </h3>
+                  <div class="lt-buybox__acc-panel" id="lt-acc-{{ section.id }}-desc">
+                    <div class="lt-buybox__acc-inner">
+                      <div class="lt-buybox__acc-body">
+                        {%- for block in product_blocks -%}
+                          {%- assign p = block.settings.product -%}
+                          {%- if p == blank -%}{%- continue -%}{%- endif -%}
+                          <div data-panel="{{ block.id }}"{% if block.id != selected_id %} hidden{% endif %}>{{ p.description }}</div>
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+
+              {%- for block in dropdown_blocks -%}
+                <div class="lt-buybox__acc-item" {{ block.shopify_attributes }}>
+                  <h3>
+                    <button type="button" class="lt-buybox__acc-btn" data-acc aria-expanded="false" aria-controls="lt-acc-{{ block.id }}">
+                      <span>{{ block.settings.heading | escape }}</span>
+                      <img class="lt-buybox__acc-icon" src="{{ 'faq-icon-plus.svg' | asset_url }}" alt="" width="18" height="18">
+                    </button>
+                  </h3>
+                  <div class="lt-buybox__acc-panel" id="lt-acc-{{ block.id }}">
+                    <div class="lt-buybox__acc-inner">
+                      <div class="lt-buybox__acc-body">{{ block.settings.content }}</div>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict';
+
+    var SECTION_ID = '{{ section.id }}';
+    var store = window.__ltBuybox = window.__ltBuybox || {};
+    var active = null;
+
+    function cartUrl(path) {
+      var root = (window.Shopify && window.Shopify.routes && window.Shopify.routes.root) || '/';
+      return root + path;
+    }
+
+    function destroy() {
+      if (!active) return;
+      active.destroy();
+      active = null;
+    }
+
+    function init() {
+      var root = document.querySelector('#shopify-section-' + SECTION_ID + ' .lt-buybox');
+      if (!root) return;
+      if (active && active.root === root) return;
+      destroy();
+
+      var swipers = [];
+      var galleries = {};
+      var listeners = [];
+      var busy = false;
+      var atc = root.querySelector('[data-atc]');
+      var atcLabel = root.querySelector('[data-atc-label]');
+      var errorEl = root.querySelector('[data-error]');
+
+      function on(target, type, fn) {
+        target.addEventListener(type, fn);
+        listeners.push([target, type, fn]);
+      }
+
+      function setError(message) {
+        if (!errorEl) return;
+        errorEl.textContent = message;
+        errorEl.hidden = !message;
+      }
+
+      /* Play the active slide's video (muted), pause the rest */
+      function syncVideos(swiper) {
+        var isHidden = !!swiper.el.closest('[hidden]');
+        swiper.slides.forEach(function (slide, index) {
+          var video = slide.querySelector('video');
+          if (!video) return;
+          if (!isHidden && index === swiper.activeIndex) {
+            video.muted = true;
+            video.playsInline = true;
+            var playing = video.play();
+            if (playing && playing.catch) playing.catch(function () {});
+          } else {
+            video.pause();
+          }
+        });
+      }
+
+      /* Galleries are initialised the first time they become visible */
+      function initGallery(id) {
+        if (galleries[id] || typeof window.Swiper === 'undefined') return;
+        var gallery = root.querySelector('.lt-buybox__gallery[data-panel="' + id + '"]');
+        var mainEl = gallery && gallery.querySelector('.lt-buybox__main .swiper');
+        if (!mainEl) return;
+
+        var thumbs = null;
+        var thumbsEl = gallery.querySelector('.lt-buybox__thumbs .swiper');
+        if (thumbsEl) {
+          thumbs = new Swiper(thumbsEl, {
+            spaceBetween: 6,
+            slidesPerView: 'auto',
+            watchSlidesProgress: true,
+            breakpoints: { 768: { spaceBetween: 8 } }
+          });
+          swipers.push(thumbs);
+        }
+
+        var options = {
+          spaceBetween: 10,
+          slidesPerView: 1,
+          loop: mainEl.querySelectorAll('.swiper-slide').length > 1,
+          navigation: {
+            prevEl: gallery.querySelector('[data-prev]'),
+            nextEl: gallery.querySelector('[data-next]')
+          },
+          on: {
+            afterInit: syncVideos,
+            slideChange: syncVideos
+          }
+        };
+        if (thumbs) options.thumbs = { swiper: thumbs, autoScrollOffset: 3 };
+
+        galleries[id] = new Swiper(mainEl, options);
+        swipers.push(galleries[id]);
+      }
+
+      function currentOption() {
+        return root.querySelector('.lt-buybox__plans:not([hidden]) .lt-buybox__radio:checked');
+      }
+
+      function syncPlans() {
+        root.querySelectorAll('.lt-buybox__plan').forEach(function (plan) {
+          var input = plan.querySelector('.lt-buybox__radio');
+          plan.classList.toggle('is-selected', !!input && input.checked);
+        });
+        if (atc && !busy) {
+          var option = currentOption();
+          atc.disabled = !option;
+          if (atcLabel) atcLabel.textContent = atc.getAttribute(option ? 'data-label' : 'data-soldout');
+        }
+        setError('');
+      }
+
+      function select(id) {
+        if (!root.querySelector('.lt-buybox__gallery[data-panel="' + id + '"]')) return;
+
+        root.querySelectorAll('[data-select]').forEach(function (btn) {
+          var isOn = btn.getAttribute('data-select') === id;
+          btn.classList.toggle('is-selected', isOn);
+          btn.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+        });
+
+        root.querySelectorAll('[data-panel]').forEach(function (panel) {
+          panel.hidden = panel.getAttribute('data-panel') !== id;
+        });
+
+        root.querySelectorAll('[data-panel][hidden] video').forEach(function (video) {
+          video.pause();
+        });
+
+        if (galleries[id]) {
+          galleries[id].update();
+          syncVideos(galleries[id]);
+        } else {
+          initGallery(id);
+        }
+
+        var plans = root.querySelector('.lt-buybox__plans[data-panel="' + id + '"]');
+        var first = plans && plans.querySelector('.lt-buybox__radio:not(:disabled)');
+        if (first) first.checked = true;
+        syncPlans();
+      }
+
+      function toggleAccordion(btn) {
+        var open = btn.getAttribute('aria-expanded') !== 'true';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var item = btn.closest('.lt-buybox__acc-item');
+        if (item) item.classList.toggle('is-open', open);
+      }
+
+      function setLoading(state) {
+        busy = state;
+        if (!atc) return;
+        atc.classList.toggle('is-loading', state);
+        if (state) {
+          atc.setAttribute('aria-busy', 'true');
+        } else {
+          atc.removeAttribute('aria-busy');
+        }
+      }
+
+      function addToCart() {
+        var option = currentOption();
+        if (!option || busy) return;
+
+        var payload = { id: parseInt(option.value, 10), quantity: 1 };
+        var plan = option.getAttribute('data-plan');
+        if (plan) payload.selling_plan = parseInt(plan, 10);
+
+        setLoading(true);
+        setError('');
+
+        fetch(cartUrl('cart/add.js'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+          body: JSON.stringify(payload)
+        })
+          .then(function (res) {
+            return res.json().then(function (data) {
+              if (!res.ok) throw new Error(data.description || data.message || 'Could not add to cart.');
+              return data;
+            });
+          })
+          .then(function () {
+            setLoading(false);
+
+            /* Broad cart-update events for third-party cart drawers */
+            ['cart:refresh', 'cart:updated'].forEach(function (name) {
+              document.dispatchEvent(new CustomEvent(name, { bubbles: true }));
+            });
+
+            fetch(cartUrl('cart.js'))
+              .then(function (r) { return r.json(); })
+              .then(function (cart) {
+                document.dispatchEvent(new CustomEvent('cart:item-added', { bubbles: true, detail: { cart: cart } }));
+
+                /* Rebuy Smart Cart: refresh totals, then open the cart */
+                document.dispatchEvent(new CustomEvent('rebuy:cart.change', { detail: { cart: cart } }));
+                if (window.Rebuy && window.Rebuy.SmartCart) window.Rebuy.SmartCart.show();
+              })
+              .catch(function () {});
+          })
+          .catch(function (err) {
+            setLoading(false);
+            setError(err && err.message ? err.message : 'Could not add to cart. Please try again.');
+          });
+      }
+
+      on(root, 'click', function (e) {
+        var target = e.target.closest('[data-select], [data-acc], [data-atc]');
+        if (!target || !root.contains(target)) return;
+        if (target.hasAttribute('data-select')) {
+          select(target.getAttribute('data-select'));
+        } else if (target.hasAttribute('data-acc')) {
+          toggleAccordion(target);
+        } else {
+          addToCart();
+        }
+      });
+
+      on(root, 'change', function (e) {
+        if (e.target.classList && e.target.classList.contains('lt-buybox__radio')) syncPlans();
+      });
+
+      /* UGC video slider (and other sections) can ask a buy box to show a product */
+      on(document, 'lt:buybox:select', function (e) {
+        var detail = e.detail;
+        if (!detail || detail.handled || !detail.handle) return;
+        var match = null;
+        root.querySelectorAll('.lt-buybox__gallery[data-handle]').forEach(function (gallery) {
+          if (!match && gallery.getAttribute('data-handle') === detail.handle) match = gallery;
+        });
+        if (!match) return;
+        detail.handled = true;
+        select(match.getAttribute('data-panel'));
+        root.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      /* Theme editor: selecting a Product block shows that product */
+      on(document, 'shopify:block:select', function (e) {
+        if (!e.detail || e.detail.sectionId !== SECTION_ID) return;
+        var id = e.target && e.target.getAttribute ? e.target.getAttribute('data-select') : null;
+        if (id) select(id);
+      });
+
+      var reviewsEl = root.querySelector('.lt-buybox__reviews .swiper');
+      if (reviewsEl && typeof window.Swiper !== 'undefined') {
+        swipers.push(new Swiper(reviewsEl, {
+          spaceBetween: 10,
+          slidesPerView: 1,
+          navigation: {
+            prevEl: root.querySelector('[data-review-prev]'),
+            nextEl: root.querySelector('[data-review-next]')
+          }
+        }));
+      }
+
+      var visible = root.querySelector('.lt-buybox__gallery:not([hidden])');
+      if (visible) initGallery(visible.getAttribute('data-panel'));
+      syncPlans();
+
+      active = {
+        root: root,
+        destroy: function () {
+          swipers.slice().reverse().forEach(function (swiper) {
+            if (swiper && !swiper.destroyed) swiper.destroy(true, true);
+          });
+          listeners.forEach(function (l) {
+            l[0].removeEventListener(l[1], l[2]);
+          });
+          root.querySelectorAll('video').forEach(function (video) {
+            video.pause();
+          });
+        }
+      };
+    }
+
+    /* Replace any instance left by a previous render of this section */
+    var previous = store[SECTION_ID];
+    if (previous) previous.destroy();
+    store[SECTION_ID] = { init: init, destroy: destroy, bound: previous ? previous.bound : false };
+
+    /* Theme editor lifecycle: bound once per section, always calls the latest instance */
+    if (!store[SECTION_ID].bound) {
+      store[SECTION_ID].bound = true;
+      document.addEventListener('shopify:section:load', function (e) {
+        if (e.detail && e.detail.sectionId === SECTION_ID && store[SECTION_ID]) store[SECTION_ID].init();
+      });
+      document.addEventListener('shopify:section:unload', function (e) {
+        if (e.detail && e.detail.sectionId === SECTION_ID && store[SECTION_ID]) store[SECTION_ID].destroy();
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "LT Product Buy Box",
+  "max_blocks": 30,
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "info": "Checkout button, badges and selected options",
+      "default": "#27214D"
+    },
+    {
+      "type": "header",
+      "content": "Summary"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "4.94/5 Overall Rating"
+    },
+    {
+      "type": "text",
+      "id": "rating_caption",
+      "label": "Rating caption",
+      "default": "Trusted by 11,000+ Customers"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Muzzle Sleeping Strips"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Choose your strength and purchase type"
+    },
+    {
+      "type": "image_picker",
+      "id": "badge",
+      "label": "Badge image"
+    },
+    {
+      "type": "text",
+      "id": "tags",
+      "label": "Tags",
+      "info": "Separate tags with commas",
+      "default": "Gentle on skin, Easy to remove, Comfortable fit"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_frontrow",
+      "label": "Show FrontRow badge",
+      "info": "Turn on for one buy box per page only",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Labels"
+    },
+    {
+      "type": "text",
+      "id": "selector_label",
+      "label": "Product selector label",
+      "default": "Select Strength"
+    },
+    {
+      "type": "text",
+      "id": "purchase_label",
+      "label": "Purchase type label",
+      "default": "Select Purchase Type"
+    },
+    {
+      "type": "text",
+      "id": "subscribe_label",
+      "label": "Subscription option title",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "text",
+      "id": "onetime_label",
+      "label": "One-time option title",
+      "info": "Used when the product has no variants",
+      "default": "One-time purchase"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Checkout Now"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption under button",
+      "default": "Engineered for Comfort, Crafted for Performance"
+    },
+    {
+      "type": "text",
+      "id": "description_label",
+      "label": "Description dropdown title",
+      "info": "Shows the selected product's description. Leave empty to hide.",
+      "default": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Scroll target"
+    },
+    {
+      "type": "text",
+      "id": "custom_id",
+      "label": "Custom ID",
+      "info": "Buttons with this scroll ID jump here, e.g. landing-product-main. Use each ID on one section only."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "info": "Leave empty to use the product title",
+          "default": "Medium Hold"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Our most popular hold"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Selector image",
+          "info": "Optional. Uses the product's featured image when empty."
+        }
+      ]
+    },
+    {
+      "type": "perk",
+      "name": "Subscription perk",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Cancel anytime"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Isobel"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Review",
+          "default": "Very pleased with this purchase! It's high-quality, easy to use, and reliable. Highly recommend for its efficiency and convenience."
+        }
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Dropdown",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Delivery & Returns"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Standard delivery takes 3-5 business days. Express shipping available.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Buy Box – Kids",
+      "settings": {
+        "text_color": "#27214D",
+        "title": "Muzzle Sleeping Strips for Kids",
+        "selector_label": "Select Type",
+        "custom_id": "landing-product-main",
+        "show_frontrow": true
+      },
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "heading": "Regular",
+            "subheading": "Everyday comfort"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "heading": "Sensitive",
+            "subheading": "Gentle on delicate skin"
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "text": "Free shipping"
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "text": "Cancel anytime"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Mishel E.",
+            "content": "“Super easy to use. Kids love it and have been asking about it every night. Easy and painless to remove in the morning”"
+          }
+        },
+        {
+          "type": "dropdown",
+          "settings": {
+            "heading": "Delivery & Returns",
+            "content": "<p><strong>Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\"><strong>Return Policy</strong></a><strong>.</strong></p>"
+          }
+        },
+        {
+          "type": "dropdown",
+          "settings": {
+            "heading": "30-Day Money Back Guarantee",
+            "content": "<p><strong>Please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\"><strong>Return Policy</strong></a><strong> for more details.</strong></p>"
+          }
+        }
+      ]
+    },
+    {
+      "name": "LT Buy Box – Adults",
+      "settings": {
+        "text_color": "#27214D",
+        "title": "Muzzle Sleeping Strips for Adults",
+        "show_frontrow": false
+      },
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "heading": "Medium Hold",
+            "subheading": "Our most popular hold"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "heading": "Strong Hold",
+            "subheading": "Extra secure all night"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "heading": "Sensitive",
+            "subheading": "Gentle on delicate skin"
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "text": "Free shipping"
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "text": "Cancel anytime"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Michael L.",
+            "content": "“I’ve struggled with snoring for years and these muzzle strips have been a game-changer.”"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "name": "Brinley M.",
+            "content": "“Muzzle has made a noticeable difference on how rested I feel, and it is so comfortable and gentle on my skin.”"
+          }
+        },
+        {
+          "type": "dropdown",
+          "settings": {
+            "heading": "Delivery & Returns",
+            "content": "<p><strong>Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\"><strong>Return Policy</strong></a><strong>.</strong></p>"
+          }
+        },
+        {
+          "type": "dropdown",
+          "settings": {
+            "heading": "30-Day Money Back Guarantee",
+            "content": "<p><strong>Please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\"><strong>Return Policy</strong></a><strong> for more details.</strong></p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
