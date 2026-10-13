@@ -5,9 +5,11 @@
 {% if template.name == 'product' %}
     {% assign main_variant = product.selected_or_first_available_variant %}
     {% for product_by_age in mother_product.products_by_age.value %}
-        {% if main_variant.product.title contains product_by_age.age.value %}
-            {% assign first_product_by_age = product_by_age %}
-        {% endif %}
+        {% for product_by_strength in product_by_age.products_by_strength.value %}
+            {% if product_by_strength.variant.value.product.id == main_variant.product.id %}
+                {% assign first_product_by_age = product_by_age %}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 
 {% else %}
@@ -1108,7 +1110,7 @@
                                     {% assign selected_strength = main_variant.product.metafields.custom.strength.value %}
                                     {% for product_by_strength in product_by_age.products_by_strength.value %}
                                         {% if product_by_strength.strength.value == selected_strength %}
-                                            <div class="age_selector_single{% if main_variant.product.title contains product_by_age.age.value %} selected{% endif %}{% unless product_by_strength.variant.value %} disabled_choice{% endunless %}"{% if product_by_strength.variant.value %} onclick="reRenderDynamicPart('{{ product_by_strength.variant.value.product.handle }}')"{% endif %} data-age="{{ product_by_age.age.value | handleize }}">{{ product_by_age.age.value }}</div>
+                                            <div class="age_selector_single{% if first_product_by_age.age.value == product_by_age.age.value %} selected{% endif %}{% unless product_by_strength.variant.value %} disabled_choice{% endunless %}"{% if product_by_strength.variant.value %} onclick="reRenderDynamicPart('{{ product_by_strength.variant.value.product.handle }}')"{% endif %} data-age="{{ product_by_age.age.value | handleize }}">{{ product_by_age.age.value }}</div>
                                         {% endif %}
                                     {% endfor %}
                                 {% endfor %}
@@ -1119,7 +1121,7 @@
                             <div class="strength_selector_wrapper">
                                 {% for product_by_strength in first_product_by_age.products_by_strength.value %}
                                     {% if product_by_strength.variant.value %}
-                                        <div class="strength_selector_single{% if main_variant.product.title contains product_by_strength.strength.value %} selected{% endif %}" onclick="reRenderDynamicPart('{{ product_by_strength.variant.value.product.handle }}')" data-strength="{{ product_by_strength.heading.value | handleize }}">
+                                        <div class="strength_selector_single{% if product_by_strength.variant.value.product.id == main_variant.product.id %} selected{% endif %}" onclick="reRenderDynamicPart('{{ product_by_strength.variant.value.product.handle }}')" data-strength="{{ product_by_strength.heading.value | handleize }}">
                                             <img src="{{ product_by_strength.variant.value.product.featured_image | image_url: width: 300 }}" alt="{{ product_by_strength.variant.value.product.title | append: 'image' }}">
                                             <div class="strength_el_heading">{{ product_by_strength.heading.value }}</div>
                                             <div class="strength_el_subheading">{{ product_by_strength.subheading.value }}</div>
