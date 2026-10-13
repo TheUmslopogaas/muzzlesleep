@@ -663,7 +663,7 @@
         "tag_9xpV4Q": {
           "type": "tag",
           "settings": {
-            "text": "Phthalate-Free"
+            "text": "Adhesive Tested to ISO 10993 Standards"
           }
         },
         "tag_rDRBzi": {
@@ -764,6 +764,8 @@
         "image_ratio_mobile": 100,
         "image": "shopify://shop_images/Preston_Before.webp",
         "other_half_image": "shopify://shop_images/Preston_After.webp",
+        "quote": "\"Our myofunctional therapist recommended gentle mouth taping as part of our son’s nightly routine. After five months, we personally noticed improvements in his oral posture and nighttime breathing habits. Every child is different — this was simply our family’s experience.\"",
+        "quote_author": "Kelley, Mom and Co-Founder of Muzzle",
         "title": "<span>The Perfect Aid For</span>\nMyofunctional Therapy",
         "description": "Myofunctional therapy is a series of exercises designed to improve the function and coordination of the tongue, mouth, and facial muscles. It helps promote proper oral posture, encouraging nasal breathing, correct tongue placement, and optimal jaw development—especially important for growing children.",
         "background": "#F6F5FF",
