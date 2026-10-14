@@ -495,6 +495,7 @@
         "review_dcqNAC": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/content-1243870.webp",
             "name": "Michael L.",
             "content": "“I’ve struggled with snoring for years and these muzzle strips have been a game-changer.”"
           }
@@ -502,8 +503,9 @@
         "review_wizryP": {
           "type": "review",
           "settings": {
-            "name": "Brinley M.",
-            "content": "“Muzzle has made a noticeable difference on how rested I feel, and it is so comfortable and gentle on my skin.”"
+            "image": "shopify://shop_images/content-1252543.webp",
+            "name": "Mishel E.",
+            "content": "“Super easy to use. Kids love it and have been asking about it every night. Easy and painless to remove in the morning”"
           }
         },
         "dropdown_NJVnqY": {
