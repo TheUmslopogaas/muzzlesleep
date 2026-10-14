@@ -508,6 +508,14 @@
             "content": "“Super easy to use. Kids love it and have been asking about it every night. Easy and painless to remove in the morning”"
           }
         },
+        "review_fQ9qeP": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/content-1252543.webp",
+            "name": "Brinley M.",
+            "content": "“Muzzle has made a noticeable difference on how rested I feel, and it is so comfortable and gentle on my skin.”"
+          }
+        },
         "dropdown_NJVnqY": {
           "type": "dropdown",
           "settings": {
@@ -532,6 +540,7 @@
         "perk_QKYx38",
         "review_dcqNAC",
         "review_wizryP",
+        "review_fQ9qeP",
         "dropdown_NJVnqY",
         "dropdown_jMrHXY"
       ],
