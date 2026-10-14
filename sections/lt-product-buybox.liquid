@@ -1056,7 +1056,12 @@
           </div>
 
           {%- if s.tags != blank -%}
-            {%- assign tag_list = s.tags | split: ',' -%}
+            {%- comment -%} Use "|" as separator when present, so tags can contain commas {%- endcomment -%}
+            {%- if s.tags contains '|' -%}
+              {%- assign tag_list = s.tags | split: '|' -%}
+            {%- else -%}
+              {%- assign tag_list = s.tags | split: ',' -%}
+            {%- endif -%}
             <ul class="lt-buybox__tags">
               {%- for tag in tag_list -%}
                 {%- assign tag_text = tag | strip -%}
@@ -1978,7 +1983,7 @@
       "type": "text",
       "id": "tags",
       "label": "Tags",
-      "info": "Separate tags with commas",
+      "info": "Separate tags with commas, or with | if a tag contains a comma",
       "default": "Gentle on skin, Easy to remove, Comfortable fit"
     },
     {
