@@ -353,13 +353,22 @@
         "perk_gtJw9x": {
           "type": "perk",
           "settings": {
-            "text": "Free shipping"
+            "icon": "shopify://shop_images/ba828a57981e2b49aee2ba4937c8e705.png",
+            "text": "Never run out of tapes"
           }
         },
         "perk_ee6Jd3": {
           "type": "perk",
           "settings": {
-            "text": "Cancel anytime"
+            "icon": "shopify://shop_images/7147faef9a720d0eb86190eba9716c39.png",
+            "text": "sleep and forget about it"
+          }
+        },
+        "perk_xBxHxP": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/af1cdb23ae5c49cfca49f6b887c1517a.png",
+            "text": "extra 20% off for subscribing"
           }
         },
         "review_pBWKKR": {
@@ -389,6 +398,7 @@
         "product_NWFKBU",
         "perk_gtJw9x",
         "perk_ee6Jd3",
+        "perk_xBxHxP",
         "review_pBWKKR",
         "dropdown_cKGAXG",
         "dropdown_rycK7C"
@@ -464,13 +474,22 @@
         "perk_GqAcKd": {
           "type": "perk",
           "settings": {
-            "text": "Free shipping"
+            "icon": "shopify://shop_images/ba828a57981e2b49aee2ba4937c8e705.png",
+            "text": "Never run out of tapes"
           }
         },
         "perk_mqtbXt": {
           "type": "perk",
           "settings": {
-            "text": "Cancel anytime"
+            "icon": "shopify://shop_images/7147faef9a720d0eb86190eba9716c39.png",
+            "text": "sleep and forget about it"
+          }
+        },
+        "perk_QKYx38": {
+          "type": "perk",
+          "settings": {
+            "icon": "shopify://shop_images/af1cdb23ae5c49cfca49f6b887c1517a.png",
+            "text": "extra 20% off for subscribing"
           }
         },
         "review_dcqNAC": {
@@ -508,6 +527,7 @@
         "product_XBdqXV",
         "perk_GqAcKd",
         "perk_mqtbXt",
+        "perk_QKYx38",
         "review_dcqNAC",
         "review_wizryP",
         "dropdown_NJVnqY",
