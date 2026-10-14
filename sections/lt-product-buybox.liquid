@@ -354,6 +354,54 @@
     background: var(--lt-soft);
   }
 
+  #shopify-section-{{ section.id }} .lt-buybox__variants {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__variant {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 0;
+    padding: 14px 10px;
+    border: 1px solid var(--lt-line);
+    border-radius: 10px;
+    background: #FFFFFF;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__variant:hover {
+    border-color: var(--lt-muted);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__variant.is-selected {
+    border-color: var(--lt-accent);
+    background: var(--lt-soft);
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__variant-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.32px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__variant-sub {
+    color: var(--lt-muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.24px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__variant:focus-visible,
   #shopify-section-{{ section.id }} .lt-buybox__strength:focus-visible,
   #shopify-section-{{ section.id }} .lt-buybox__atc:focus-visible,
   #shopify-section-{{ section.id }} .lt-buybox__acc-btn:focus-visible,
@@ -545,10 +593,19 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    min-height: 26px;
+    margin: 0;
+    padding: 0;
+    color: var(--lt-text);
     font-size: 14px;
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.28px;
+    text-transform: capitalize;
+  }
+
+  #shopify-section-{{ section.id }} .lt-buybox__perk span {
+    font-weight: 600;
   }
 
   #shopify-section-{{ section.id }} .lt-buybox__perk img {
@@ -859,6 +916,14 @@
     }
 
     #shopify-section-{{ section.id }} .lt-buybox__strength img { width: 75%; }
+
+    #shopify-section-{{ section.id }} .lt-buybox__variant {
+      padding: 12px 8px;
+      border-radius: 8px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-buybox__variant-title { font-size: 14px; }
+    #shopify-section-{{ section.id }} .lt-buybox__variant-sub { font-size: 11px; }
     #shopify-section-{{ section.id }} .lt-buybox__strength-title { font-size: 14px; }
     #shopify-section-{{ section.id }} .lt-buybox__strength-sub { font-size: 11px; }
     #shopify-section-{{ section.id }} .lt-buybox__plan-title { font-size: 14px; }
@@ -874,7 +939,10 @@
       border-radius: 10px;
     }
 
-    #shopify-section-{{ section.id }} .lt-buybox__perk { font-size: 12px; }
+    #shopify-section-{{ section.id }} .lt-buybox__perk {
+      min-height: 22px;
+      font-size: 12px;
+    }
 
     #shopify-section-{{ section.id }} .lt-buybox__perk img {
       width: 22px;
@@ -929,6 +997,7 @@
 
     #shopify-section-{{ section.id }} .lt-buybox__strength { padding: 14px 8px; }
     #shopify-section-{{ section.id }} .lt-buybox__strength-title { font-size: 13px; }
+    #shopify-section-{{ section.id }} .lt-buybox__variant-title { font-size: 13px; }
 
     #shopify-section-{{ section.id }} .lt-buybox__plan { padding: 8px 10px; }
     #shopify-section-{{ section.id }} .lt-buybox__plan-name { margin: 0 8px; }
@@ -1016,7 +1085,7 @@
                     <div class="swiper">
                       <div class="swiper-wrapper">
                         {%- for media in p.media -%}
-                          <div class="swiper-slide">
+                          <div class="swiper-slide"{% if block.settings.use_packs %} data-media-id="{{ media.id }}"{% endif %}>
                             <div class="lt-buybox__frame">
                               {%- case media.media_type -%}
                                 {%- when 'video' -%}
@@ -1127,6 +1196,39 @@
             </div>
           {%- endif -%}
 
+          {%- comment -%} Variant picker: only for products using "variant picker + quantity packs" {%- endcomment -%}
+          {%- for block in product_blocks -%}
+            {%- assign p = block.settings.product -%}
+            {%- if p == blank or p.has_only_default_variant -%}{%- continue -%}{%- endif -%}
+            {%- unless block.settings.use_packs -%}{%- continue -%}{%- endunless -%}
+            {%- assign start_variant = p.selected_or_first_available_variant -%}
+
+            <div class="lt-buybox__group" data-panel="{{ block.id }}"{% if block.id != selected_id %} hidden{% endif %}>
+              {%- if s.variant_label != blank -%}
+                <p class="lt-buybox__divider"><span>{{ s.variant_label | escape }}</span></p>
+              {%- endif -%}
+              <div class="lt-buybox__variants" role="group" aria-label="{{ s.variant_label | default: 'Select option' | escape }}">
+                {%- for variant in p.variants -%}
+                  {%- assign is_start = false -%}
+                  {%- if variant.id == start_variant.id -%}{%- assign is_start = true -%}{%- endif -%}
+                  {%- assign v_desc = variant.metafields.custom.description.value -%}
+                  <button
+                    type="button"
+                    class="lt-buybox__variant{% if is_start %} is-selected{% endif %}"
+                    data-variant-pick="{{ variant.id }}"
+                    data-media-id="{{ variant.featured_media.id }}"
+                    aria-pressed="{{ is_start }}"
+                  >
+                    <span class="lt-buybox__variant-title">{{ variant.title | escape }}</span>
+                    {%- if v_desc != blank -%}
+                      <span class="lt-buybox__variant-sub">{{ v_desc | escape }}</span>
+                    {%- endif -%}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+
           <div class="lt-buybox__group">
             {%- if s.purchase_label != blank -%}
               <p class="lt-buybox__divider" aria-hidden="true"><span>{{ s.purchase_label | escape }}</span></p>
@@ -1136,19 +1238,25 @@
               {%- assign p = block.settings.product -%}
               {%- if p == blank -%}{%- continue -%}{%- endif -%}
               {%- assign has_checked = false -%}
+              {%- assign use_packs = block.settings.use_packs -%}
+              {%- assign start_variant = p.selected_or_first_available_variant -%}
 
-              <fieldset class="lt-buybox__plans" data-panel="{{ block.id }}"{% if block.id != selected_id %} hidden{% endif %}>
+              <fieldset class="lt-buybox__plans" data-panel="{{ block.id }}"{% if use_packs %} data-packs{% endif %}{% if block.id != selected_id %} hidden{% endif %}>
                 <legend class="lt-buybox__sr">{{ s.purchase_label | default: 'Purchase type' | escape }}: {{ p.title | escape }}</legend>
 
                 {%- for variant in p.variants -%}
+                  {%- comment -%} Packs mode: only the selected variant's options are visible {%- endcomment -%}
+                  {%- assign card_hidden = false -%}
+                  {%- if use_packs and variant.id != start_variant.id -%}{%- assign card_hidden = true -%}{%- endif -%}
+
                   {%- for allocation in variant.selling_plan_allocations -%}
                     {%- assign is_checked = false -%}
-                    {%- if has_checked == false and variant.available -%}
+                    {%- if has_checked == false and variant.available and card_hidden == false -%}
                       {%- assign is_checked = true -%}
                       {%- assign has_checked = true -%}
                     {%- endif -%}
 
-                    <div class="lt-buybox__plan{% if is_checked %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}">
+                    <div class="lt-buybox__plan{% if is_checked %} is-selected{% endif %}{% unless variant.available %} is-disabled{% endunless %}"{% if use_packs %} data-variant="{{ variant.id }}"{% endif %}{% if card_hidden %} hidden{% endif %}>
                       <label class="lt-buybox__plan-row">
                         <input
                           type="radio"
@@ -1164,7 +1272,7 @@
                           <span class="lt-buybox__plan-title">{{ s.subscribe_label | escape }}</span>
                           <span class="lt-buybox__plan-desc">
                             {{- allocation.selling_plan.name | escape -}}
-                            {%- unless p.has_only_default_variant %} · {{ variant.title | escape }}{% endunless -%}
+                            {%- unless p.has_only_default_variant or use_packs %} · {{ variant.title | escape }}{% endunless -%}
                           </span>
                         </span>
                         {%- if allocation.compare_at_price > allocation.price -%}
@@ -1195,7 +1303,101 @@
                     </div>
                   {%- endfor -%}
 
-                  {%- unless p.requires_selling_plan -%}
+                  {%- if use_packs and p.requires_selling_plan == false -%}
+                    {%- comment -%}
+                      Quantity packs: 1, 3 and 6 of the SAME variant (one SKU for the 3PL).
+                      Pack prices come from variant metafields and are display only;
+                      the actual discount is a Shopify automatic discount.
+                    {%- endcomment -%}
+                    {%- liquid
+                      assign pack_size = variant.metafields.custom.pack_size.value
+                      assign stock_limited = false
+                      if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny'
+                        assign stock_limited = true
+                      endif
+                      assign pack_qtys = '1,3,6' | split: ','
+                    -%}
+
+                    {%- for qty_str in pack_qtys -%}
+                      {%- liquid
+                        assign qty = qty_str | plus: 0
+                        assign full_total = variant.price | times: qty
+                        assign pack_price = full_total
+                        assign pack_meta = ''
+                        assign pack_was = ''
+
+                        if qty == 1
+                          assign pack_title = variant.title
+                          assign pack_badge = variant.metafields.custom.badge.value
+                          if variant.compare_at_price > variant.price
+                            assign pack_was = variant.compare_at_price
+                          endif
+                        elsif qty == 3
+                          assign pack_title = block.settings.pack3_title
+                          assign pack_badge = block.settings.pack3_badge
+                          assign pack_meta = variant.metafields.custom.price_3_pack.value
+                        else
+                          assign pack_title = block.settings.pack6_title
+                          assign pack_badge = block.settings.pack6_badge
+                          assign pack_meta = variant.metafields.custom.price_6_pack.value
+                        endif
+
+                        if pack_meta != blank
+                          assign pack_price = pack_meta | times: 100 | round
+                          if full_total > pack_price
+                            assign pack_was = full_total
+                          endif
+                        endif
+
+                        assign pack_ok = variant.available
+                        if stock_limited and variant.inventory_quantity < qty
+                          assign pack_ok = false
+                        endif
+
+                        assign is_checked = false
+                        if has_checked == false and pack_ok and card_hidden == false
+                          assign is_checked = true
+                          assign has_checked = true
+                        endif
+                      -%}
+
+                      <div class="lt-buybox__plan{% if is_checked %} is-selected{% endif %}{% unless pack_ok %} is-disabled{% endunless %}" data-variant="{{ variant.id }}"{% if card_hidden %} hidden{% endif %}>
+                        <label class="lt-buybox__plan-row">
+                          <input
+                            type="radio"
+                            class="lt-buybox__radio"
+                            name="lt-plan-{{ section.id }}-{{ block.id }}"
+                            value="{{ variant.id }}"
+                            data-plan=""
+                            data-qty="{{ qty }}"
+                            {% if is_checked %}checked{% endif %}
+                            {% unless pack_ok %}disabled{% endunless %}
+                          >
+                          <span class="lt-buybox__dot" aria-hidden="true"></span>
+                          <span class="lt-buybox__plan-name">
+                            <span class="lt-buybox__plan-title">{{ pack_title | escape }}</span>
+                            {%- if pack_ok == false -%}
+                              <span class="lt-buybox__plan-desc">{% if variant.available %}Not enough stock{% else %}Sold out{% endif %}</span>
+                            {%- elsif pack_size != blank -%}
+                              {%- assign pack_pcs = pack_size | times: qty -%}
+                              <span class="lt-buybox__plan-desc">{{ pack_pcs }} Pcs ({{ pack_price | divided_by: pack_pcs | money }} / day)</span>
+                            {%- elsif qty == 1 and variant.metafields.custom.description.value != blank -%}
+                              <span class="lt-buybox__plan-desc">{{ variant.metafields.custom.description.value | escape }}</span>
+                            {%- endif -%}
+                          </span>
+                          {%- if pack_badge != blank -%}
+                            <span class="lt-buybox__save">{{ pack_badge | escape }}</span>
+                          {%- endif -%}
+                          <span class="lt-buybox__price">
+                            <span class="lt-buybox__price-now">{{ pack_price | money }}</span>
+                            {%- if pack_was != blank -%}
+                              <span class="lt-buybox__price-was"><span class="lt-buybox__sr">Regular price </span>{{ pack_was | money }}</span>
+                            {%- endif -%}
+                          </span>
+                        </label>
+                      </div>
+                    {%- endfor -%}
+                  {%- elsif p.requires_selling_plan == false -%}
                     {%- assign is_checked = false -%}
                     {%- if has_checked == false and variant.available -%}
                       {%- assign is_checked = true -%}
@@ -1237,7 +1439,7 @@
                         </span>
                       </label>
                     </div>
-                  {%- endunless -%}
+                  {%- endif -%}
                 {%- endfor -%}
               </fieldset>
             {%- endfor -%}
@@ -1457,7 +1659,46 @@
       }
 
       function currentOption() {
-        return root.querySelector('.lt-buybox__plans:not([hidden]) .lt-buybox__radio:checked');
+        return root.querySelector('.lt-buybox__plans:not([hidden]) .lt-buybox__plan:not([hidden]) .lt-buybox__radio:checked');
+      }
+
+      /* Packs mode: show the chosen variant's options and move the gallery to its image */
+      function selectVariant(panelId, variantId) {
+        var plans = root.querySelector('.lt-buybox__plans[data-panel="' + panelId + '"]');
+        if (!plans || !variantId) return;
+
+        var pickedPill = null;
+        root.querySelectorAll('.lt-buybox__group[data-panel="' + panelId + '"] [data-variant-pick]').forEach(function (pill) {
+          var isOn = pill.getAttribute('data-variant-pick') === variantId;
+          pill.classList.toggle('is-selected', isOn);
+          pill.setAttribute('aria-pressed', isOn ? 'true' : 'false');
+          if (isOn) pickedPill = pill;
+        });
+
+        plans.querySelectorAll('.lt-buybox__plan[data-variant]').forEach(function (card) {
+          card.hidden = card.getAttribute('data-variant') !== variantId;
+        });
+
+        var first = plans.querySelector('.lt-buybox__plan:not([hidden]) .lt-buybox__radio:not(:disabled)');
+        if (first) first.checked = true;
+        syncPlans();
+
+        var swiper = galleries[panelId];
+        var mediaId = pickedPill ? pickedPill.getAttribute('data-media-id') : '';
+        if (!swiper || !mediaId) return;
+        var slide = swiper.el.querySelector('.swiper-slide[data-media-id="' + mediaId + '"]');
+        if (!slide) return;
+        var index = slide.hasAttribute('data-swiper-slide-index')
+          ? parseInt(slide.getAttribute('data-swiper-slide-index'), 10)
+          : swiper.slides.indexOf(slide);
+        if (index > -1) swiper.slideToLoop(index);
+      }
+
+      function currentVariant(panelId) {
+        var pill = root.querySelector('.lt-buybox__group[data-panel="' + panelId + '"] [data-variant-pick].is-selected');
+        if (pill) return pill.getAttribute('data-variant-pick');
+        var card = root.querySelector('.lt-buybox__plans[data-panel="' + panelId + '"] .lt-buybox__plan[data-variant]:not([hidden])');
+        return card ? card.getAttribute('data-variant') : null;
       }
 
       function syncPlans() {
@@ -1498,6 +1739,10 @@
         }
 
         var plans = root.querySelector('.lt-buybox__plans[data-panel="' + id + '"]');
+        if (plans && plans.hasAttribute('data-packs')) {
+          selectVariant(id, currentVariant(id));
+          return;
+        }
         var first = plans && plans.querySelector('.lt-buybox__radio:not(:disabled)');
         if (first) first.checked = true;
         syncPlans();
@@ -1525,8 +1770,10 @@
         var option = currentOption();
         if (!option || busy) return;
 
-        var payload = { id: parseInt(option.value, 10), quantity: 1 };
+        /* Packs add N of the same variant; subscriptions are always quantity 1 */
         var plan = option.getAttribute('data-plan');
+        var qty = plan ? 1 : (parseInt(option.getAttribute('data-qty'), 10) || 1);
+        var payload = { id: parseInt(option.value, 10), quantity: qty };
         if (plan) payload.selling_plan = parseInt(plan, 10);
 
         setLoading(true);
@@ -1569,10 +1816,13 @@
       }
 
       on(root, 'click', function (e) {
-        var target = e.target.closest('[data-select], [data-acc], [data-atc]');
+        var target = e.target.closest('[data-select], [data-variant-pick], [data-acc], [data-atc]');
         if (!target || !root.contains(target)) return;
         if (target.hasAttribute('data-select')) {
           select(target.getAttribute('data-select'));
+        } else if (target.hasAttribute('data-variant-pick')) {
+          var group = target.closest('[data-panel]');
+          if (group) selectVariant(group.getAttribute('data-panel'), target.getAttribute('data-variant-pick'));
         } else if (target.hasAttribute('data-acc')) {
           toggleAccordion(target);
         } else {
@@ -1620,6 +1870,12 @@
       var visible = root.querySelector('.lt-buybox__gallery:not([hidden])');
       if (visible) initGallery(visible.getAttribute('data-panel'));
       syncPlans();
+
+      var visiblePlans = root.querySelector('.lt-buybox__plans[data-packs]:not([hidden])');
+      if (visiblePlans) {
+        var panelId = visiblePlans.getAttribute('data-panel');
+        selectVariant(panelId, currentVariant(panelId));
+      }
 
       active = {
         root: root,
@@ -1744,6 +2000,13 @@
     },
     {
       "type": "text",
+      "id": "variant_label",
+      "label": "Variant picker label",
+      "info": "Shown for products using variant picker + quantity packs",
+      "default": "Select Option"
+    },
+    {
+      "type": "text",
       "id": "purchase_label",
       "label": "Purchase type label",
       "default": "Select Purchase Type"
@@ -1864,6 +2127,45 @@
           "id": "image",
           "label": "Selector image",
           "info": "Optional. Uses the product's featured image when empty."
+        },
+        {
+          "type": "header",
+          "content": "Variant picker + packs"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_packs",
+          "label": "Use variant picker + quantity packs",
+          "info": "Shows the product's variants, then 1, 3 and 6 packs of the same variant. Pack prices use the variant metafields custom.price_3_pack and custom.price_6_pack. The discount must exist as an automatic discount.",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "pack3_title",
+          "label": "3-pack title",
+          "default": "Buy 3 For The Price Of 2",
+          "visible_if": "{{ block.settings.use_packs }}"
+        },
+        {
+          "type": "text",
+          "id": "pack3_badge",
+          "label": "3-pack badge",
+          "default": "Most Popular",
+          "visible_if": "{{ block.settings.use_packs }}"
+        },
+        {
+          "type": "text",
+          "id": "pack6_title",
+          "label": "6-pack title",
+          "default": "6 Months Supply",
+          "visible_if": "{{ block.settings.use_packs }}"
+        },
+        {
+          "type": "text",
+          "id": "pack6_badge",
+          "label": "6-pack badge",
+          "default": "Best Value",
+          "visible_if": "{{ block.settings.use_packs }}"
         }
       ]
     },
@@ -1881,7 +2183,7 @@
           "type": "text",
           "id": "text",
           "label": "Text",
-          "default": "Cancel anytime"
+          "default": "Never run out of tapes"
         }
       ]
     },
@@ -1957,13 +2259,19 @@
         {
           "type": "perk",
           "settings": {
-            "text": "Free shipping"
+            "text": "Never run out of tapes"
           }
         },
         {
           "type": "perk",
           "settings": {
-            "text": "Cancel anytime"
+            "text": "Sleep and forget about it"
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "text": "Extra 20% off for subscribing"
           }
         },
         {
@@ -2008,7 +2316,8 @@
           "type": "product",
           "settings": {
             "heading": "Strong Hold",
-            "subheading": "Extra secure all night"
+            "subheading": "Extra secure all night",
+            "use_packs": true
           }
         },
         {
@@ -2021,13 +2330,19 @@
         {
           "type": "perk",
           "settings": {
-            "text": "Free shipping"
+            "text": "Never run out of tapes"
           }
         },
         {
           "type": "perk",
           "settings": {
-            "text": "Cancel anytime"
+            "text": "Sleep and forget about it"
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "text": "Extra 20% off for subscribing"
           }
         },
         {
