@@ -374,6 +374,15 @@
         "review_pBWKKR": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/1762878160__img_0069__original.webp",
+            "name": "Danielle L.",
+            "content": "“My daughter has worn these for a month, sleeps comfortably in them, and we’re hoping for good news from the orthodontist soon!”"
+          }
+        },
+        "review_6kaKah": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/content-1252543.webp",
             "name": "Mishel E.",
             "content": "“Super easy to use. Kids love it and have been asking about it every night. Easy and painless to remove in the morning”"
           }
@@ -400,6 +409,7 @@
         "perk_ee6Jd3",
         "perk_xBxHxP",
         "review_pBWKKR",
+        "review_6kaKah",
         "dropdown_cKGAXG",
         "dropdown_rycK7C"
       ],
@@ -502,6 +512,7 @@
         },
         "review_wizryP": {
           "type": "review",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/content-1252543.webp",
             "name": "Mishel E.",
@@ -520,14 +531,14 @@
           "type": "dropdown",
           "settings": {
             "heading": "Delivery & Returns",
-            "content": "<p><strong>Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\"><strong>Return Policy</strong></a><strong>.</strong></p>"
+            "content": "<p>Standard delivery takes 3-5 business days. Express shipping available. For returns, please refer to our <a href=\"https://muzzlesleep.com/policies/refund-policy\">Return Policy</a>.</p>"
           }
         },
         "dropdown_jMrHXY": {
           "type": "dropdown",
           "settings": {
             "heading": "30-Day Money Back Guarantee",
-            "content": "<p><strong>Please refer to our </strong><a href=\"https://muzzlesleep.com/policies/refund-policy\"><strong>Return Policy</strong></a><strong> for more details.</strong></p>"
+            "content": "<p>Please refer to our <a href=\"https://muzzlesleep.com/policies/refund-policy\">Return Policy</a> for more details.</p>"
           }
         }
       },
