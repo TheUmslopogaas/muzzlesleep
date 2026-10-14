@@ -422,7 +422,7 @@
         "rating_caption": "Trusted by 11,000+ Customers",
         "title": "Muzzle Sleeping Strips for Kids",
         "subtitle": "Choose your strength and purchase type",
-        "tags": "Gentle on skin, Easy to remove, Comfortable fit",
+        "tags": "Dermatologically Tested, HSA/FSA Approved, Doctor Recommended, Perfect for Sensitive Skin, BPA, BPS & BPF-Free, Designed in the USA",
         "show_frontrow": true,
         "selector_label": "Select Type",
         "variant_label": "Select Option",
@@ -564,7 +564,7 @@
         "rating_caption": "Trusted by 11,000+ Customers",
         "title": "Muzzle Sleeping Strips for Adults",
         "subtitle": "Choose your strength and purchase type",
-        "tags": "Gentle on skin, Easy to remove, Comfortable fit",
+        "tags": "Dermatologically Tested, HSA/FSA Approved, Doctor Recommended, Perfect for Sensitive Skin, BPA, BPS & BPF-Free, Designed in the USA",
         "show_frontrow": false,
         "selector_label": "Select Strength",
         "variant_label": "Select Option",
@@ -630,6 +630,7 @@
         "dropdown_LXmL8T",
         "dropdown_8EjwJ9"
       ],
+      "disabled": true,
       "settings": {
         "delivery_content": "<p>Some Text Here...</p>",
         "warranty_content": "<p>Some Text Here...</p>",
