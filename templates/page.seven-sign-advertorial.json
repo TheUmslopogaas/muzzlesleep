@@ -149,6 +149,99 @@
         "margin_bottom": 0
       }
     },
+    "advertorial_research": {
+      "type": "lt-advertorial-research",
+      "blocks": {
+        "research_stats": {
+          "type": "stats",
+          "settings": {
+            "column": "left",
+            "title": "Behavior & Attention",
+            "badge": "Pediatrics / AAP",
+            "stat1_label": "Odds ratio",
+            "stat1_value": "2.5×",
+            "stat1_caption": "higher odds of hyperactivity",
+            "stat2_label": "Odds ratio",
+            "stat2_value": "2.1×",
+            "stat2_caption": "higher odds of inattention",
+            "body": "<p>In a study of 3,019 five-year-old children, symptoms of sleep-disordered breathing were associated with approximately 2.5× higher odds of hyperactivity and 2.1× higher odds of inattention. These are odds ratios, not ADHD diagnoses or proof of causation.</p>",
+            "note": "<p>Also associated with 2.1× higher odds of aggressive behavior and 2.2× higher odds of daytime sleepiness. The study assessed symptoms of sleep-disordered breathing, not mouth breathing alone.</p>",
+            "source_label": "Source: Pediatrics / American Academy of Pediatrics"
+          }
+        },
+        "research_progress": {
+          "type": "progress",
+          "settings": {
+            "column": "right",
+            "title": "Mouth Breathing & Learning",
+            "badge": "Systematic review",
+            "value": "8 out of 10",
+            "bar_filled": 8,
+            "bar_total": 10,
+            "body": "<p>8 out of 10 studies in one systematic review found a higher incidence of learning difficulties among mouth-breathing children.</p>",
+            "note": "<p>Systematic review of 10 studies involving children ages 7–11. Study methods varied.</p>",
+            "source_label": "Source: Brazilian Journal of Otorhinolaryngology"
+          }
+        },
+        "research_comparison": {
+          "type": "comparison",
+          "settings": {
+            "column": "left",
+            "title": "Mouth Breathing, Behavior & Daytime Sleepiness",
+            "row1_label": "Persisted",
+            "row1_value": "Mouth breathing remained",
+            "row2_label": "Improved",
+            "row2_value": "Mouth breathing improved",
+            "body": "<p>Research has found that children whose mouth breathing improved also showed improvements in behavior, daytime sleepiness, and quality of life.</p>",
+            "note": "<p>Post-hoc analysis of Childhood Adenotonsillectomy Trial data in children with obstructive sleep apnea. Improvements were greater than in children whose mouth breathing persisted. This study did not evaluate Muzzle Kids or mouth tape.</p>",
+            "source_label": "Source: Sleep and Breathing"
+          }
+        },
+        "research_text": {
+          "type": "text",
+          "settings": {
+            "column": "right",
+            "title": "Facial & Dental Development",
+            "body": "<p>Chronic mouth breathing during childhood has been associated with differences in facial and dental development.</p>",
+            "note": "<p>A systematic review and meta-analysis found differences in the maxilla, mandible, occlusal plane, and airway between mouth-breathing and nasal-breathing children.</p>",
+            "source_label": "Source: BMC Oral Health"
+          }
+        },
+        "research_disclaimer": {
+          "type": "disclaimer",
+          "settings": {
+            "column": "right",
+            "title": "The research above shows associations and does not prove cause and effect.",
+            "text": "<p>Muzzle Kids is not intended to diagnose, treat, cure, or prevent any medical condition. Talk to your child's pediatrician if you have concerns about your child's sleep, breathing, behavior, or development.</p>",
+            "accent_color": "#a78bfa"
+          }
+        }
+      },
+      "block_order": [
+        "research_stats",
+        "research_progress",
+        "research_comparison",
+        "research_text",
+        "research_disclaimer"
+      ],
+      "name": "LT Advertorial Research",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "bg_gradient_color": "#f5f3fc",
+        "heading": "It’s Not Just About How They Sleep",
+        "intro": "<p>Nighttime breathing patterns have been studied in relation to daytime behavior, attention, learning, tiredness, and development. The research below highlights associations found in published studies — not product outcomes.</p>",
+        "card_bg_color": "#ffffff",
+        "card_border_color": "#eceaf3",
+        "accent_color": "#2b95dd",
+        "label_color": "#1a1442",
+        "soft_color": "#f3f1fb",
+        "padding_top": 80,
+        "padding_bottom": 80,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
     "advertorial_nasal_breathing": {
       "type": "lt-advertorial-nasal-breathing",
       "name": "LT Nasal Breathing",
@@ -193,7 +286,7 @@
         "top_alignment": "left",
         "top_max_width": 1000,
         "show_card": true,
-        "card_alignment": "left",
+        "card_alignment": "center",
         "card_max_width": 1000,
         "card_heading": "Meet Muzzle Kids",
         "card_body": "<p>Muzzle Kids is designed to gently encourage nasal breathing during sleep.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
@@ -275,6 +368,7 @@
     "main",
     "advertorial_hero",
     "advertorial_signs",
+    "advertorial_research",
     "advertorial_nasal_breathing",
     "advertorial_product_intro_lead",
     "advertorial_product_intro",

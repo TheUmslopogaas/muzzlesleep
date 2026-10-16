@@ -93,21 +93,27 @@
     margin-bottom: {{ mb }}px;
   }
 
-  /* ── Alignment (position + text) ── */
+  /* ── Alignment: top = position + text, card = position only ── */
   #shopify-section-{{ section.id }} .lt-product-intro__top--left,
   #shopify-section-{{ section.id }} .lt-product-intro__card--left {
     margin-right: auto;
-    text-align: left;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__top--center,
   #shopify-section-{{ section.id }} .lt-product-intro__card--center {
     margin-left: auto;
     margin-right: auto;
-    text-align: center;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__top--right,
   #shopify-section-{{ section.id }} .lt-product-intro__card--right {
     margin-left: auto;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--left {
+    text-align: left;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--center {
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--right {
     text-align: right;
   }
 
@@ -118,7 +124,7 @@
   #shopify-section-{{ section.id }} .lt-product-intro__top-heading {
     margin: 0 0 16px;
     font-size: 36px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.3px;
     color: inherit;
@@ -144,6 +150,7 @@
     column-gap: 24px;
     max-width: {{ section.settings.card_max_width }}px;
     padding: 0 36px;
+    text-align: left;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 20px;
     overflow: hidden;
@@ -160,7 +167,7 @@
   #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
     margin: 0 0 20px;
     font-size: 30px;
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.3px;
     color: inherit;
@@ -350,12 +357,13 @@
       "type": "select",
       "id": "card_alignment",
       "label": "Card alignment",
+      "info": "Positions the card; text inside stays left-aligned",
       "options": [
         { "value": "left", "label": "Left" },
         { "value": "center", "label": "Center" },
         { "value": "right", "label": "Right" }
       ],
-      "default": "left",
+      "default": "center",
       "visible_if": "{{ section.settings.show_card }}"
     },
     {
