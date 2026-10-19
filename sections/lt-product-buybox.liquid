@@ -687,6 +687,10 @@
     height: 18px;
   }
 
+  #shopify-section-{{ section.id }} .lt-buybox__lightlabs {
+    margin-top: 16px;
+  }
+
   /* ---------- Reviews ---------- */
   #shopify-section-{{ section.id }} .lt-buybox__reviews {
     position: relative;
@@ -1470,6 +1474,22 @@
                 <span>{{ s.caption | escape }}</span>
               </p>
             {%- endif -%}
+
+            {%- if s.lightlabs_panel_id != blank and s.lightlabs_product_id != blank -%}
+              <div class="lt-buybox__lightlabs">
+                <lightlabs-panel panel-id="{{ s.lightlabs_panel_id | escape }}" product-id="{{ s.lightlabs_product_id | escape }}"></lightlabs-panel>
+              </div>
+              <script>
+                (function () {
+                  var src = 'https://transparency.lightlabs.com/embed.js';
+                  if (document.querySelector('script[src="' + src + '"]')) return;
+                  var el = document.createElement('script');
+                  el.src = src;
+                  el.async = true;
+                  document.head.appendChild(el);
+                })();
+              </script>
+            {%- endif -%}
           </div>
 
           {%- if review_blocks.size > 0 -%}
@@ -2040,6 +2060,21 @@
       "id": "caption",
       "label": "Caption under button",
       "default": "Engineered for Comfort, Crafted for Performance"
+    },
+    {
+      "type": "header",
+      "content": "LightLabs panel"
+    },
+    {
+      "type": "text",
+      "id": "lightlabs_panel_id",
+      "label": "Panel ID",
+      "info": "Shown under the caption. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "lightlabs_product_id",
+      "label": "Product ID"
     },
     {
       "type": "text",
