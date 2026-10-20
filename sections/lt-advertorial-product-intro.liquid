@@ -17,6 +17,8 @@
   if section.settings.note_title != blank or section.settings.note_text != blank
     assign has_note = true
   endif
+
+  assign button_url = section.settings.button_url | default: '#'
 -%}
 
 <div class="lt-product-intro">
@@ -45,6 +47,11 @@
           {%- endif -%}
           {%- if section.settings.card_body != blank -%}
             <div class="lt-product-intro__card-body">{{ section.settings.card_body }}</div>
+          {%- endif -%}
+          {%- if section.settings.button_text != blank -%}
+            <a class="lt-product-intro__button" href="{{ button_url }}">
+              {{- section.settings.button_text | escape -}}
+            </a>
           {%- endif -%}
         </div>
 
@@ -185,6 +192,30 @@
   #shopify-section-{{ section.id }} .lt-product-intro__card-body p:last-child {
     margin-bottom: 0;
   }
+  #shopify-section-{{ section.id }} .lt-product-intro__button {
+    display: inline-block;
+    margin-top: 28px;
+    padding: 15px 44px;
+    background-color: {{ section.settings.button_bg_color }};
+    color: {{ section.settings.button_text_color }};
+    border-radius: 999px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 1px;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__button:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__button:focus-visible {
+    outline: 2px solid {{ section.settings.button_bg_color }};
+    outline-offset: 3px;
+  }
   #shopify-section-{{ section.id }} .lt-product-intro__card-media {
     align-self: end;
     padding: 32px 16px 0 0;
@@ -260,6 +291,9 @@
     #shopify-section-{{ section.id }} .lt-product-intro__card-body {
       font-size: 15px;
     }
+    #shopify-section-{{ section.id }} .lt-product-intro__button {
+      margin-top: 20px;
+    }
     #shopify-section-{{ section.id }} .lt-product-intro__card-media {
       width: 100% !important;
       max-width: 100% !important;
@@ -281,6 +315,11 @@
     }
     #shopify-section-{{ section.id }} .lt-product-intro__note-title {
       font-size: 13px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__button {
+      display: block;
+      padding: 14px 24px;
+      font-size: 14px;
     }
   }
 </style>
@@ -389,6 +428,35 @@
       "id": "card_body",
       "label": "Card body text",
       "default": "<p>Muzzle Kids is designed to gently encourage nasal breathing during sleep.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "info": "Leave blank to hide the button",
+      "default": "Shop Now",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link",
+      "info": "Defaults to # when left blank",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#1A1442",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff",
       "visible_if": "{{ section.settings.show_card }}"
     },
     {
