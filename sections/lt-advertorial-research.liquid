@@ -1,0 +1,975 @@
+{%- liquid
+  assign pt = section.settings.padding_top
+  assign pb = section.settings.padding_bottom
+  assign mt = section.settings.margin_top
+  assign mb = section.settings.margin_bottom
+  assign pt_mob = pt | times: 0.6 | round
+  assign pb_mob = pb | times: 0.6 | round
+  assign mt_mob = mt | times: 0.6 | round
+  assign mb_mob = mb | times: 0.6 | round
+
+  assign bg_end = section.settings.bg_gradient_color
+  if bg_end == blank
+    assign bg_end = section.settings.bg_color
+  endif
+
+  assign columns = 'left,right' | split: ','
+-%}
+
+<div class="lt-research">
+  <div class="page-width lt-research__wrap">
+
+    {%- if section.settings.heading != blank or section.settings.intro != blank -%}
+      <div class="lt-research__header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="lt-research__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.intro != blank -%}
+          <div class="lt-research__intro">{{ section.settings.intro }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="lt-research__grid">
+        {%- for column in columns -%}
+          <div class="lt-research__col">
+            {%- for block in section.blocks -%}
+              {%- if block.settings.column != column -%}{%- continue -%}{%- endif -%}
+
+              {%- if block.type == 'disclaimer' -%}
+                <div class="lt-research__disclaimer" style="--lt-order: {{ forloop.index }}; border-left-color: {{ block.settings.accent_color }};" {{ block.shopify_attributes }}>
+                  {%- if block.settings.title != blank -%}
+                    <p class="lt-research__disclaimer-title">{{ block.settings.title }}</p>
+                  {%- endif -%}
+                  {%- if block.settings.text != blank -%}
+                    <div class="lt-research__disclaimer-text">{{ block.settings.text }}</div>
+                  {%- endif -%}
+                </div>
+                {%- continue -%}
+              {%- endif -%}
+
+              <div class="lt-research__card lt-research__card--{{ block.type }}" style="--lt-order: {{ forloop.index }};" {{ block.shopify_attributes }}>
+                {%- if block.settings.title != blank or block.settings.badge != blank -%}
+                  <div class="lt-research__card-head">
+                    {%- if block.settings.title != blank -%}
+                      <h3 class="lt-research__card-title">{{ block.settings.title }}</h3>
+                    {%- endif -%}
+                    {%- if block.settings.badge != blank -%}
+                      <span class="lt-research__badge">{{ block.settings.badge }}</span>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+
+                {%- case block.type -%}
+                  {%- when 'stats' -%}
+                    {%- if block.settings.stat1_value != blank or block.settings.stat2_value != blank -%}
+                      <div class="lt-research__stats{% if block.settings.stat1_value != blank and block.settings.stat2_value != blank %} lt-research__stats--two{% endif %}">
+                        {%- if block.settings.stat1_value != blank -%}
+                          <div class="lt-research__stat">
+                            {%- if block.settings.stat1_label != blank -%}
+                              <p class="lt-research__stat-label">{{ block.settings.stat1_label }}</p>
+                            {%- endif -%}
+                            <p class="lt-research__value">{{ block.settings.stat1_value }}</p>
+                            {%- if block.settings.stat1_caption != blank -%}
+                              <p class="lt-research__stat-caption">{{ block.settings.stat1_caption }}</p>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                        {%- if block.settings.stat2_value != blank -%}
+                          <div class="lt-research__stat">
+                            {%- if block.settings.stat2_label != blank -%}
+                              <p class="lt-research__stat-label">{{ block.settings.stat2_label }}</p>
+                            {%- endif -%}
+                            <p class="lt-research__value">{{ block.settings.stat2_value }}</p>
+                            {%- if block.settings.stat2_caption != blank -%}
+                              <p class="lt-research__stat-caption">{{ block.settings.stat2_caption }}</p>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+
+                  {%- when 'progress' -%}
+                    {%- liquid
+                      assign bar_total = block.settings.bar_total
+                      assign bar_filled = block.settings.bar_filled
+                      if bar_filled > bar_total
+                        assign bar_filled = bar_total
+                      endif
+                    -%}
+                    {%- if block.settings.value != blank -%}
+                      <p class="lt-research__value lt-research__value--progress">{{ block.settings.value }}</p>
+                    {%- endif -%}
+                    <div class="lt-research__bar" role="img" aria-label="{{ bar_filled }} of {{ bar_total }}">
+                      {%- for i in (1..bar_total) -%}
+                        <span class="lt-research__seg{% if i <= bar_filled %} lt-research__seg--filled{% endif %}"></span>
+                      {%- endfor -%}
+                    </div>
+
+                  {%- when 'comparison' -%}
+                    {%- if block.settings.row1_label != blank or block.settings.row2_label != blank -%}
+                      <div class="lt-research__rows">
+                        {%- if block.settings.row1_label != blank -%}
+                          <div class="lt-research__row lt-research__row--highlight">
+                            <span class="lt-research__row-label">{{ block.settings.row1_label }}</span>
+                            <span class="lt-research__row-value">{{ block.settings.row1_value }}</span>
+                          </div>
+                        {%- endif -%}
+                        {%- if block.settings.row2_label != blank -%}
+                          <div class="lt-research__row">
+                            <span class="lt-research__row-label">{{ block.settings.row2_label }}</span>
+                            <span class="lt-research__row-value">{{ block.settings.row2_value }}</span>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    {%- endif -%}
+                {%- endcase -%}
+
+                {%- if block.settings.body != blank -%}
+                  <div class="lt-research__body">{{ block.settings.body }}</div>
+                {%- endif -%}
+                {%- if block.settings.note != blank -%}
+                  <div class="lt-research__note">{{ block.settings.note }}</div>
+                {%- endif -%}
+                {%- if block.settings.source_label != blank -%}
+                  <a
+                    class="lt-research__source"
+                    href="{{ block.settings.source_url | default: '#' }}"
+                    {% if block.settings.source_url != blank %}target="_blank" rel="noopener"{% endif %}
+                  >
+                    {{- block.settings.source_label -}}
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    background-image: linear-gradient(180deg, {{ section.settings.bg_color }} 0%, {{ bg_end }} 100%);
+    color: {{ section.settings.text_color }};
+    padding-top: {{ pt }}px;
+    padding-bottom: {{ pb }}px;
+    margin-top: {{ mt }}px;
+    margin-bottom: {{ mb }}px;
+  }
+
+  /* ── Header ── */
+  #shopify-section-{{ section.id }} .lt-research__header {
+    max-width: 900px;
+    margin-bottom: 48px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__heading {
+    margin: 0 0 20px;
+    font-size: 44px;
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-research__heading:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__intro {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.65;
+    letter-spacing: 0;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-research__intro p {
+    margin: 0 0 14px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Grid ── */
+  #shopify-section-{{ section.id }} .lt-research__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  #shopify-section-{{ section.id }} .lt-research__col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__col:empty {
+    display: none;
+  }
+
+  /* ── Card ── */
+  #shopify-section-{{ section.id }} .lt-research__card {
+    padding: 28px 28px 36px;
+    background-color: {{ section.settings.card_bg_color }};
+    border: 1px solid {{ section.settings.card_border_color }};
+    border-radius: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card > * {
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card > * + * {
+    margin-top: 24px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.2px;
+    color: inherit;
+  }
+  #shopify-section-{{ section.id }} .lt-research__badge {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background-color: {{ section.settings.soft_color }};
+    color: {{ section.settings.label_color }};
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  /* ── Stats ── */
+  #shopify-section-{{ section.id }} .lt-research__stats--two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__stat p {
+    margin: 0;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__stat-label {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: {{ section.settings.label_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-research__card .lt-research__value {
+    margin: 0;
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    color: {{ section.settings.accent_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-research__stat .lt-research__stat-caption {
+    margin-top: 6px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* ── Progress ── */
+  #shopify-section-{{ section.id }} .lt-research__card > .lt-research__value--progress {
+    margin-top: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card > .lt-research__bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__seg {
+    flex: 1;
+    height: 10px;
+    border-radius: 999px;
+    background-color: {{ section.settings.soft_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-research__seg--filled {
+    background-color: {{ section.settings.accent_color }};
+  }
+
+  /* ── Comparison ── */
+  #shopify-section-{{ section.id }} .lt-research__card > .lt-research__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 13px 16px;
+    border: 1px solid {{ section.settings.card_border_color }};
+    border-radius: 12px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .lt-research__row--highlight {
+    background-color: {{ section.settings.soft_color }};
+    border-color: transparent;
+  }
+  #shopify-section-{{ section.id }} .lt-research__row-label {
+    font-weight: 600;
+  }
+  #shopify-section-{{ section.id }} .lt-research__row-value {
+    color: {{ section.settings.label_color }};
+    text-align: right;
+  }
+
+  /* ── Body / note / source ── */
+  #shopify-section-{{ section.id }} .lt-research__body {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.55;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card > .lt-research__note {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__body p,
+  #shopify-section-{{ section.id }} .lt-research__note p {
+    margin: 0 0 12px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__body p:last-child,
+  #shopify-section-{{ section.id }} .lt-research__note p:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__card > .lt-research__source {
+    display: inline-block;
+    margin-top: 32px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: {{ section.settings.accent_color }};
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .lt-research__source:hover,
+  #shopify-section-{{ section.id }} .lt-research__source:focus-visible {
+    text-decoration: underline;
+  }
+
+  /* ── Disclaimer ── */
+  #shopify-section-{{ section.id }} .lt-research__disclaimer {
+    padding: 24px 28px;
+    background-color: {{ section.settings.card_bg_color }};
+    border-left: 4px solid;
+    border-radius: 16px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__disclaimer-title {
+    margin: 0 0 12px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: {{ section.settings.label_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-research__disclaimer-title:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__disclaimer-text {
+    font-size: 15px;
+    line-height: 1.65;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-research__disclaimer-text p {
+    margin: 0 0 10px;
+  }
+  #shopify-section-{{ section.id }} .lt-research__disclaimer-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Responsive 767px ── */
+  @media screen and (max-width: 767px) {
+    #shopify-section-{{ section.id }} {
+      padding-top: {{ pt_mob }}px;
+      padding-bottom: {{ pb_mob }}px;
+      margin-top: {{ mt_mob }}px;
+      margin-bottom: {{ mb_mob }}px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__header {
+      margin-bottom: 32px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__heading {
+      margin-bottom: 14px;
+      font-size: 30px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__intro {
+      font-size: 16px;
+    }
+    /* Single column in block order */
+    #shopify-section-{{ section.id }} .lt-research__grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__col {
+      display: contents;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card,
+    #shopify-section-{{ section.id }} .lt-research__disclaimer {
+      order: var(--lt-order);
+    }
+    #shopify-section-{{ section.id }} .lt-research__card {
+      padding: 22px 20px 26px;
+      border-radius: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card-title {
+      font-size: 20px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card .lt-research__value {
+      font-size: 44px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__body {
+      font-size: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card > .lt-research__note {
+      font-size: 13px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card > .lt-research__source {
+      margin-top: 24px;
+      font-size: 14px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__row {
+      font-size: 15px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__disclaimer {
+      padding: 20px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__disclaimer-title {
+      font-size: 18px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__disclaimer-text {
+      font-size: 14px;
+    }
+  }
+
+  /* ── Responsive 480px ── */
+  @media screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .lt-research__heading {
+      font-size: 26px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card-head {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__card .lt-research__value {
+      font-size: 38px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__stat .lt-research__stat-caption {
+      font-size: 14px;
+    }
+    #shopify-section-{{ section.id }} .lt-research__row {
+      padding: 12px 14px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "LT Advertorial Research",
+  "class": "lt-section-advertorial-research",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_color",
+      "label": "Background gradient end",
+      "info": "Bottom color of the background fade. Clear for a flat background.",
+      "default": "#F5F3FC"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "It’s Not Just About How They Sleep"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "<p>Nighttime breathing patterns have been studied in relation to daytime behavior, attention, learning, tiredness, and development. The research below highlights associations found in published studies — not product outcomes.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Card Style"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#ECEAF3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "info": "Stats, progress bar and source links",
+      "default": "#2B95DD"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Label color",
+      "info": "Badges, stat labels, row values and disclaimer title",
+      "default": "#1A1442"
+    },
+    {
+      "type": "color",
+      "id": "soft_color",
+      "label": "Soft fill",
+      "info": "Badges, highlighted row and empty bar segments",
+      "default": "#F3F1FB"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stats",
+      "name": "Stats card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Desktop column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Behavior & Attention"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Pediatrics / AAP"
+        },
+        {
+          "type": "header",
+          "content": "Stat 1"
+        },
+        {
+          "type": "text",
+          "id": "stat1_label",
+          "label": "Label",
+          "default": "Odds ratio"
+        },
+        {
+          "type": "text",
+          "id": "stat1_value",
+          "label": "Value",
+          "default": "2.5×"
+        },
+        {
+          "type": "text",
+          "id": "stat1_caption",
+          "label": "Caption",
+          "default": "higher odds of hyperactivity"
+        },
+        {
+          "type": "header",
+          "content": "Stat 2"
+        },
+        {
+          "type": "text",
+          "id": "stat2_label",
+          "label": "Label",
+          "default": "Odds ratio"
+        },
+        {
+          "type": "text",
+          "id": "stat2_value",
+          "label": "Value",
+          "info": "Leave blank to show one stat",
+          "default": "2.1×"
+        },
+        {
+          "type": "text",
+          "id": "stat2_caption",
+          "label": "Caption",
+          "default": "higher odds of inattention"
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>In a study of 3,019 five-year-old children, symptoms of sleep-disordered breathing were associated with approximately 2.5× higher odds of hyperactivity and 2.1× higher odds of inattention. These are odds ratios, not ADHD diagnoses or proof of causation.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Small note",
+          "default": "<p>Also associated with 2.1× higher odds of aggressive behavior and 2.2× higher odds of daytime sleepiness. The study assessed symptoms of sleep-disordered breathing, not mouth breathing alone.</p>"
+        },
+        {
+          "type": "text",
+          "id": "source_label",
+          "label": "Source label",
+          "default": "Source: Pediatrics / American Academy of Pediatrics"
+        },
+        {
+          "type": "url",
+          "id": "source_url",
+          "label": "Source link"
+        }
+      ]
+    },
+    {
+      "type": "progress",
+      "name": "Progress card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Desktop column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Mouth Breathing & Learning"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "Systematic review"
+        },
+        {
+          "type": "header",
+          "content": "Progress"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "8 out of 10"
+        },
+        {
+          "type": "range",
+          "id": "bar_filled",
+          "label": "Filled segments",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "default": 8
+        },
+        {
+          "type": "range",
+          "id": "bar_total",
+          "label": "Total segments",
+          "min": 2,
+          "max": 20,
+          "step": 1,
+          "default": 10
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>8 out of 10 studies in one systematic review found a higher incidence of learning difficulties among mouth-breathing children.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Small note",
+          "default": "<p>Systematic review of 10 studies involving children ages 7–11. Study methods varied.</p>"
+        },
+        {
+          "type": "text",
+          "id": "source_label",
+          "label": "Source label",
+          "default": "Source: Brazilian Journal of Otorhinolaryngology"
+        },
+        {
+          "type": "url",
+          "id": "source_url",
+          "label": "Source link"
+        }
+      ]
+    },
+    {
+      "type": "comparison",
+      "name": "Comparison card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Desktop column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Mouth Breathing, Behavior & Daytime Sleepiness"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge"
+        },
+        {
+          "type": "header",
+          "content": "Highlighted row"
+        },
+        {
+          "type": "text",
+          "id": "row1_label",
+          "label": "Label",
+          "default": "Persisted"
+        },
+        {
+          "type": "text",
+          "id": "row1_value",
+          "label": "Value",
+          "default": "Mouth breathing remained"
+        },
+        {
+          "type": "header",
+          "content": "Outlined row"
+        },
+        {
+          "type": "text",
+          "id": "row2_label",
+          "label": "Label",
+          "default": "Improved"
+        },
+        {
+          "type": "text",
+          "id": "row2_value",
+          "label": "Value",
+          "default": "Mouth breathing improved"
+        },
+        {
+          "type": "header",
+          "content": "Text"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>Research has found that children whose mouth breathing improved also showed improvements in behavior, daytime sleepiness, and quality of life.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Small note",
+          "default": "<p>Post-hoc analysis of Childhood Adenotonsillectomy Trial data in children with obstructive sleep apnea. Improvements were greater than in children whose mouth breathing persisted. This study did not evaluate Muzzle Kids or mouth tape.</p>"
+        },
+        {
+          "type": "text",
+          "id": "source_label",
+          "label": "Source label",
+          "default": "Source: Sleep and Breathing"
+        },
+        {
+          "type": "url",
+          "id": "source_url",
+          "label": "Source link"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Desktop column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Facial & Dental Development"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body",
+          "default": "<p>Chronic mouth breathing during childhood has been associated with differences in facial and dental development.</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "note",
+          "label": "Small note",
+          "default": "<p>A systematic review and meta-analysis found differences in the maxilla, mandible, occlusal plane, and airway between mouth-breathing and nasal-breathing children.</p>"
+        },
+        {
+          "type": "text",
+          "id": "source_label",
+          "label": "Source label",
+          "default": "Source: BMC Oral Health"
+        },
+        {
+          "type": "url",
+          "id": "source_url",
+          "label": "Source link"
+        }
+      ]
+    },
+    {
+      "type": "disclaimer",
+      "name": "Disclaimer",
+      "settings": [
+        {
+          "type": "select",
+          "id": "column",
+          "label": "Desktop column",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "right"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "The research above shows associations and does not prove cause and effect."
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Muzzle Kids is not intended to diagnose, treat, cure, or prevent any medical condition. Talk to your child's pediatrician if you have concerns about your child's sleep, breathing, behavior, or development.</p>"
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Border color",
+          "default": "#A78BFA"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "LT Advertorial Research",
+      "category": "LT Sections",
+      "blocks": [
+        { "type": "stats" },
+        { "type": "progress" },
+        { "type": "comparison" },
+        { "type": "text" },
+        { "type": "disclaimer" }
+      ]
+    }
+  ]
+}
+{% endschema %}

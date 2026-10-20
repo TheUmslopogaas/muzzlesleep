@@ -76,6 +76,27 @@
                 {%- if block.settings.body != blank -%}
                   <div class="lt-signs__body">{{ block.settings.body }}</div>
                 {%- endif -%}
+                {%- if block.settings.show_card -%}
+                  {%- if block.settings.card_headline != blank or block.settings.card_text != blank -%}
+                    <div class="lt-signs__card">
+                      {%- if block.settings.card_headline != blank -%}
+                        <p class="lt-signs__card-headline lt-signs__card-headline--{{ block.settings.card_style }}">{{ block.settings.card_headline }}</p>
+                      {%- endif -%}
+                      {%- if block.settings.card_text != blank -%}
+                        <p class="lt-signs__card-text">{{ block.settings.card_text }}</p>
+                      {%- endif -%}
+                      {%- if block.settings.card_source != blank or block.settings.card_link_label != blank -%}
+                        <p class="lt-signs__card-source">
+                          {{- block.settings.card_source -}}
+                          {%- if block.settings.card_source != blank and block.settings.card_link_label != blank %} · {% endif -%}
+                          {%- if block.settings.card_link_label != blank -%}
+                            <a href="{{ block.settings.card_link | default: '#' }}" target="_blank" rel="noopener">{{ block.settings.card_link_label }}</a>
+                          {%- endif -%}
+                        </p>
+                      {%- endif -%}
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
               </div>
             </div>
           {%- endif -%}
@@ -174,9 +195,6 @@
     padding: 32px 0;
     border-top: 1px solid #ececec;
   }
-  #shopify-section-{{ section.id }} .lt-signs__item:first-child {
-    border-top: none;
-  }
   #shopify-section-{{ section.id }} .lt-signs__number {
     display: flex;
     flex-shrink: 0;
@@ -195,9 +213,9 @@
     min-width: 0;
   }
   #shopify-section-{{ section.id }} .lt-signs__heading {
-    margin: 0 0 10px;
+    margin: 0 0 8px;
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.3;
     letter-spacing: -0.2px;
     color: inherit;
@@ -205,7 +223,7 @@
   #shopify-section-{{ section.id }} .lt-signs__subheading {
     margin: 0 0 10px;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.6;
     color: inherit;
     letter-spacing: 0px;
@@ -215,7 +233,6 @@
     font-weight: 400;
     line-height: 1.7;
     color: inherit;
-    opacity: 0.85;
     letter-spacing: 0;
   }
   #shopify-section-{{ section.id }} .lt-signs__body p {
@@ -223,6 +240,52 @@
   }
   #shopify-section-{{ section.id }} .lt-signs__body p:last-child {
     margin-bottom: 0;
+  }
+
+  /* ── Stat card ── */
+  #shopify-section-{{ section.id }} .lt-signs__card {
+    margin-top: 18px;
+    padding: 18px 20px;
+    background-color: {{ section.settings.card_bg_color }};
+    border-left: 3px solid {{ section.settings.card_accent_color }};
+    border-radius: 10px;
+    color: {{ section.settings.card_text_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-headline {
+    margin: 0 0 8px;
+    letter-spacing: 0;
+    color: {{ section.settings.card_accent_color }};
+    font-weight: 600;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-headline--stat {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-headline--label {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-text {
+    margin: 0;
+    letter-spacing: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-source {
+    margin: 8px 0 0;
+    letter-spacing: 0;
+    font-size: 11px;
+    line-height: 1.5;
+    opacity: 0.75;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-source a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .lt-signs__card-source a:hover,
+  #shopify-section-{{ section.id }} .lt-signs__card-source a:focus-visible {
+    text-decoration: underline;
   }
 
   /* ── Responsive 767px ── */
@@ -258,6 +321,12 @@
     #shopify-section-{{ section.id }} .lt-signs__body {
       font-size: 14px;
     }
+    #shopify-section-{{ section.id }} .lt-signs__card {
+      padding: 16px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__card-headline--stat {
+      font-size: 24px;
+    }
   }
 
   /* ── Responsive 480px ── */
@@ -267,6 +336,9 @@
     }
     #shopify-section-{{ section.id }} .lt-signs__heading {
       font-size: 18px;
+    }
+    #shopify-section-{{ section.id }} .lt-signs__card-headline--stat {
+      font-size: 22px;
     }
   }
 </style>
@@ -357,6 +429,29 @@
     },
     {
       "type": "header",
+      "content": "Stat cards"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Stat card background",
+      "default": "#F4F1FC"
+    },
+    {
+      "type": "color",
+      "id": "card_accent_color",
+      "label": "Stat card accent",
+      "info": "Border and headline",
+      "default": "#3B9AE1"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Stat card text",
+      "default": "#1A1442"
+    },
+    {
+      "type": "header",
       "content": "Spacing"
     },
     {
@@ -417,6 +512,60 @@
           "id": "body",
           "label": "Body text",
           "default": "<p>Describe this sign in more detail.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Stat card"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_card",
+          "label": "Show stat card",
+          "default": false
+        },
+        {
+          "type": "select",
+          "id": "card_style",
+          "label": "Headline style",
+          "options": [
+            { "value": "stat", "label": "Large stat" },
+            { "value": "label", "label": "Small label" }
+          ],
+          "default": "stat",
+          "visible_if": "{{ block.settings.show_card }}"
+        },
+        {
+          "type": "text",
+          "id": "card_headline",
+          "label": "Headline",
+          "info": "e.g. 2.2× or Development",
+          "visible_if": "{{ block.settings.show_card }}"
+        },
+        {
+          "type": "textarea",
+          "id": "card_text",
+          "label": "Description",
+          "visible_if": "{{ block.settings.show_card }}"
+        },
+        {
+          "type": "text",
+          "id": "card_source",
+          "label": "Source",
+          "info": "e.g. Pediatrics / AAP · 3,019 five-year-olds",
+          "visible_if": "{{ block.settings.show_card }}"
+        },
+        {
+          "type": "text",
+          "id": "card_link_label",
+          "label": "Link label",
+          "default": "View study",
+          "visible_if": "{{ block.settings.show_card }}"
+        },
+        {
+          "type": "url",
+          "id": "card_link",
+          "label": "Study link",
+          "visible_if": "{{ block.settings.show_card }}"
         }
       ]
     }
@@ -440,7 +589,13 @@
           "settings": {
             "heading": "You Notice Their Mouth Is Open While They Sleep",
             "subheading": "This is one of the easiest signs to spot — once you know to look for it.",
-            "body": "<p>Check on them after they've been asleep for a little while.</p><p>Are their lips gently closed? Or is their mouth hanging open?</p><p>Many parents simply never think to check.</p>"
+            "body": "<p>Check on them after they've been asleep for a little while.</p><p>Are their lips gently closed? Or is their mouth hanging open?</p><p>Many parents simply never think to check.</p>",
+            "show_card": true,
+            "card_style": "label",
+            "card_headline": "Development",
+            "card_text": "Chronic mouth breathing has been associated with differences in facial and dental development.",
+            "card_source": "BMC Oral Health · systematic review",
+            "card_link_label": "View study"
           }
         },
         {
@@ -448,7 +603,13 @@
           "settings": {
             "heading": "They Toss, Turn or Seem Restless",
             "subheading": "Being in bed for 10 hours doesn't necessarily mean getting 10 hours of high-quality sleep.",
-            "body": "<p>If your child frequently changes positions, kicks off the covers or seems unusually restless during the night, it may be worth looking at their overall sleep habits — including how they breathe.</p>"
+            "body": "<p>If your child frequently changes positions, kicks off the covers or seems unusually restless during the night, it may be worth looking at their overall sleep habits — including how they breathe.</p>",
+            "show_card": true,
+            "card_style": "stat",
+            "card_headline": "2.5× / 2.1×",
+            "card_text": "Higher odds of hyperactivity / inattention in children with symptoms of sleep-disordered breathing.",
+            "card_source": "Pediatrics / AAP · 3,019 five-year-olds",
+            "card_link_label": "View study"
           }
         },
         {
@@ -456,7 +617,13 @@
           "settings": {
             "heading": "They're Tired Even After a Full Night's Sleep",
             "subheading": "\"But you slept for 10 hours!\"",
-            "body": "<p>Sound familiar?</p><p>Sleep isn't just about quantity. Quality matters, too.</p><p>If mornings are consistently difficult or your child still seems exhausted after plenty of time in bed, their nighttime routine and sleep quality may deserve a closer look.</p>"
+            "body": "<p>Sound familiar?</p><p>Sleep isn't just about quantity. Quality matters, too.</p><p>If mornings are consistently difficult or your child still seems exhausted after plenty of time in bed, their nighttime routine and sleep quality may deserve a closer look.</p>",
+            "show_card": true,
+            "card_style": "stat",
+            "card_headline": "2.2×",
+            "card_text": "Higher odds of daytime sleepiness in children with symptoms of sleep-disordered breathing.",
+            "card_source": "Pediatrics / AAP · 3,019 five-year-olds",
+            "card_link_label": "View study"
           }
         },
         {
@@ -472,7 +639,13 @@
           "settings": {
             "heading": "They Have Trouble Focusing During the Day",
             "subheading": "Sleep and daytime behavior are closely connected.",
-            "body": "<p>When kids don't get restorative sleep, it can show up during the day as difficulty concentrating, low energy or simply seeming \"off.\"</p><p>That doesn't automatically mean nighttime breathing is the cause — but sleep quality is an important piece of the puzzle.</p>"
+            "body": "<p>Research has found associations between sleep-disordered breathing and daytime attention and tiredness.</p><p>These associations do not establish a cause-and-effect relationship. If you have concerns about your child's attention or sleep, talk with their pediatrician.</p>",
+            "show_card": true,
+            "card_style": "stat",
+            "card_headline": "8 out of 10",
+            "card_text": "Studies in one systematic review reported more learning difficulties among mouth-breathing children.",
+            "card_source": "Systematic review · ages 7–11",
+            "card_link_label": "View study"
           }
         },
         {

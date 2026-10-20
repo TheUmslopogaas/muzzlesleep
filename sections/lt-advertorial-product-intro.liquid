@@ -7,49 +7,78 @@
   assign pb_mob = pb | times: 0.6 | round
   assign mt_mob = mt | times: 0.6 | round
   assign mb_mob = mb | times: 0.6 | round
+
+  assign has_top = false
+  if section.settings.top_heading != blank or section.settings.top_body != blank
+    assign has_top = true
+  endif
+
+  assign has_note = false
+  if section.settings.note_title != blank or section.settings.note_text != blank
+    assign has_note = true
+  endif
 -%}
 
 <div class="lt-product-intro">
   <div class="page-width lt-product-intro__wrap">
 
-    <div class="lt-product-intro__top">
-      {%- if section.settings.top_heading != blank -%}
-        <h2 class="lt-product-intro__top-heading">{{ section.settings.top_heading }}</h2>
-      {%- endif -%}
-      {%- if section.settings.top_body != blank -%}
-        <div class="lt-product-intro__top-body">{{ section.settings.top_body }}</div>
-      {%- endif -%}
-    </div>
-
-    <div class="lt-product-intro__card">
-      <div class="lt-product-intro__card-content">
-        {%- if section.settings.card_heading != blank -%}
-          <h3 class="lt-product-intro__card-heading">{{ section.settings.card_heading }}</h3>
+    {%- if has_top -%}
+      <div class="lt-product-intro__top lt-product-intro__top--{{ section.settings.top_alignment }}">
+        {%- if section.settings.top_heading != blank -%}
+          <h2 class="lt-product-intro__top-heading">{{ section.settings.top_heading }}</h2>
         {%- endif -%}
-        {%- if section.settings.card_body != blank -%}
-          <div class="lt-product-intro__card-body">{{ section.settings.card_body }}</div>
+        {%- if section.settings.top_body != blank -%}
+          <div class="lt-product-intro__top-body">{{ section.settings.top_body }}</div>
         {%- endif -%}
       </div>
+    {%- endif -%}
 
-      {%- if section.settings.product_image != blank -%}
-        <div class="lt-product-intro__card-media" style="width: {{ section.settings.image_max_width }}px; max-width: {{ section.settings.image_max_width }}px;">
-          <img
-            class="lt-product-intro__img"
-            src="{{ section.settings.product_image | image_url: width: 1000 }}"
-            srcset="
-              {{ section.settings.product_image | image_url: width: 400 }} 400w,
-              {{ section.settings.product_image | image_url: width: 700 }} 700w,
-              {{ section.settings.product_image | image_url: width: 1000 }} 1000w
-            "
-            sizes="(max-width: 767px) 100vw, {{ section.settings.image_max_width }}px"
-            width="{{ section.settings.product_image.width }}"
-            height="{{ section.settings.product_image.height }}"
-            alt="{{ section.settings.product_image.alt | default: 'Muzzle Sleep mouth tape product' | escape }}"
-            loading="lazy"
-          >
+    {%- if section.settings.show_card -%}
+      <div class="lt-product-intro__card lt-product-intro__card--{{ section.settings.card_alignment }}{% if has_top %} lt-product-intro__card--spaced{% endif %}">
+        <div class="lt-product-intro__card-content">
+          {%- if section.settings.card_heading != blank -%}
+            {%- if section.settings.top_heading != blank -%}
+              <h3 class="lt-product-intro__card-heading">{{ section.settings.card_heading }}</h3>
+            {%- else -%}
+              <h2 class="lt-product-intro__card-heading">{{ section.settings.card_heading }}</h2>
+            {%- endif -%}
+          {%- endif -%}
+          {%- if section.settings.card_body != blank -%}
+            <div class="lt-product-intro__card-body">{{ section.settings.card_body }}</div>
+          {%- endif -%}
         </div>
-      {%- endif -%}
-    </div>
+
+        {%- if section.settings.product_image != blank -%}
+          <div class="lt-product-intro__card-media" style="width: {{ section.settings.image_max_width }}px; max-width: {{ section.settings.image_max_width }}px;">
+            <img
+              class="lt-product-intro__img"
+              src="{{ section.settings.product_image | image_url: width: 1000 }}"
+              srcset="
+                {{ section.settings.product_image | image_url: width: 400 }} 400w,
+                {{ section.settings.product_image | image_url: width: 700 }} 700w,
+                {{ section.settings.product_image | image_url: width: 1000 }} 1000w
+              "
+              sizes="(max-width: 767px) 100vw, {{ section.settings.image_max_width }}px"
+              width="{{ section.settings.product_image.width }}"
+              height="{{ section.settings.product_image.height }}"
+              alt="{{ section.settings.product_image.alt | default: 'Muzzle Kids mouth tape product' | escape }}"
+              loading="lazy"
+            >
+          </div>
+        {%- endif -%}
+
+        {%- if has_note -%}
+          <div class="lt-product-intro__note">
+            {%- if section.settings.note_title != blank -%}
+              <p class="lt-product-intro__note-title">{{ section.settings.note_title }}</p>
+            {%- endif -%}
+            {%- if section.settings.note_text != blank -%}
+              <div class="lt-product-intro__note-text">{{ section.settings.note_text }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
 
   </div>
 </div>
@@ -64,24 +93,51 @@
     margin-bottom: {{ mb }}px;
   }
 
+  /* ── Alignment: top = position + text, card = position only ── */
+  #shopify-section-{{ section.id }} .lt-product-intro__top--left,
+  #shopify-section-{{ section.id }} .lt-product-intro__card--left {
+    margin-right: auto;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--center,
+  #shopify-section-{{ section.id }} .lt-product-intro__card--center {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--right,
+  #shopify-section-{{ section.id }} .lt-product-intro__card--right {
+    margin-left: auto;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--left {
+    text-align: left;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--center {
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__top--right {
+    text-align: right;
+  }
+
   /* ── Top content ── */
+  #shopify-section-{{ section.id }} .lt-product-intro__top {
+    max-width: {{ section.settings.top_max_width }}px;
+  }
   #shopify-section-{{ section.id }} .lt-product-intro__top-heading {
     margin: 0 0 16px;
     font-size: 36px;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.3px;
     color: inherit;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__top-body {
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: 16px;
+    line-height: 1.7;
     color: inherit;
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: 0;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__top-body p {
-    margin: 0 0 16px;
+    margin: 0 0 14px;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__top-body p:last-child {
     margin-bottom: 0;
@@ -91,21 +147,27 @@
   #shopify-section-{{ section.id }} .lt-product-intro__card {
     display: grid;
     grid-template-columns: 1fr auto;
-    margin-top: 40px;
+    column-gap: 24px;
+    max-width: {{ section.settings.card_max_width }}px;
+    padding: 0 36px;
+    text-align: left;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 20px;
     overflow: hidden;
     background-color: #ffffff;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__card--spaced {
+    margin-top: 48px;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-content {
-    padding: 48px 24px 48px 48px;
+    padding: 56px 0 40px 16px;
     align-self: center;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
     margin: 0 0 20px;
     font-size: 30px;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 1.2;
     letter-spacing: -0.3px;
     color: inherit;
@@ -115,7 +177,7 @@
     line-height: 1.65;
     color: inherit;
     letter-spacing: 0;
-    font-weight: 500;
+    font-weight: 400;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-body p {
     margin: 0 0 14px;
@@ -124,12 +186,45 @@
     margin-bottom: 0;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__card-media {
-    padding: 40px 0 0 0;
+    align-self: end;
+    padding: 32px 16px 0 0;
   }
   #shopify-section-{{ section.id }} .lt-product-intro__img {
     display: block;
     width: 100%;
     height: auto;
+  }
+
+  /* ── Bottom bar ── */
+  #shopify-section-{{ section.id }} .lt-product-intro__note {
+    grid-column: 1 / -1;
+    margin-bottom: 36px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    background-color: {{ section.settings.note_bg_color }};
+    color: {{ section.settings.note_text_color }};
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__note-title {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__note-title:last-child {
+    margin-bottom: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__note-text {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__note-text p {
+    margin: 0 0 8px;
+  }
+  #shopify-section-{{ section.id }} .lt-product-intro__note-text p:last-child {
+    margin-bottom: 0;
   }
 
   /* ── Responsive 767px ── */
@@ -149,11 +244,14 @@
     }
     #shopify-section-{{ section.id }} .lt-product-intro__card {
       grid-template-columns: 1fr;
-      margin-top: 28px;
+      padding: 0 20px;
       border-radius: 16px;
     }
+    #shopify-section-{{ section.id }} .lt-product-intro__card--spaced {
+      margin-top: 28px;
+    }
     #shopify-section-{{ section.id }} .lt-product-intro__card-content {
-      padding: 28px 24px 24px;
+      padding: 28px 4px 8px;
     }
     #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
       font-size: 24px;
@@ -165,7 +263,11 @@
     #shopify-section-{{ section.id }} .lt-product-intro__card-media {
       width: 100% !important;
       max-width: 100% !important;
-      padding: 8px 0 0;
+      padding: 16px 0 0;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__note {
+      margin-bottom: 20px;
+      padding: 16px;
     }
   }
 
@@ -176,6 +278,9 @@
     }
     #shopify-section-{{ section.id }} .lt-product-intro__card-heading {
       font-size: 21px;
+    }
+    #shopify-section-{{ section.id }} .lt-product-intro__note-title {
+      font-size: 13px;
     }
   }
 </style>
@@ -215,28 +320,82 @@
       "type": "richtext",
       "id": "top_body",
       "label": "Body text",
-      "default": "<p>For children who can already breathe comfortably through their nose and have been appropriately evaluated when needed, some families use gentle mouth tape as part of a nasal-breathing bedtime routine.</p><p>That's where Muzzle Sleep comes in.</p>"
+      "default": "<p>For children who can already breathe comfortably through their nose and have been appropriately evaluated when needed, some families use gentle mouth tape as part of a nasal-breathing bedtime routine.</p><p>That's where Muzzle Kids comes in.</p>"
+    },
+    {
+      "type": "select",
+      "id": "top_alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "top_max_width",
+      "label": "Max width",
+      "min": 400,
+      "max": 1400,
+      "step": 20,
+      "default": 1000,
+      "unit": "px"
     },
     {
       "type": "header",
       "content": "Product Card"
     },
     {
+      "type": "checkbox",
+      "id": "show_card",
+      "label": "Show product card",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "card_alignment",
+      "label": "Card alignment",
+      "info": "Positions the card; text inside stays left-aligned",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "range",
+      "id": "card_max_width",
+      "label": "Card max width",
+      "min": 400,
+      "max": 1400,
+      "step": 20,
+      "default": 1000,
+      "unit": "px",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
       "type": "text",
       "id": "card_heading",
       "label": "Card heading",
-      "default": "Meet Muzzle"
+      "default": "Meet Muzzle Kids",
+      "visible_if": "{{ section.settings.show_card }}"
     },
     {
       "type": "richtext",
       "id": "card_body",
       "label": "Card body text",
-      "default": "<p>Muzzle is designed to make mouth taping feel more comfortable and approachable.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>"
+      "default": "<p>Muzzle Kids is designed to gently encourage nasal breathing during sleep.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
+      "visible_if": "{{ section.settings.show_card }}"
     },
     {
       "type": "image_picker",
       "id": "product_image",
-      "label": "Product image"
+      "label": "Product image",
+      "visible_if": "{{ section.settings.show_card }}"
     },
     {
       "type": "range",
@@ -246,7 +405,40 @@
       "max": 700,
       "step": 10,
       "default": 500,
-      "unit": "px"
+      "unit": "px",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "header",
+      "content": "Card Bottom Bar"
+    },
+    {
+      "type": "textarea",
+      "id": "note_title",
+      "label": "Bar title",
+      "default": "Important: Muzzle Kids is not intended to diagnose, treat, cure, or prevent ADHD, behavioral issues, learning difficulties, daytime sleepiness, facial/dental development concerns, or sleep-disordered breathing.",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "richtext",
+      "id": "note_text",
+      "label": "Bar text",
+      "default": "<p>If your child snores, gasps, struggles to breathe or you suspect a sleep or airway issue, talk with their pediatrician, dentist or another qualified healthcare professional before beginning use. Muzzle Kids is designed to gently encourage nasal breathing during sleep and should not be presented as a substitute for evaluation or appropriate treatment.</p>",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "color",
+      "id": "note_bg_color",
+      "label": "Bar background",
+      "default": "#F5F3FD",
+      "visible_if": "{{ section.settings.show_card }}"
+    },
+    {
+      "type": "color",
+      "id": "note_text_color",
+      "label": "Bar text color",
+      "default": "#1A1442",
+      "visible_if": "{{ section.settings.show_card }}"
     },
     {
       "type": "header",

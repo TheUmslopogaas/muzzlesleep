@@ -44,7 +44,14 @@
           "settings": {
             "heading": "They Wake Up With a Dry Mouth",
             "subheading": "Does your child immediately reach for water in the morning?",
-            "body": "<p>Sleeping with the mouth open can leave the mouth and throat feeling noticeably dry by morning.</p><p>If this happens regularly, it may be worth paying attention to how they're breathing while they sleep.</p>"
+            "body": "<p>Sleeping with the mouth open can leave the mouth and throat feeling noticeably dry by morning.</p><p>If this happens regularly, it may be worth paying attention to how they're breathing while they sleep.</p>",
+            "show_card": false,
+            "card_style": "stat",
+            "card_headline": "",
+            "card_text": "",
+            "card_source": "",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         },
         "sign_2": {
@@ -52,7 +59,14 @@
           "settings": {
             "heading": "You Notice Their Mouth Is Open While They Sleep",
             "subheading": "This is one of the easiest signs to spot — once you know to look for it.",
-            "body": "<p>Check on them after they've been asleep for a little while.</p><p>Are their lips gently closed? Or is their mouth hanging open?</p><p>Many parents simply never think to check.</p>"
+            "body": "<p>Check on them after they've been asleep for a little while.</p><p>Are their lips gently closed? Or is their mouth hanging open?</p><p>Many parents simply never think to check.</p>",
+            "show_card": true,
+            "card_style": "label",
+            "card_headline": "Development",
+            "card_text": "Chronic mouth breathing has been associated with differences in facial and dental development.",
+            "card_source": "BMC Oral Health · systematic review",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         },
         "sign_3": {
@@ -60,7 +74,14 @@
           "settings": {
             "heading": "They Toss, Turn or Seem Restless",
             "subheading": "Being in bed for 10 hours doesn't necessarily mean getting 10 hours of high-quality sleep.",
-            "body": "<p>If your child frequently changes positions, kicks off the covers or seems unusually restless during the night, it may be worth looking at their overall sleep habits — including how they breathe.</p>"
+            "body": "<p>If your child frequently changes positions, kicks off the covers or seems unusually restless during the night, it may be worth looking at their overall sleep habits — including how they breathe.</p>",
+            "show_card": true,
+            "card_style": "stat",
+            "card_headline": "2.5× / 2.1×",
+            "card_text": "Higher odds of hyperactivity / inattention in children with symptoms of sleep-disordered breathing.",
+            "card_source": "Pediatrics / AAP · 3,019 five-year-olds",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         },
         "sign_4": {
@@ -68,7 +89,14 @@
           "settings": {
             "heading": "They're Tired Even After a Full Night's Sleep",
             "subheading": "\"But you slept for 10 hours!\"",
-            "body": "<p>Sound familiar?</p><p>Sleep isn't just about quantity. Quality matters, too.</p><p>If mornings are consistently difficult or your child still seems exhausted after plenty of time in bed, their nighttime routine and sleep quality may deserve a closer look.</p>"
+            "body": "<p>Sound familiar?</p><p>Sleep isn't just about quantity. Quality matters, too.</p><p>If mornings are consistently difficult or your child still seems exhausted after plenty of time in bed, their nighttime routine and sleep quality may deserve a closer look.</p>",
+            "show_card": true,
+            "card_style": "stat",
+            "card_headline": "2.2×",
+            "card_text": "Higher odds of daytime sleepiness in children with symptoms of sleep-disordered breathing.",
+            "card_source": "Pediatrics / AAP · 3,019 five-year-olds",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         },
         "sign_5": {
@@ -76,7 +104,14 @@
           "settings": {
             "heading": "Mornings Come With Irritability or Crankiness",
             "subheading": "Every child has rough mornings.",
-            "body": "<p>But when waking up tired, moody or irritable becomes the norm, parents may want to look beyond bedtime itself.</p><p>Sometimes the question isn't:<br>\"How long did they sleep?\"<br>It's:<br>\"How well did they sleep?\"</p>"
+            "body": "<p>But when waking up tired, moody or irritable becomes the norm, parents may want to look beyond bedtime itself.</p><p>Sometimes the question isn't:<br>\"How long did they sleep?\"<br>It's:<br>\"How well did they sleep?\"</p>",
+            "show_card": false,
+            "card_style": "stat",
+            "card_headline": "",
+            "card_text": "",
+            "card_source": "",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         },
         "sign_6": {
@@ -84,7 +119,14 @@
           "settings": {
             "heading": "They Have Trouble Focusing During the Day",
             "subheading": "Sleep and daytime behavior are closely connected.",
-            "body": "<p>When kids don't get restorative sleep, it can show up during the day as difficulty concentrating, low energy or simply seeming \"off.\"</p><p>That doesn't automatically mean nighttime breathing is the cause — but sleep quality is an important piece of the puzzle.</p>"
+            "body": "<p>Research has found associations between sleep-disordered breathing and daytime attention and tiredness.</p><p>These associations do not establish a cause-and-effect relationship. If you have concerns about your child's attention or sleep, talk with their pediatrician.</p>",
+            "show_card": true,
+            "card_style": "stat",
+            "card_headline": "8 out of 10",
+            "card_text": "Studies in one systematic review reported more learning difficulties among mouth-breathing children.",
+            "card_source": "Systematic review · ages 7–11",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         },
         "sign_7": {
@@ -92,7 +134,14 @@
           "settings": {
             "heading": "You Hear Snoring or Noisy Breathing",
             "subheading": "Children can occasionally snore, especially when they're congested.",
-            "body": "<p>But frequent snoring, loud breathing, gasping or noticeable difficulty breathing during sleep deserves attention.</p><p>If your child regularly snores, gasps, struggles to breathe or you suspect a sleep or airway issue, talk with their pediatrician, dentist or another qualified healthcare professional.</p>"
+            "body": "<p>But frequent snoring, loud breathing, gasping or noticeable difficulty breathing during sleep deserves attention.</p><p>If your child regularly snores, gasps, struggles to breathe or you suspect a sleep or airway issue, talk with their pediatrician, dentist or another qualified healthcare professional.</p>",
+            "show_card": false,
+            "card_style": "stat",
+            "card_headline": "",
+            "card_text": "",
+            "card_source": "",
+            "card_link_label": "View study",
+            "card_link": ""
           }
         }
       },
@@ -116,8 +165,110 @@
         "image": "shopify://shop_images/c8112f7cc29d38315b5759a36e62c96500de6797.jpg",
         "number_bg_color": "#1a1442",
         "number_text_color": "#ffffff",
+        "card_bg_color": "#f4f1fc",
+        "card_accent_color": "#3b9ae1",
+        "card_text_color": "#1a1442",
         "padding_top": 60,
         "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "advertorial_research": {
+      "type": "lt-advertorial-research",
+      "blocks": {
+        "research_stats": {
+          "type": "stats",
+          "settings": {
+            "column": "left",
+            "title": "Behavior & Attention",
+            "badge": "Pediatrics / AAP",
+            "stat1_label": "Odds ratio",
+            "stat1_value": "2.5×",
+            "stat1_caption": "higher odds of hyperactivity",
+            "stat2_label": "Odds ratio",
+            "stat2_value": "2.1×",
+            "stat2_caption": "higher odds of inattention",
+            "body": "<p>In a study of 3,019 five-year-old children, symptoms of sleep-disordered breathing were associated with approximately 2.5× higher odds of hyperactivity and 2.1× higher odds of inattention. These are odds ratios, not ADHD diagnoses or proof of causation.</p>",
+            "note": "<p>Also associated with 2.1× higher odds of aggressive behavior and 2.2× higher odds of daytime sleepiness. The study assessed symptoms of sleep-disordered breathing, not mouth breathing alone.</p>",
+            "source_label": "Source: Pediatrics / American Academy of Pediatrics",
+            "source_url": ""
+          }
+        },
+        "research_progress": {
+          "type": "progress",
+          "settings": {
+            "column": "right",
+            "title": "Mouth Breathing & Learning",
+            "badge": "Systematic review",
+            "value": "8 out of 10",
+            "bar_filled": 8,
+            "bar_total": 10,
+            "body": "<p>8 out of 10 studies in one systematic review found a higher incidence of learning difficulties among mouth-breathing children.</p>",
+            "note": "<p>Systematic review of 10 studies involving children ages 7–11. Study methods varied.</p>",
+            "source_label": "Source: Brazilian Journal of Otorhinolaryngology",
+            "source_url": ""
+          }
+        },
+        "research_comparison": {
+          "type": "comparison",
+          "settings": {
+            "column": "left",
+            "title": "Mouth Breathing, Behavior & Daytime Sleepiness",
+            "badge": "",
+            "row1_label": "Persisted",
+            "row1_value": "Mouth breathing remained",
+            "row2_label": "Improved",
+            "row2_value": "Mouth breathing improved",
+            "body": "<p>Research has found that children whose mouth breathing improved also showed improvements in behavior, daytime sleepiness, and quality of life.</p>",
+            "note": "<p>Post-hoc analysis of Childhood Adenotonsillectomy Trial data in children with obstructive sleep apnea. Improvements were greater than in children whose mouth breathing persisted. This study did not evaluate Muzzle Kids or mouth tape.</p>",
+            "source_label": "Source: Sleep and Breathing",
+            "source_url": ""
+          }
+        },
+        "research_text": {
+          "type": "text",
+          "settings": {
+            "column": "right",
+            "title": "Facial & Dental Development",
+            "badge": "",
+            "body": "<p>Chronic mouth breathing during childhood has been associated with differences in facial and dental development.</p>",
+            "note": "<p>A systematic review and meta-analysis found differences in the maxilla, mandible, occlusal plane, and airway between mouth-breathing and nasal-breathing children.</p>",
+            "source_label": "Source: BMC Oral Health",
+            "source_url": ""
+          }
+        },
+        "research_disclaimer": {
+          "type": "disclaimer",
+          "settings": {
+            "column": "right",
+            "title": "The research above shows associations and does not prove cause and effect.",
+            "text": "<p>Muzzle Kids is not intended to diagnose, treat, cure, or prevent any medical condition. Talk to your child's pediatrician if you have concerns about your child's sleep, breathing, behavior, or development.</p>",
+            "accent_color": "#a78bfa"
+          }
+        }
+      },
+      "block_order": [
+        "research_stats",
+        "research_progress",
+        "research_comparison",
+        "research_text",
+        "research_disclaimer"
+      ],
+      "name": "LT Advertorial Research",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "bg_gradient_color": "#F6F5FF",
+        "heading": "It’s Not Just About How They Sleep",
+        "intro": "<p>Nighttime breathing patterns have been studied in relation to daytime behavior, attention, learning, tiredness, and development. The research below highlights associations found in published studies — not product outcomes.</p>",
+        "card_bg_color": "#ffffff",
+        "card_border_color": "#eceaf3",
+        "accent_color": "#2b95dd",
+        "label_color": "#1a1442",
+        "soft_color": "#f3f1fb",
+        "padding_top": 80,
+        "padding_bottom": 80,
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -126,14 +277,40 @@
       "type": "lt-advertorial-nasal-breathing",
       "name": "LT Nasal Breathing",
       "settings": {
-        "bg_color": "#eeecfb",
+        "bg_color": "#F6F5FF",
         "text_color": "#222222",
         "heading": "Why Nasal Breathing Matters",
         "body_text": "<p>Our noses aren't just there to smell.</p><p>They're designed to filter, warm and humidify the air we breathe.</p><p>That's why healthy nasal breathing is an important habit — including during sleep.</p><p>And it's why more parents are beginning to pay attention not only to how much their kids sleep, but how they're breathing while they sleep.</p>",
-        "image": "shopify://shop_images/image_1_efcdbf18-344b-4128-8096-cdabdac62411.png",
+        "image": "shopify://shop_images/Mouth_breathing_and_nasal_breathing_illustration.png",
         "image_max_width": 400,
         "padding_top": 60,
         "padding_bottom": 60,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "advertorial_product_intro_lead": {
+      "type": "lt-advertorial-product-intro",
+      "name": "LT Product Intro",
+      "settings": {
+        "bg_color": "#ffffff",
+        "text_color": "#222222",
+        "top_heading": "Many parents start by paying closer attention to how their child breathes at night.",
+        "top_body": "<p>Muzzle Kids is designed to gently encourage nasal breathing during sleep. It is not intended to diagnose, treat, cure, or prevent any medical condition. If you have concerns about your child's sleep, breathing, behavior, or development, talk with their pediatrician.</p>",
+        "top_alignment": "center",
+        "top_max_width": 860,
+        "show_card": false,
+        "card_alignment": "center",
+        "card_max_width": 1000,
+        "card_heading": "Meet Muzzle Kids",
+        "card_body": "<p>Muzzle Kids is designed to gently encourage nasal breathing during sleep.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
+        "image_max_width": 500,
+        "note_title": "Important: Muzzle Kids is not intended to diagnose, treat, cure, or prevent ADHD, behavioral issues, learning difficulties, daytime sleepiness, facial/dental development concerns, or sleep-disordered breathing.",
+        "note_text": "<p>If your child snores, gasps, struggles to breathe or you suspect a sleep or airway issue, talk with their pediatrician, dentist or another qualified healthcare professional before beginning use. Muzzle Kids is designed to gently encourage nasal breathing during sleep and should not be presented as a substitute for evaluation or appropriate treatment.</p>",
+        "note_bg_color": "#f5f3fd",
+        "note_text_color": "#1a1442",
+        "padding_top": 60,
+        "padding_bottom": 40,
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -145,11 +322,20 @@
         "bg_color": "#ffffff",
         "text_color": "#222222",
         "top_heading": "A Simple Bedtime Habit to Consider",
-        "top_body": "<p>For children who can already breathe comfortably through their nose and have been appropriately evaluated when needed, some families use gentle mouth tape as part of a nasal-breathing bedtime routine.</p><p>That's where Muzzle Sleep comes in.</p>",
-        "card_heading": "Meet Muzzle",
-        "card_body": "<p>Muzzle is designed to make mouth taping feel more comfortable and approachable.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
+        "top_body": "<p>For children who can already breathe comfortably through their nose and have been appropriately evaluated when needed, some families use gentle mouth tape as part of a nasal-breathing bedtime routine.</p><p>That's where Muzzle Kids comes in.</p>",
+        "top_alignment": "left",
+        "top_max_width": 1000,
+        "show_card": true,
+        "card_alignment": "center",
+        "card_max_width": 1000,
+        "card_heading": "Meet Muzzle Kids",
+        "card_body": "<p>Muzzle Kids is designed to gently encourage nasal breathing during sleep.</p><p>Rather than thinking of it as “taping the mouth shut,” think of it as a gentle nighttime cue that encourages the lips to remain closed while sleeping.</p><p>A small change to the bedtime routine. A bigger focus on better sleep habits.</p>",
         "product_image": "shopify://shop_images/Muzzle_Sleep_-_28_2.png",
         "image_max_width": 400,
+        "note_title": "Important: Muzzle Kids is not intended to diagnose, treat, cure, or prevent ADHD, behavioral issues, learning difficulties, daytime sleepiness, facial/dental development concerns, or sleep-disordered breathing.",
+        "note_text": "<p>If your child snores, gasps, struggles to breathe or you suspect a sleep or airway issue, talk with their pediatrician, dentist or another qualified healthcare professional before beginning use. Muzzle Kids is designed to gently encourage nasal breathing during sleep and should not be presented as a substitute for evaluation or appropriate treatment.</p>",
+        "note_bg_color": "#f5f3fd",
+        "note_text_color": "#1a1442",
         "padding_top": 60,
         "padding_bottom": 60,
         "margin_top": 0,
@@ -222,7 +408,9 @@
     "main",
     "advertorial_hero",
     "advertorial_signs",
+    "advertorial_research",
     "advertorial_nasal_breathing",
+    "advertorial_product_intro_lead",
     "advertorial_product_intro",
     "advertorial_bedtime_cta"
   ]
