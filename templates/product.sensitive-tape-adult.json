@@ -66,6 +66,7 @@
         },
         "testimonial_3dinmP": {
           "type": "testimonial",
+          "disabled": true,
           "settings": {
             "text": "As a parent giving my child the opportunity for a well rested night sleep is a must. It’s easy enough for my 9 year old to do himself. The medium strength adhesive is strong enough to stay on without irritating his skin. All around great product.",
             "customer_name": "Daniella S."
@@ -80,6 +81,7 @@
         },
         "testimonial_zCnn6f": {
           "type": "testimonial",
+          "disabled": true,
           "settings": {
             "text": "Muzzle Kids Mouth Tape has been a game-changer for my kids’ sleep! I love that it’s safe, third-party tested, and designed with a breathable opening—giving me peace of mind while improving their breathing and rest.",
             "customer_name": "Caitlin W."
