@@ -428,7 +428,7 @@
         </div> {% endcomment %}
 
         <!-- Reviews Section -->
-        <div class="reviews-section">
+        {% comment %} <div class="reviews-section">
           {%- assign atf_reviews = product.metafields.custom.product_abovethefold_reviews.value -%}
           <div class="swiper review-swiper">
             <div class="swiper-wrapper">
@@ -470,7 +470,7 @@
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
           </div>
-        </div>        
+        </div>         {% endcomment %}
 
         <!-- Accordion Section -->
         <div class="accordion-section">
