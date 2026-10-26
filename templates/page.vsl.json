@@ -519,6 +519,8 @@
         "accordion_background": "#ff5cb3",
         "accordion_text_color": "#ffffff",
         "allow_multiple": false,
+        "before_image": "shopify://shop_images/ee282027f2d86789086c0be2e3136084290d0f72.jpg",
+        "after_image": "shopify://shop_images/edc796fb25fc89f47769cc81a354dc77d1a5aef0.jpg",
         "before_label": "Before",
         "after_label": "After",
         "initial_position": 50,
