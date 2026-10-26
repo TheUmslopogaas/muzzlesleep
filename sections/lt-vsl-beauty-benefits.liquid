@@ -10,8 +10,8 @@
 
   assign overlay = section.settings.overlay_color
   assign overlay_0 = overlay | color_modify: 'alpha', 0
-  assign overlay_1 = overlay | color_modify: 'alpha', 0.4
-  assign overlay_2 = overlay | color_modify: 'alpha', 0.9
+  assign overlay_1 = overlay | color_modify: 'alpha', 0.45
+  assign overlay_2 = overlay | color_modify: 'alpha', 0.88
 -%}
 
 <style>
@@ -110,7 +110,7 @@
     margin: 0;
     padding: 0;
     aspect-ratio: 395 / 410;
-    border: 3px solid rgba(160, 140, 152, 0.65);
+    border: 2px solid #d4d4d4;
     border-radius: 44px;
     overflow: hidden;
     background-color: #e8a3c4;
@@ -140,8 +140,9 @@
     fill: rgba(0, 0, 0, 0.2);
   }
 
-  /* Frosted blur fading in from the sharp upper image */
-  #shopify-section-{{ section.id }} .lt-vsl-benefits__blur {
+  /* Frosted blur fading in from the sharp upper image (pseudo-elements: theme hides div:empty) */
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__card::before {
+    content: '';
     position: absolute;
     right: 0;
     bottom: 0;
@@ -155,7 +156,8 @@
     pointer-events: none;
   }
 
-  #shopify-section-{{ section.id }} .lt-vsl-benefits__shade {
+  #shopify-section-{{ section.id }} .lt-vsl-benefits__card::after {
+    content: '';
     position: absolute;
     right: 0;
     bottom: 0;
@@ -199,7 +201,7 @@
 
   #shopify-section-{{ section.id }} .lt-vsl-benefits__wide-media {
     aspect-ratio: 1228 / 410;
-    border: 3px solid rgba(130, 130, 130, 0.8);
+    border: 2px solid #d4d4d4;
     border-radius: 48px;
     overflow: hidden;
     background-color: #2b2b2b;
@@ -360,8 +362,6 @@
                 {{ 'image' | placeholder_svg_tag }}
               {%- endif -%}
             </div>
-            <div class="lt-vsl-benefits__blur" aria-hidden="true"></div>
-            <div class="lt-vsl-benefits__shade" aria-hidden="true"></div>
             <div class="lt-vsl-benefits__content">
               {%- if block.settings.title != blank -%}
                 <h3 class="lt-vsl-benefits__title">{{ block.settings.title | escape }}</h3>

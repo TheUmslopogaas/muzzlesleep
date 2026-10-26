@@ -144,6 +144,7 @@
     z-index: 0;
   }
 
+  #shopify-section-{{ section.id }} .lt-testi__poster,
   #shopify-section-{{ section.id }} .lt-testi__video,
   #shopify-section-{{ section.id }} .lt-testi__media svg {
     display: block;
@@ -153,12 +154,99 @@
     pointer-events: none;
   }
 
+  /* Video sits over the thumbnail and only shows once it has frames */
+  #shopify-section-{{ section.id }} .lt-testi__video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__card.has-started .lt-testi__video {
+    opacity: 1;
+  }
+
+  /* Tap to play: the whole card is the button */
+  #shopify-section-{{ section.id }} .lt-testi__play {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__play:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: -6px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__play-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.18);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    backdrop-filter: blur(14px) saturate(120%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__play-icon svg {
+    display: block;
+    width: 26px;
+    height: 26px;
+    margin-left: 3px;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__play:hover .lt-testi__play-icon {
+    transform: scale(1.06);
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__card.is-playing .lt-testi__play-icon {
+    opacity: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-testi__card.is-loading .lt-testi__play-icon {
+    animation: lt-testi-pulse-{{ section.id }} 1.2s ease-in-out infinite;
+  }
+
+  @keyframes lt-testi-pulse-{{ section.id }} {
+    50% { opacity: 0.55; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .lt-testi__video,
+    #shopify-section-{{ section.id }} .lt-testi__play-icon {
+      transition: none;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__card.is-loading .lt-testi__play-icon {
+      animation: none;
+      opacity: 0.55;
+    }
+  }
+
   #shopify-section-{{ section.id }} .lt-testi__media svg {
     background-color: #5a5a5a;
     fill: rgba(255, 255, 255, 0.25);
   }
 
-  #shopify-section-{{ section.id }} .lt-testi__shade {
+  /* Pseudo-element: theme hides div:empty */
+  #shopify-section-{{ section.id }} .lt-testi__card::before {
+    content: '';
     position: absolute;
     top: 0;
     right: 0;
@@ -303,6 +391,16 @@
       top: 16px;
       left: 18px;
     }
+
+    #shopify-section-{{ section.id }} .lt-testi__play-icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    #shopify-section-{{ section.id }} .lt-testi__play-icon svg {
+      width: 22px;
+      height: 22px;
+    }
   }
 </style>
 
@@ -350,32 +448,30 @@
           -%}
           <li class="lt-testi__card" {{ block.shopify_attributes }}>
             <div class="lt-testi__media">
-              {%- if video != blank and src != nil -%}
-                <video
-                  class="lt-testi__video"
-                  muted
-                  loop
-                  playsinline
-                  preload="none"
-                  poster="{{ video.preview_image | image_url: width: 800 }}"
-                  aria-label="{{ block.settings.username | escape }}"
-                >
-                  <source src="{{ src.url }}" type="{{ src.mime_type }}">
-                </video>
-              {%- elsif video != blank and video.preview_image != blank -%}
+              {%- if video != blank and video.preview_image != blank -%}
                 <img
-                  class="lt-testi__video"
+                  class="lt-testi__poster"
                   src="{{ video.preview_image | image_url: width: 800 }}"
+                  srcset="{{ video.preview_image | image_url: width: 400 }} 400w, {{ video.preview_image | image_url: width: 800 }} 800w"
+                  sizes="(max-width: 767px) 340px, 400px"
                   alt="{{ block.settings.username | escape }}"
+                  width="{{ video.preview_image.width }}"
+                  height="{{ video.preview_image.height }}"
                   loading="lazy"
                   draggable="false"
                 >
               {%- else -%}
                 {{ 'lifestyle-1' | placeholder_svg_tag }}
               {%- endif -%}
+              {%- if video != blank and src != nil -%}
+                {%- comment -%} Nothing in here downloads until the card is tapped {%- endcomment -%}
+                <template class="lt-testi__player-template">
+                  <video class="lt-testi__video" playsinline preload="auto" aria-hidden="true">
+                    <source src="{{ src.url }}" type="{{ src.mime_type }}">
+                  </video>
+                </template>
+              {%- endif -%}
             </div>
-
-            <div class="lt-testi__shade" aria-hidden="true"></div>
 
             <div class="lt-testi__profile">
               <div class="lt-testi__avatar">
@@ -409,6 +505,24 @@
                 {%- endif -%}
               </div>
             </div>
+
+            {%- if video != blank and src != nil -%}
+              {%- capture play_label -%}Play video from {{ block.settings.username | default: 'customer' }}{%- endcapture -%}
+              {%- capture pause_label -%}Pause video from {{ block.settings.username | default: 'customer' }}{%- endcapture -%}
+              <button
+                class="lt-testi__play"
+                type="button"
+                aria-label="{{ play_label | escape }}"
+                data-label-play="{{ play_label | escape }}"
+                data-label-pause="{{ pause_label | escape }}"
+              >
+                <span class="lt-testi__play-icon" aria-hidden="true">
+                  <svg viewBox="0 0 44 44" fill="currentColor" focusable="false">
+                    <path d="M12 7.5v29L36.5 22 12 7.5z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </button>
+            {%- endif -%}
           </li>
         {%- endfor -%}
       </ul>
@@ -427,11 +541,12 @@
       var cards = [];
       var observer = null;
       var bound = false;
+      var pressed = false;
       var dragging = false;
+      var dragged = false;
       var startX = 0;
       var startScroll = 0;
       var initTimer = 0;
-      var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function cardCenter(card) {
         return card.offsetLeft + card.offsetWidth / 2;
@@ -466,22 +581,31 @@
         scrollToCard(best, true);
       }
 
-      /* Mouse drag (touch uses native scrolling) */
+      /* Mouse drag (touch uses native scrolling); a short press stays a click */
       function onPointerDown(event) {
+        dragged = false;
         if (event.pointerType !== 'mouse' || event.button !== 0) return;
-        dragging = true;
+        pressed = true;
         startX = event.clientX;
         startScroll = viewport.scrollLeft;
-        viewport.classList.add('lt-is-grabbing');
-        try { viewport.setPointerCapture(event.pointerId); } catch (e) {}
       }
 
       function onPointerMove(event) {
-        if (!dragging) return;
-        viewport.scrollLeft = startScroll - (event.clientX - startX);
+        if (!pressed) return;
+        var delta = event.clientX - startX;
+        if (!dragging) {
+          if (Math.abs(delta) < 6) return;
+          dragging = true;
+          dragged = true;
+          viewport.classList.add('lt-is-grabbing');
+          try { viewport.setPointerCapture(event.pointerId); } catch (e) {}
+        }
+        viewport.scrollLeft = startScroll - delta;
       }
 
       function onPointerEnd(event) {
+        if (!pressed) return;
+        pressed = false;
         if (!dragging) return;
         dragging = false;
         viewport.classList.remove('lt-is-grabbing');
@@ -489,17 +613,86 @@
         snapToNearest();
       }
 
-      /* Only play the videos that are actually on screen */
+      /* Tap to play: the video is only created (and downloaded) on first tap */
+      function getVideo(card, create) {
+        var video = card.querySelector('video.lt-testi__video');
+        if (video || !create) return video;
+        var tpl = card.querySelector('.lt-testi__player-template');
+        if (!tpl) return null;
+        var frag = document.importNode(tpl.content, true);
+        video = frag.querySelector('video');
+        if (!video) return null;
+        card.querySelector('.lt-testi__media').appendChild(frag);
+        return video;
+      }
+
+      function setPlaying(card, playing) {
+        var button = card.querySelector('.lt-testi__play');
+        card.classList.toggle('is-playing', playing);
+        if (button) {
+          button.setAttribute('aria-label', button.getAttribute(playing ? 'data-label-pause' : 'data-label-play'));
+        }
+      }
+
+      function pauseOthers(current) {
+        cards.forEach(function (card) {
+          if (card === current) return;
+          var video = getVideo(card, false);
+          if (video && !video.paused) video.pause();
+        });
+      }
+
+      function toggle(card) {
+        var video = getVideo(card, true);
+        if (!video) return;
+        if (!video.paused) {
+          video.pause();
+          return;
+        }
+        pauseOthers(card);
+        card.classList.add('is-loading');
+        var attempt = video.play();
+        if (attempt && typeof attempt.catch === 'function') {
+          attempt.catch(function () {
+            card.classList.remove('is-loading');
+            setPlaying(card, false);
+          });
+        }
+      }
+
+      function onClick(event) {
+        var button = event.target.closest ? event.target.closest('.lt-testi__play') : null;
+        if (!button || !viewport.contains(button)) return;
+        if (dragged) {
+          dragged = false;
+          return;
+        }
+        toggle(button.closest('.lt-testi__card'));
+      }
+
+      /* Media events do not bubble, so listen in the capture phase */
+      function onVideoPlaying(event) {
+        var card = event.target.closest && event.target.closest('.lt-testi__card');
+        if (!card) return;
+        card.classList.remove('is-loading');
+        card.classList.add('has-started');
+        setPlaying(card, true);
+      }
+
+      function onVideoStopped(event) {
+        if (event.target.tagName !== 'VIDEO' && event.target.tagName !== 'SOURCE') return;
+        var card = event.target.closest('.lt-testi__card');
+        if (!card) return;
+        card.classList.remove('is-loading');
+        setPlaying(card, false);
+      }
+
+      /* Pause a playing video once its card leaves the screen */
       function onIntersect(entries) {
         entries.forEach(function (entry) {
-          var video = entry.target.querySelector('video');
-          if (!video) return;
-          if (entry.isIntersecting && !reduceMotion) {
-            var attempt = video.play();
-            if (attempt && typeof attempt.catch === 'function') attempt.catch(function () {});
-          } else {
-            video.pause();
-          }
+          if (entry.isIntersecting) return;
+          var video = getVideo(entry.target, false);
+          if (video && !video.paused) video.pause();
         });
       }
 
@@ -513,9 +706,14 @@
         viewport.addEventListener('pointermove', onPointerMove);
         viewport.addEventListener('pointerup', onPointerEnd);
         viewport.addEventListener('pointercancel', onPointerEnd);
+        viewport.addEventListener('click', onClick);
+        viewport.addEventListener('playing', onVideoPlaying, true);
+        viewport.addEventListener('pause', onVideoStopped, true);
+        viewport.addEventListener('ended', onVideoStopped, true);
+        viewport.addEventListener('error', onVideoStopped, true);
 
         if ('IntersectionObserver' in window) {
-          observer = new IntersectionObserver(onIntersect, { root: viewport, threshold: 0.5 });
+          observer = new IntersectionObserver(onIntersect, { threshold: 0.25 });
           cards.forEach(function (card) { observer.observe(card); });
         }
 
@@ -529,6 +727,11 @@
           viewport.removeEventListener('pointermove', onPointerMove);
           viewport.removeEventListener('pointerup', onPointerEnd);
           viewport.removeEventListener('pointercancel', onPointerEnd);
+          viewport.removeEventListener('click', onClick);
+          viewport.removeEventListener('playing', onVideoPlaying, true);
+          viewport.removeEventListener('pause', onVideoStopped, true);
+          viewport.removeEventListener('ended', onVideoStopped, true);
+          viewport.removeEventListener('error', onVideoStopped, true);
           var videos = viewport.querySelectorAll('video');
           for (var i = 0; i < videos.length; i++) videos[i].pause();
         }
@@ -538,7 +741,9 @@
         root.removeEventListener('shopify:section:unload', destroy);
         observer = null;
         initTimer = 0;
+        pressed = false;
         dragging = false;
+        dragged = false;
         bound = false;
         viewport = null;
         cards = [];

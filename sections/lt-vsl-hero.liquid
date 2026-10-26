@@ -6,6 +6,33 @@
     assign has_source = true
   endif
 
+  assign cover = section.settings.poster_image
+  if cover == blank and video != blank and video.preview_image != blank
+    assign cover = video.preview_image
+  endif
+
+  assign hls_src = nil
+  assign mp4_src = nil
+  if video != blank
+    for s in video.sources
+      if s.format == 'm3u8'
+        assign hls_src = s
+      elsif s.format == 'mp4' and s.width <= 1080
+        if mp4_src == nil or s.width > mp4_src.width
+          assign mp4_src = s
+        endif
+      endif
+    endfor
+    if mp4_src == nil
+      for s in video.sources
+        if s.format == 'mp4'
+          assign mp4_src = s
+          break
+        endif
+      endfor
+    endif
+  endif
+
   assign pt = section.settings.padding_top
   assign pb = section.settings.padding_bottom
   assign mt = section.settings.margin_top
@@ -290,6 +317,23 @@
     display: none;
   }
 
+  /* Cover stays visible until the video actually starts */
+  #shopify-section-{{ section.id }} .lt-vsl-hero__media.is-loading .lt-vsl-hero__play {
+    pointer-events: none;
+    animation: lt-vsl-hero-pulse-{{ section.id }} 1.2s ease-in-out infinite;
+  }
+
+  @keyframes lt-vsl-hero-pulse-{{ section.id }} {
+    50% { opacity: 0.55; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .lt-vsl-hero__media.is-loading .lt-vsl-hero__play {
+      animation: none;
+      opacity: 0.55;
+    }
+  }
+
   #shopify-section-{{ section.id }} .lt-vsl-hero__player {
     position: absolute;
     inset: 0;
@@ -299,6 +343,11 @@
     border: 0;
     object-fit: cover;
     background-color: #000000;
+    opacity: 0;
+  }
+
+  #shopify-section-{{ section.id }} .lt-vsl-hero__media.is-playing .lt-vsl-hero__player {
+    opacity: 1;
   }
 
   /* Logos */
@@ -580,14 +629,15 @@
 
     <div class="lt-vsl-hero__media">
       <div class="lt-vsl-hero__poster">
-        {%- if section.settings.poster_image != blank -%}
+        {%- if cover != blank -%}
           <img
-            src="{{ section.settings.poster_image | image_url: width: 1228 }}"
-            srcset="{{ section.settings.poster_image | image_url: width: 640 }} 640w, {{ section.settings.poster_image | image_url: width: 1228 }} 1228w, {{ section.settings.poster_image | image_url: width: 2456 }} 2456w"
+            src="{{ cover | image_url: width: 1228 }}"
+            srcset="{{ cover | image_url: width: 640 }} 640w, {{ cover | image_url: width: 1228 }} 1228w, {{ cover | image_url: width: 2456 }} 2456w"
             sizes="(max-width: 767px) 100vw, 1228px"
-            alt="{{ section.settings.poster_image.alt | default: section.settings.poster_alt | escape }}"
-            width="{{ section.settings.poster_image.width }}"
-            height="{{ section.settings.poster_image.height }}"
+            alt="{{ cover.alt | default: section.settings.poster_alt | escape }}"
+            width="{{ cover.width }}"
+            height="{{ cover.height }}"
+            fetchpriority="high"
           >
         {%- else -%}
           {{ 'lifestyle-1' | placeholder_svg_tag }}
@@ -605,7 +655,21 @@
       {%- if has_source -%}
         <template class="lt-vsl-hero__player-template">
           {%- if video != blank -%}
-            {{ video | video_tag: image_size: '1440x', autoplay: true, controls: true, playsinline: true, class: 'lt-vsl-hero__player' }}
+            <video
+              class="lt-vsl-hero__player"
+              controls
+              playsinline
+              preload="auto"
+              {% if cover != blank %}poster="{{ cover | image_url: width: 1440 }}"{% endif %}
+              aria-label="{{ section.settings.play_label | escape }}"
+            >
+              {%- if hls_src != nil -%}
+                <source src="{{ hls_src.url }}" type="{{ hls_src.mime_type }}">
+              {%- endif -%}
+              {%- if mp4_src != nil -%}
+                <source src="{{ mp4_src.url }}" type="{{ mp4_src.mime_type }}">
+              {%- endif -%}
+            </video>
           {%- elsif video_url.type == 'youtube' -%}
             <iframe
               class="lt-vsl-hero__player"
@@ -670,22 +734,46 @@
 
       var media = null;
       var button = null;
+      var player = null;
+      var revealTimer = 0;
       var bound = false;
+
+      /* Swap the cover for the player only once it has something to show */
+      function reveal() {
+        if (!media) return;
+        if (revealTimer) clearTimeout(revealTimer);
+        revealTimer = 0;
+        media.classList.remove('is-loading');
+        media.classList.add('is-playing');
+        if (player) {
+          player.setAttribute('tabindex', '-1');
+          player.focus({ preventScroll: true });
+        }
+      }
 
       function onPlay() {
         var tpl = media.querySelector('.lt-vsl-hero__player-template');
-        if (!tpl || media.classList.contains('is-playing')) return;
+        if (!tpl || player) return;
         var frag = document.importNode(tpl.content, true);
-        var player = frag.querySelector('.lt-vsl-hero__player');
+        player = frag.querySelector('.lt-vsl-hero__player');
         if (!player) return;
-        media.classList.add('is-playing');
+        media.classList.add('is-loading');
+
+        if (player.tagName === 'VIDEO') {
+          player.addEventListener('playing', reveal);
+          player.addEventListener('error', reveal);
+        } else {
+          player.addEventListener('load', reveal);
+        }
         media.appendChild(frag);
+
+        /* Never leave the visitor stuck on a pulsing button */
+        revealTimer = setTimeout(reveal, 8000);
+
         if (typeof player.play === 'function') {
           var attempt = player.play();
-          if (attempt && typeof attempt.catch === 'function') attempt.catch(function () {});
+          if (attempt && typeof attempt.catch === 'function') attempt.catch(reveal);
         }
-        player.setAttribute('tabindex', '-1');
-        player.focus();
       }
 
       function init() {
@@ -701,13 +789,18 @@
         if (button) button.removeEventListener('click', onPlay);
         root.removeEventListener('shopify:section:load', init);
         root.removeEventListener('shopify:section:unload', destroy);
-        if (media) {
-          var player = media.querySelector('video.lt-vsl-hero__player');
-          if (player) player.pause();
+        if (revealTimer) clearTimeout(revealTimer);
+        if (player) {
+          player.removeEventListener('playing', reveal);
+          player.removeEventListener('error', reveal);
+          player.removeEventListener('load', reveal);
+          if (typeof player.pause === 'function') player.pause();
         }
+        revealTimer = 0;
         bound = false;
         media = null;
         button = null;
+        player = null;
         delete root.ltVslHeroDestroy;
       }
 
