@@ -592,6 +592,7 @@
         "testimonial_1": {
           "type": "testimonial",
           "settings": {
+            "video": "shopify://files/videos/UGC-Beautytape1.mp4",
             "username": "usernamehere",
             "followers": "10k followers"
           }
@@ -599,6 +600,31 @@
         "testimonial_2": {
           "type": "testimonial",
           "settings": {
+            "video": "shopify://files/videos/content-2550772 (1).mp4",
+            "username": "usernamehere",
+            "followers": "10k followers"
+          }
+        },
+        "testimonial_ejxcWJ": {
+          "type": "testimonial",
+          "settings": {
+            "video": "shopify://files/videos/Product Demo 2 - Beauty.mp4",
+            "username": "usernamehere",
+            "followers": "10k followers"
+          }
+        },
+        "testimonial_TcmYjp": {
+          "type": "testimonial",
+          "settings": {
+            "video": "shopify://files/videos/UGC-Beautytape1.mp4",
+            "username": "usernamehere",
+            "followers": "10k followers"
+          }
+        },
+        "testimonial_tbRc6A": {
+          "type": "testimonial",
+          "settings": {
+            "video": "shopify://files/videos/content-2550772 (1).mp4",
             "username": "usernamehere",
             "followers": "10k followers"
           }
@@ -606,27 +632,7 @@
         "testimonial_3": {
           "type": "testimonial",
           "settings": {
-            "username": "usernamehere",
-            "followers": "10k followers"
-          }
-        },
-        "testimonial_4": {
-          "type": "testimonial",
-          "settings": {
-            "username": "usernamehere",
-            "followers": "10k followers"
-          }
-        },
-        "testimonial_5": {
-          "type": "testimonial",
-          "settings": {
-            "username": "usernamehere",
-            "followers": "10k followers"
-          }
-        },
-        "testimonial_6": {
-          "type": "testimonial",
-          "settings": {
+            "video": "shopify://files/videos/Product Demo 2 - Beauty.mp4",
             "username": "usernamehere",
             "followers": "10k followers"
           }
@@ -635,10 +641,10 @@
       "block_order": [
         "testimonial_1",
         "testimonial_2",
-        "testimonial_3",
-        "testimonial_4",
-        "testimonial_5",
-        "testimonial_6"
+        "testimonial_ejxcWJ",
+        "testimonial_TcmYjp",
+        "testimonial_tbRc6A",
+        "testimonial_3"
       ],
       "settings": {
         "background_color": "#ffffff",
