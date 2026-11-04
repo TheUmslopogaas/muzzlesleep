@@ -256,6 +256,11 @@
         "type": "shopify://apps/alia/blocks/customer-app-frame/51f1d398-3e41-44da-b81e-defd5804b292",
         "disabled": false,
         "settings": {}
+      },
+      "8176665580738358564": {
+        "type": "shopify://apps/nile-ai-commerce/blocks/nile-click/019d46c7-7c2d-78f0-b4eb-3851ba32c786",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
