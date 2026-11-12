@@ -1,0 +1,1085 @@
+{%- comment -%}
+  LT Product Cards
+  ------------------------------------------------------------------
+  - One block = one product card. Pick a product and everything is pulled
+    from Shopify; every field can be overridden from the block settings.
+  - Price / compare-at overrides only apply when NO product is selected.
+  - Add to Cart posts to /cart/add.js and opens the Rebuy Smart Cart.
+  - Cards never link anywhere unless "Make cards clickable" is turned on.
+  - Carousel (Swiper 11, loaded globally in layout/theme.liquid) or grid,
+    configured independently for desktop (>= 750px) and mobile.
+{%- endcomment -%}
+
+{{ 'lt-product-cards.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'lt-product-cards.js' | asset_url }}" defer="defer"></script>
+
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+
+  assign layout_d = s.layout_desktop
+  assign layout_m = s.layout_mobile
+  if layout_m == 'same'
+    assign layout_m = layout_d
+  endif
+
+  assign spv_d = s.peek_d | divided_by: 100.0 | plus: s.per_row_d
+  assign spv_m = s.peek_m | divided_by: 100.0 | plus: s.per_row_m
+
+  assign current_product_id = 0
+  if product
+    assign current_product_id = product.id
+  endif
+
+  case s.header_align_d
+    when 'left'
+      assign h_items_d = 'flex-start'
+    when 'right'
+      assign h_items_d = 'flex-end'
+    else
+      assign h_items_d = 'center'
+  endcase
+  case s.header_align_m
+    when 'left'
+      assign h_items_m = 'flex-start'
+    when 'right'
+      assign h_items_m = 'flex-end'
+    else
+      assign h_items_m = 'center'
+  endcase
+
+  if s.card_align == 'left'
+    assign card_items = 'flex-start'
+  else
+    assign card_items = 'center'
+  endif
+
+  case s.img_ratio
+    when 'portrait'
+      assign img_ratio = '4 / 5'
+    when 'tall'
+      assign img_ratio = '3 / 4'
+    when 'landscape'
+      assign img_ratio = '4 / 3'
+    when 'wide'
+      assign img_ratio = '16 / 9'
+    when 'natural'
+      assign img_ratio = 'auto'
+    else
+      assign img_ratio = '1 / 1'
+  endcase
+
+  if s.grid_justify == 'left'
+    assign grid_justify = 'flex-start'
+  else
+    assign grid_justify = 'center'
+  endif
+
+  if s.btn_font == 'body'
+    assign btn_font = 'var(--font-body-family)'
+  else
+    assign btn_font = 'var(--font-heading-family)'
+  endif
+
+  assign root_classes = 'lt-pc lt-pc--d-' | append: layout_d | append: ' lt-pc--m-' | append: layout_m
+  assign root_classes = root_classes | append: ' lt-pc--ad-' | append: s.arrow_pos_d | append: ' lt-pc--am-' | append: s.arrow_pos_m
+  unless s.arrows_d
+    assign root_classes = root_classes | append: ' lt-pc--d-noarrows'
+  endunless
+  unless s.arrows_m
+    assign root_classes = root_classes | append: ' lt-pc--m-noarrows'
+  endunless
+  unless s.dots_d
+    assign root_classes = root_classes | append: ' lt-pc--d-nodots'
+  endunless
+  unless s.dots_m
+    assign root_classes = root_classes | append: ' lt-pc--m-nodots'
+  endunless
+  if s.btn_full_width
+    assign root_classes = root_classes | append: ' lt-pc--btn-full'
+  endif
+  if s.select_divider
+    assign root_classes = root_classes | append: ' lt-pc--sel-divider'
+  endif
+  if s.img_ratio == 'natural'
+    assign root_classes = root_classes | append: ' lt-pc--img-natural'
+  endif
+  if s.title_lines > 0
+    assign root_classes = root_classes | append: ' lt-pc--title-clamp'
+  endif
+  if s.card_desc_lines > 0
+    assign root_classes = root_classes | append: ' lt-pc--desc-clamp'
+  endif
+  if s.card_shadow
+    assign root_classes = root_classes | append: ' lt-pc--shadow'
+  endif
+  if s.hide_on_desktop
+    assign root_classes = root_classes | append: ' lt-pc--hide-d'
+  endif
+  if s.hide_on_mobile
+    assign root_classes = root_classes | append: ' lt-pc--hide-m'
+  endif
+
+  assign img_sizes = '(min-width: 750px) calc(min(100vw, ' | append: s.max_width | append: 'px) / ' | append: spv_d | append: '), calc(100vw / ' | append: spv_m | append: ')'
+  assign visible_count = 0
+-%}
+
+{%- capture cards_html -%}
+  {%- for block in section.blocks -%}
+    {%- liquid
+      assign b = block.settings
+      assign p = b.product
+      assign has_product = false
+      if p != blank
+        assign has_product = true
+      endif
+
+      assign skip = false
+      assign is_placeholder = false
+      if has_product
+        if s.hide_current_product and current_product_id != 0 and p.id == current_product_id
+          assign skip = true
+        endif
+        if s.hide_sold_out and p.available == false
+          assign skip = true
+        endif
+      elsif b.title == blank and b.image == blank and b.price_override == blank
+        if request.design_mode
+          assign is_placeholder = true
+        else
+          assign skip = true
+        endif
+      endif
+    -%}
+    {%- if skip -%}{%- continue -%}{%- endif -%}
+    {%- assign visible_count = visible_count | plus: 1 -%}
+
+    {%- liquid
+      # ---------- Variant + purchase option (dynamic products only) ----------
+      assign sel_variant = nil
+      assign sel_alloc = nil
+      assign sel_plan_id = 'onetime'
+      assign has_plans = false
+      assign allow_onetime = true
+      assign show_variant_select = false
+      assign show_plan_select = false
+
+      if has_product
+        assign sel_variant = p.selected_or_first_available_variant | default: p.variants.first
+        assign vid = b.variant_id | strip
+        if vid != blank
+          assign vid_num = vid | plus: 0
+          for v in p.variants
+            if v.id == vid_num
+              assign sel_variant = v
+              break
+            endif
+          endfor
+        endif
+
+        if p.selling_plan_groups.size > 0
+          assign has_plans = true
+        endif
+        if has_plans and p.requires_selling_plan
+          assign allow_onetime = false
+        endif
+
+        assign option_count = 0
+        for g in p.selling_plan_groups
+          assign option_count = option_count | plus: g.selling_plans.size
+        endfor
+        if allow_onetime
+          assign option_count = option_count | plus: 1
+        endif
+
+        if has_plans and option_count > 1 and b.hide_plan_select == false
+          assign show_plan_select = true
+        endif
+        if p.has_only_default_variant == false and p.variants.size > 1 and b.hide_variant_select == false
+          assign show_variant_select = true
+        endif
+
+        if has_plans
+          if b.default_purchase == 'subscription' or allow_onetime == false
+            assign found_alloc = false
+            for g in p.selling_plan_groups
+              for sp in g.selling_plans
+                for a in sel_variant.selling_plan_allocations
+                  if a.selling_plan.id == sp.id and found_alloc == false
+                    assign sel_alloc = a
+                    assign sel_plan_id = sp.id
+                    assign found_alloc = true
+                  endif
+                endfor
+              endfor
+            endfor
+          endif
+        endif
+      endif
+
+      # ---------- Price ----------
+      assign price_html = ''
+      assign cmp_html = ''
+      assign pct = 0
+      if has_product
+        if sel_alloc
+          assign price_cents = sel_alloc.price
+          assign cmp_cents = sel_alloc.compare_at_price | default: 0
+          assign v_cmp = sel_variant.compare_at_price | default: 0
+          if v_cmp > cmp_cents
+            assign cmp_cents = v_cmp
+          endif
+        else
+          assign price_cents = sel_variant.price
+          assign cmp_cents = sel_variant.compare_at_price | default: 0
+        endif
+        if cmp_cents <= price_cents
+          assign cmp_cents = 0
+        endif
+        if cmp_cents > 0
+          assign pct = cmp_cents | minus: price_cents | times: 100.0 | divided_by: cmp_cents | round
+        endif
+      else
+        assign price_html = b.price_override | strip
+        assign cmp_html = b.compare_override | strip
+      endif
+    -%}
+    {%- if has_product -%}
+      {%- capture price_html -%}{%- render 'lt-pc-money', cents: price_cents, format: s.price_format -%}{%- endcapture -%}
+      {%- if cmp_cents > 0 -%}
+        {%- capture cmp_html -%}{%- render 'lt-pc-money', cents: cmp_cents, format: s.price_format -%}{%- endcapture -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- liquid
+      # ---------- Content ----------
+      assign card_title = b.title | default: p.title
+      if is_placeholder
+        assign card_title = 'Select a product'
+      endif
+
+      assign img = b.image
+      assign img_dynamic = false
+      if img == blank and has_product
+        assign img = sel_variant.featured_image | default: p.featured_image
+        assign img_dynamic = true
+      endif
+      assign img_alt = b.image_alt | default: img.alt | default: card_title | strip_html
+
+      assign desc_html = b.description
+      if desc_html == blank and has_product and p.description != blank
+        assign desc_html = p.description | strip_html | strip_newlines | truncatewords: s.description_words | prepend: '<p>' | append: '</p>'
+      endif
+
+      assign badge_static = ''
+      if s.show_badge and b.badge_text != blank
+        assign badge_static = b.badge_text
+      endif
+      assign show_sale_badge = false
+      if badge_static == blank and s.show_sale_badge and has_product
+        assign show_sale_badge = true
+      endif
+
+      # ---------- Reviews ----------
+      assign rating_raw = b.rating_override | strip
+      assign rating_scale = 5
+      if rating_raw == blank and has_product
+        assign rating_raw = p.metafields.reviews.rating.value.rating
+        assign rating_scale = p.metafields.reviews.rating.value.scale_max | default: 5 | round
+      endif
+      assign rating = rating_raw | times: 1.0
+      if rating > rating_scale
+        assign rating = rating_scale | times: 1.0
+      endif
+      assign rating_display = rating | round: 1
+      assign star_fill = rating | times: 100.0 | divided_by: rating_scale | round: 1
+
+      assign review_count = b.review_count_override | strip
+      if review_count == blank and has_product
+        assign review_count = p.metafields.reviews.rating_count.value | append: ''
+      endif
+
+      assign review_text = ''
+      unless s.review_text contains '[count]' and review_count == blank
+        assign review_text = s.review_text | replace: '[count]', review_count | replace: '[rating]', rating_display
+      endunless
+
+      # ---------- Link (only when explicitly enabled) ----------
+      assign card_url = b.link
+      if card_url == blank and has_product
+        assign card_url = p.url
+      endif
+      assign card_linked = false
+      if s.enable_card_link and card_url != blank
+        assign card_linked = true
+      endif
+
+      # ---------- Labels ----------
+      assign atc_label = b.button_label | default: s.atc_label
+      assign link_label = b.button_label | default: s.link_button_label
+      assign one_time_label = b.one_time_label | default: s.one_time_label
+      assign sub_label_tpl = b.subscription_label | default: s.subscription_label
+    -%}
+
+    <div class="swiper-slide lt-pc__slide">
+      <div
+        class="lt-pc__card{% if is_placeholder %} lt-pc__card--placeholder{% endif %}"
+        role="group"
+        aria-label="{{ card_title | strip_html | escape }}"
+        {% if has_product %}
+          data-lt-pc-card
+          data-variant-id="{{ sel_variant.id }}"
+          data-plan-id="{{ sel_plan_id }}"
+          data-dynamic-image="{{ img_dynamic }}"
+        {% endif %}
+        {{ block.shopify_attributes }}
+      >
+        {%- capture media_inner -%}
+          {%- if img != blank -%}
+            <picture class="lt-pc__picture">
+              {%- if b.mobile_image != blank -%}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="{{ b.mobile_image | image_url: width: 400 }} 400w, {{ b.mobile_image | image_url: width: 600 }} 600w, {{ b.mobile_image | image_url: width: 800 }} 800w"
+                  sizes="{{ img_sizes }}"
+                >
+              {%- endif -%}
+              {{
+                img
+                | image_url: width: 900
+                | image_tag:
+                  widths: '240, 360, 480, 600, 720, 900',
+                  sizes: img_sizes,
+                  loading: 'lazy',
+                  alt: img_alt,
+                  class: 'lt-pc__img',
+                  draggable: 'false'
+              }}
+            </picture>
+          {%- elsif b.mobile_image != blank -%}
+            {{
+              b.mobile_image
+              | image_url: width: 800
+              | image_tag: sizes: img_sizes, loading: 'lazy', alt: img_alt, class: 'lt-pc__img', draggable: 'false'
+            }}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'lt-pc__img lt-pc__img--placeholder' }}
+          {%- endif -%}
+
+          {%- if badge_static != blank -%}
+            <span class="lt-pc__badge">{{ badge_static | escape }}</span>
+          {%- elsif show_sale_badge -%}
+            <span class="lt-pc__badge" data-lt-pc-sale-badge {% if pct == 0 %}hidden{% endif %}>
+              {{- s.sale_badge_text | replace: '[percent]', pct | escape -}}
+            </span>
+          {%- endif -%}
+        {%- endcapture -%}
+
+        {%- if card_linked -%}
+          <a class="lt-pc__media" href="{{ card_url }}"{% if b.link_new_tab %} target="_blank" rel="noopener"{% endif %} tabindex="-1" aria-hidden="true">
+            {{- media_inner -}}
+          </a>
+        {%- else -%}
+          <div class="lt-pc__media">{{- media_inner -}}</div>
+        {%- endif -%}
+
+        <div class="lt-pc__body">
+          {%- if card_title != blank -%}
+            <h3 class="lt-pc__title">
+              {%- if card_linked -%}
+                <a href="{{ card_url }}"{% if b.link_new_tab %} target="_blank" rel="noopener"{% endif %}>{{ card_title | escape }}</a>
+              {%- else -%}
+                {{- card_title | escape -}}
+              {%- endif -%}
+            </h3>
+          {%- endif -%}
+
+          {%- if s.show_reviews and rating > 0 -%}
+            <div class="lt-pc__reviews">
+              <span class="lt-pc__stars" style="--fill: {{ star_fill }}%;" aria-label="{{ rating_display }} out of {{ rating_scale }} stars" role="img">
+                <span class="lt-pc__stars-base" aria-hidden="true">
+                  {%- for i in (1..5) -%}{%- render 'lt-pc-star' -%}{%- endfor -%}
+                </span>
+                <span class="lt-pc__stars-fill" aria-hidden="true">
+                  {%- for i in (1..5) -%}{%- render 'lt-pc-star' -%}{%- endfor -%}
+                </span>
+              </span>
+              {%- if review_text != blank -%}
+                <span class="lt-pc__reviews-text">{{ review_text | escape }}</span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if s.show_description and desc_html != blank -%}
+            <div class="lt-pc__desc rte">{{ desc_html }}</div>
+          {%- endif -%}
+
+          {%- if price_html != blank -%}
+            {%- assign show_cmp = false -%}
+            {%- if s.show_compare_at and cmp_html != blank -%}{%- assign show_cmp = true -%}{%- endif -%}
+            <div class="lt-pc__price{% if show_cmp %} is-sale{% endif %}" data-lt-pc-price-wrap>
+              <span class="lt-pc__price-current" data-lt-pc-price>{{ price_html | escape }}</span>
+              {%- if s.show_compare_at -%}
+                <s class="lt-pc__price-compare" data-lt-pc-compare {% unless show_cmp %}hidden{% endunless %}>{{ cmp_html | escape }}</s>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if has_product or b.link != blank -%}
+          <div class="lt-pc__footer">
+            {%- if show_variant_select -%}
+              <div class="lt-pc__field">
+                {%- if s.variant_select_label != blank -%}
+                  <label class="lt-pc__label" for="lt-pc-{{ block.id }}-variant">{{ s.variant_select_label | escape }}</label>
+                {%- endif -%}
+                <div class="lt-pc__select-wrap">
+                  <select
+                    id="lt-pc-{{ block.id }}-variant"
+                    class="lt-pc__select"
+                    data-lt-pc-variant
+                    {% if s.variant_select_label == blank %}aria-label="{{ card_title | escape }} options"{% endif %}
+                  >
+                    {%- for v in p.variants -%}
+                      <option
+                        value="{{ v.id }}"
+                        {% if v.id == sel_variant.id %}selected{% endif %}
+                        {% unless v.available %}disabled{% endunless %}
+                      >
+                        {{- v.title | escape -}}
+                        {%- unless v.available -%}{{ s.sold_out_suffix | escape }}{%- endunless -%}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if show_plan_select -%}
+              <div class="lt-pc__field">
+                {%- if s.plan_select_label != blank -%}
+                  <label class="lt-pc__label" for="lt-pc-{{ block.id }}-plan">{{ s.plan_select_label | escape }}</label>
+                {%- endif -%}
+                <div class="lt-pc__select-wrap">
+                  <select
+                    id="lt-pc-{{ block.id }}-plan"
+                    class="lt-pc__select"
+                    data-lt-pc-plan
+                    {% if s.plan_select_label == blank %}aria-label="Purchase option"{% endif %}
+                  >
+                    {%- if allow_onetime -%}
+                      <option value="onetime" {% if sel_plan_id == 'onetime' %}selected{% endif %}>{{ one_time_label | escape }}</option>
+                    {%- endif -%}
+                    {%- for g in p.selling_plan_groups -%}
+                      {%- for sp in g.selling_plans -%}
+                        {%- liquid
+                          assign discount_text = ''
+                          assign adj = sp.price_adjustments.first
+                          if adj.value_type == 'percentage'
+                            assign discount_text = adj.value | append: '%'
+                          endif
+                        -%}
+                        {%- if adj.value_type == 'fixed_amount' -%}
+                          {%- capture discount_text -%}{%- render 'lt-pc-money', cents: adj.value, format: s.price_format -%}{%- endcapture -%}
+                        {%- endif -%}
+                        {%- liquid
+                          assign plan_label = sub_label_tpl | replace: '[plan]', sp.name | replace: '[group]', g.name | replace: '[discount]', discount_text | strip
+                          assign plan_on_variant = false
+                          for a in sel_variant.selling_plan_allocations
+                            if a.selling_plan.id == sp.id
+                              assign plan_on_variant = true
+                            endif
+                          endfor
+                        -%}
+                        <option
+                          value="{{ sp.id }}"
+                          {% if sp.id == sel_plan_id %}selected{% endif %}
+                          {% unless plan_on_variant %}disabled{% endunless %}
+                        >
+                          {{- plan_label | escape -}}
+                        </option>
+                      {%- endfor -%}
+                    {%- endfor -%}
+                  </select>
+                </div>
+              </div>
+            {%- endif -%}
+
+            {%- if has_product -%}
+              <button
+                type="button"
+                class="lt-pc__btn"
+                data-lt-pc-atc
+                data-label="{{ atc_label | escape }}"
+                {% unless sel_variant.available %}disabled{% endunless %}
+              >
+                <span class="lt-pc__spinner" aria-hidden="true"></span>
+                <span data-lt-pc-btn-text>
+                  {%- if sel_variant.available -%}{{ atc_label | escape }}{%- else -%}{{ s.sold_out_label | escape }}{%- endif -%}
+                </span>
+              </button>
+              <p class="lt-pc__error" role="alert" data-lt-pc-error hidden></p>
+            {%- else -%}
+              <a class="lt-pc__btn" href="{{ b.link }}"{% if b.link_new_tab %} target="_blank" rel="noopener"{% endif %}>
+                <span>{{ link_label | escape }}</span>
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if has_product -%}
+          <script type="application/json" data-lt-pc-data>
+            {
+              "requiresPlan": {{ p.requires_selling_plan | json }},
+              "planOrder": [
+                {%- assign first_plan = true -%}
+                {%- for g in p.selling_plan_groups -%}
+                  {%- for sp in g.selling_plans -%}
+                    {%- unless first_plan -%},{%- endunless -%}"{{ sp.id }}"{%- assign first_plan = false -%}
+                  {%- endfor -%}
+                {%- endfor -%}
+              ],
+              "variants": [
+                {%- for v in p.variants -%}
+                  {%- liquid
+                    assign v_cmp = v.compare_at_price | default: 0
+                    if v_cmp <= v.price
+                      assign v_cmp = 0
+                    endif
+                    assign v_pct = 0
+                    if v_cmp > 0
+                      assign v_pct = v_cmp | minus: v.price | times: 100.0 | divided_by: v_cmp | round
+                    endif
+                  -%}
+                  {%- capture v_price -%}{%- render 'lt-pc-money', cents: v.price, format: s.price_format -%}{%- endcapture -%}
+                  {%- capture v_cmp_html -%}{%- if v_cmp > 0 -%}{%- render 'lt-pc-money', cents: v_cmp, format: s.price_format -%}{%- endif -%}{%- endcapture -%}
+                  {
+                    "id": {{ v.id }},
+                    "available": {{ v.available | json }},
+                    "price": {{ v_price | strip | json }},
+                    "compare": {{ v_cmp_html | strip | json }},
+                    "pct": {{ v_pct }},
+                    "img": {%- if v.featured_image -%}
+                      {%- capture v_srcset -%}
+                        {{- v.featured_image | image_url: width: 240 }} 240w, {{ v.featured_image | image_url: width: 480 }} 480w, {{ v.featured_image | image_url: width: 720 }} 720w, {{ v.featured_image | image_url: width: 900 }} 900w
+                      {%- endcapture -%}
+                      {
+                        "src": {{ v.featured_image | image_url: width: 900 | json }},
+                        "srcset": {{ v_srcset | strip | json }}
+                      }
+                    {%- else -%}null{%- endif -%},
+                    "plans": {
+                      {%- for a in v.selling_plan_allocations -%}
+                        {%- liquid
+                          assign a_cmp = a.compare_at_price | default: 0
+                          assign v_cmp_raw = v.compare_at_price | default: 0
+                          if v_cmp_raw > a_cmp
+                            assign a_cmp = v_cmp_raw
+                          endif
+                          if a_cmp <= a.price
+                            assign a_cmp = 0
+                          endif
+                          assign a_pct = 0
+                          if a_cmp > 0
+                            assign a_pct = a_cmp | minus: a.price | times: 100.0 | divided_by: a_cmp | round
+                          endif
+                        -%}
+                        {%- capture a_price -%}{%- render 'lt-pc-money', cents: a.price, format: s.price_format -%}{%- endcapture -%}
+                        {%- capture a_cmp_html -%}{%- if a_cmp > 0 -%}{%- render 'lt-pc-money', cents: a_cmp, format: s.price_format -%}{%- endif -%}{%- endcapture -%}
+                        "{{ a.selling_plan.id }}": { "price": {{ a_price | strip | json }}, "compare": {{ a_cmp_html | strip | json }}, "pct": {{ a_pct }} }
+                        {%- unless forloop.last -%},{%- endunless -%}
+                      {%- endfor -%}
+                    }
+                  }
+                  {%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              ]
+            }
+          </script>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if visible_count > 0 or request.design_mode -%}
+  <style>
+    #lt-pc-{{ sid }} {
+      --lt-pc-bg: {{ s.background | default: 'transparent' }};
+      --max-w: {{ s.max_width }}px;
+      --pt-d: {{ s.pt_d }}px; --pb-d: {{ s.pb_d }}px; --pt-m: {{ s.pt_m }}px; --pb-m: {{ s.pb_m }}px;
+      --px-d: {{ s.px_d }}px; --px-m: {{ s.px_m }}px;
+
+      --h-size-d: {{ s.heading_size_d }}px; --h-size-m: {{ s.heading_size_m }}px;
+      --h-weight: {{ s.heading_weight }}; --h-color: {{ s.heading_color }};
+      --h-align-d: {{ s.header_align_d }}; --h-align-m: {{ s.header_align_m }};
+      --h-items-d: {{ h_items_d }}; --h-items-m: {{ h_items_m }};
+      --header-gap-d: {{ s.header_gap_d }}px; --header-gap-m: {{ s.header_gap_m }}px;
+      --sdesc-size-d: {{ s.description_size_d }}px; --sdesc-size-m: {{ s.description_size_m }}px;
+      --sdesc-color: {{ s.description_color }}; --sdesc-max-w: {{ s.description_max_width }}px;
+
+      --cols-d: {{ s.per_row_d }}; --cols-m: {{ s.per_row_m }};
+      --spv-d: {{ spv_d }}; --spv-m: {{ spv_m }};
+      --gap-d: {{ s.gap_d }}px; --gap-m: {{ s.gap_m }}px;
+      --row-gap-d: {{ s.row_gap_d }}px; --row-gap-m: {{ s.row_gap_m }}px;
+      --grid-justify: {{ grid_justify }};
+
+      --card-bg: {{ s.card_bg | default: 'transparent' }};
+      --card-bw: {{ s.card_border_width }}px; --card-bc: {{ s.card_border_color | default: 'transparent' }};
+      --card-radius: {{ s.card_radius }}px;
+      --card-pad-d: {{ s.card_pad_d }}px; --card-pad-m: {{ s.card_pad_m }}px;
+      --card-align: {{ s.card_align }}; --card-items: {{ card_items }};
+      --stack-gap: {{ s.card_stack_gap }}px;
+      --footer-gap: {{ s.footer_gap }}px; --footer-inner-gap: {{ s.footer_inner_gap }}px;
+
+      --img-ratio: {{ img_ratio }}; --img-fit: {{ s.img_fit }};
+      --img-bg: {{ s.img_bg | default: 'transparent' }}; --img-radius: {{ s.img_radius }}px; --img-pad: {{ s.img_padding }}px;
+
+      --t-size-d: {{ s.title_size_d }}px; --t-size-m: {{ s.title_size_m }}px;
+      --t-weight: {{ s.title_weight }}; --t-color: {{ s.title_color }}; --t-lines: {{ s.title_lines }};
+
+      --p-size-d: {{ s.price_size_d }}px; --p-size-m: {{ s.price_size_m }}px;
+      --p-weight: {{ s.price_weight }}; --p-color: {{ s.price_color }};
+      --p-sale-color: {{ s.sale_price_color }}; --cmp-color: {{ s.compare_color }};
+
+      --badge-bg: {{ s.badge_bg }}; --badge-color: {{ s.badge_color }};
+      --badge-radius: {{ s.badge_radius }}px; --badge-size: {{ s.badge_size }}px;
+      --badge-left: {% if s.badge_position == 'top-right' %}auto{% else %}10px{% endif %};
+      --badge-right: {% if s.badge_position == 'top-right' %}10px{% else %}auto{% endif %};
+
+      --star-size: {{ s.star_size }}px; --star-color: {{ s.star_color }}; --star-empty: {{ s.star_empty_color }};
+      --r-size: {{ s.review_size }}px; --r-color: {{ s.review_text_color }};
+
+      --d-size: {{ s.card_desc_size }}px; --d-color: {{ s.card_desc_color }}; --d-lines: {{ s.card_desc_lines }};
+
+      --sel-h-d: {{ s.select_h_d }}px; --sel-h-m: {{ s.select_h_m }}px;
+      --sel-size-d: {{ s.select_size_d }}px; --sel-size-m: {{ s.select_size_m }}px;
+      --sel-color: {{ s.select_color }}; --sel-bg: {{ s.select_bg }};
+      --sel-border: {{ s.select_border }}; --sel-radius: {{ s.select_radius }}px;
+
+      --btn-h-d: {{ s.btn_h_d }}px; --btn-h-m: {{ s.btn_h_m }}px;
+      --btn-size-d: {{ s.btn_size_d }}px; --btn-size-m: {{ s.btn_size_m }}px;
+      --btn-weight: {{ s.btn_weight }}; --btn-radius: {{ s.btn_radius }}px; --btn-font: {{ btn_font }};
+      --btn-bg: {{ s.btn_bg }}; --btn-color: {{ s.btn_color }};
+      --btn-bg-h: {{ s.btn_bg_hover }}; --btn-color-h: {{ s.btn_color_hover }};
+      --btn-border: {{ s.btn_border | default: s.btn_bg }}; --btn-disabled-bg: {{ s.btn_disabled_bg }};
+
+      --arrow-size: {{ s.arrow_size }}px; --arrow-icon: {{ s.arrow_icon_size }}px;
+      --arrow-color: {{ s.arrow_color }}; --arrow-bg: {{ s.arrow_bg | default: 'transparent' }};
+      --arrow-border: {{ s.arrow_border | default: 'transparent' }}; --arrow-radius: {{ s.arrow_radius }}%;
+      --arrow-offset: {{ s.arrow_offset }}px;
+
+      --dots-space: {{ s.dots_spacing }}px;
+      --swiper-pagination-color: {{ s.dot_color }};
+      --swiper-pagination-bullet-inactive-color: {{ s.dot_inactive_color }};
+      --swiper-pagination-bullet-inactive-opacity: 1;
+      --swiper-pagination-bullet-size: {{ s.dot_size }}px;
+      --swiper-pagination-bullet-horizontal-gap: {{ s.dot_size | divided_by: 2.0 | at_least: 3 }}px;
+      --swiper-pagination-progressbar-bg-color: {{ s.dot_inactive_color }};
+      --swiper-pagination-fraction-color: {{ s.dot_color }};
+    }
+  </style>
+
+  <div id="lt-pc-{{ sid }}" class="{{ root_classes }}" data-lt-pc>
+    <div class="lt-pc__inner">
+      {%- if s.heading != blank or s.description != blank -%}
+        <div class="lt-pc__header">
+          {%- if s.heading != blank -%}
+            <{{ s.heading_tag }} class="lt-pc__heading">{{ s.heading }}</{{ s.heading_tag }}>
+          {%- endif -%}
+          {%- if s.description != blank -%}
+            <div class="lt-pc__sdesc rte">{{ s.description }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if visible_count > 0 -%}
+        <div class="lt-pc__stage">
+          <button type="button" class="lt-pc__arrow lt-pc__arrow--prev" aria-label="Previous products">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="swiper lt-pc__swiper">
+            <div class="swiper-wrapper lt-pc__track">
+              {{ cards_html }}
+            </div>
+          </div>
+          <button type="button" class="lt-pc__arrow lt-pc__arrow--next" aria-label="Next products">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="lt-pc__dots"></div>
+        </div>
+      {%- else -%}
+        <div class="lt-pc__empty">
+          Add a <strong>Product card</strong> block and pick a product to get started.
+          {%- if s.hide_current_product or s.hide_sold_out %}
+            <br><small>Note: cards may be hidden by "Hide the product being viewed" or "Hide sold-out products".</small>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <script type="application/json" data-lt-pc-config>
+      {
+        "desktop": {
+          "layout": {{ layout_d | json }},
+          "perView": {{ s.per_row_d }},
+          "peek": {{ s.peek_d }},
+          "gap": {{ s.gap_d }},
+          "arrows": {{ s.arrows_d | json }},
+          "dots": {{ s.dots_d | json }}
+        },
+        "mobile": {
+          "layout": {{ layout_m | json }},
+          "perView": {{ s.per_row_m }},
+          "peek": {{ s.peek_m }},
+          "gap": {{ s.gap_m }},
+          "arrows": {{ s.arrows_m | json }},
+          "dots": {{ s.dots_m | json }}
+        },
+        "loop": {{ s.loop | json }},
+        "moveBy": {{ s.move_by | json }},
+        "speed": {{ s.speed }},
+        "center": {{ s.center_insufficient | json }},
+        "drag": {{ s.allow_drag | json }},
+        "autoplay": {{ s.autoplay | json }},
+        "autoplayDelay": {{ s.autoplay_delay | times: 1000 | round }},
+        "pauseOnHover": {{ s.pause_on_hover | json }},
+        "dotsType": {{ s.dots_type | json }},
+        "showCompare": {{ s.show_compare_at | json }},
+        "saleBadge": {{ s.sale_badge_text | json }},
+        "openCart": {{ s.open_cart | json }},
+        "propKey": {{ s.prop_key | strip | json }},
+        "propValue": {{ s.prop_value | strip | json }},
+        "labels": {
+          "adding": {{ s.adding_label | json }},
+          "added": {{ s.added_label | json }},
+          "soldout": {{ s.sold_out_label | json }},
+          "error": {{ s.error_label | json }}
+        }
+      }
+    </script>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "LT Product Cards",
+  "tag": "section",
+  "class": "lt-pc-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "max_blocks": 24,
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "inline_richtext", "id": "heading", "label": "Title", "default": "You may also like" },
+    {
+      "type": "select", "id": "heading_tag", "label": "Title HTML tag", "default": "h2",
+      "options": [
+        { "value": "h2", "label": "H2" }, { "value": "h3", "label": "H3" },
+        { "value": "h4", "label": "H4" }, { "value": "p", "label": "Paragraph" }
+      ]
+    },
+    { "type": "range", "id": "heading_size_d", "label": "Title size (desktop)", "min": 16, "max": 72, "step": 1, "unit": "px", "default": 38 },
+    { "type": "range", "id": "heading_size_m", "label": "Title size (mobile)", "min": 14, "max": 48, "step": 1, "unit": "px", "default": 26 },
+    {
+      "type": "select", "id": "heading_weight", "label": "Title weight", "default": "700",
+      "options": [
+        { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" }, { "value": "800", "label": "Extra bold" }
+      ]
+    },
+    { "type": "color", "id": "heading_color", "label": "Title color", "default": "#27214D" },
+    { "type": "richtext", "id": "description", "label": "Description" },
+    { "type": "range", "id": "description_size_d", "label": "Description size (desktop)", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 17 },
+    { "type": "range", "id": "description_size_m", "label": "Description size (mobile)", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 15 },
+    { "type": "color", "id": "description_color", "label": "Description color", "default": "#4A4766" },
+    { "type": "range", "id": "description_max_width", "label": "Description max width", "min": 300, "max": 1200, "step": 20, "unit": "px", "default": 720 },
+    {
+      "type": "select", "id": "header_align_d", "label": "Heading alignment (desktop)", "default": "center",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ]
+    },
+    {
+      "type": "select", "id": "header_align_m", "label": "Heading alignment (mobile)", "default": "center",
+      "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" }, { "value": "right", "label": "Right" } ]
+    },
+    { "type": "range", "id": "header_gap_d", "label": "Space below heading (desktop)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "header_gap_m", "label": "Space below heading (mobile)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 24 },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select", "id": "layout_desktop", "label": "Desktop layout", "default": "carousel",
+      "options": [ { "value": "carousel", "label": "Carousel" }, { "value": "grid", "label": "Grid" } ]
+    },
+    {
+      "type": "select", "id": "layout_mobile", "label": "Mobile layout", "default": "same",
+      "options": [ { "value": "same", "label": "Same as desktop" }, { "value": "carousel", "label": "Carousel" }, { "value": "grid", "label": "Grid" } ],
+      "info": "Mobile is below 750px wide."
+    },
+    { "type": "range", "id": "per_row_d", "label": "Products per row (desktop)", "min": 1, "max": 6, "step": 1, "default": 3 },
+    { "type": "range", "id": "per_row_m", "label": "Products per row (mobile)", "min": 1, "max": 4, "step": 1, "default": 1 },
+    { "type": "range", "id": "peek_d", "label": "Peek of next card (desktop)", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 0, "info": "Carousel only. Shows part of the next card to hint that it scrolls." },
+    { "type": "range", "id": "peek_m", "label": "Peek of next card (mobile)", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 20, "info": "Carousel only." },
+    { "type": "range", "id": "gap_d", "label": "Space between cards (desktop)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "gap_m", "label": "Space between cards (mobile)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "row_gap_d", "label": "Space between rows (desktop)", "min": 0, "max": 100, "step": 2, "unit": "px", "default": 40, "info": "Grid only." },
+    { "type": "range", "id": "row_gap_m", "label": "Space between rows (mobile)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 32, "info": "Grid only." },
+    {
+      "type": "select", "id": "grid_justify", "label": "Grid: incomplete last row", "default": "center",
+      "options": [ { "value": "center", "label": "Center" }, { "value": "left", "label": "Align left" } ]
+    },
+    { "type": "checkbox", "id": "center_insufficient", "label": "Carousel: center cards when there are fewer than fit", "default": true },
+
+    { "type": "header", "content": "Carousel behavior" },
+    { "type": "checkbox", "id": "loop", "label": "Infinite loop", "default": false, "info": "Only turns on when there are more cards than fit on screen." },
+    {
+      "type": "select", "id": "move_by", "label": "Arrows move by", "default": "one",
+      "options": [ { "value": "one", "label": "One card" }, { "value": "page", "label": "A full row" } ]
+    },
+    { "type": "range", "id": "speed", "label": "Slide speed", "min": 200, "max": 1500, "step": 50, "unit": "ms", "default": 500 },
+    { "type": "checkbox", "id": "allow_drag", "label": "Allow mouse drag on desktop", "default": true },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false, "info": "Turned off automatically for visitors who prefer reduced motion." },
+    { "type": "range", "id": "autoplay_delay", "label": "Autoplay delay", "min": 2, "max": 10, "step": 0.5, "unit": "s", "default": 5 },
+    { "type": "checkbox", "id": "pause_on_hover", "label": "Pause autoplay on hover", "default": true },
+
+    { "type": "header", "content": "Arrows" },
+    { "type": "checkbox", "id": "arrows_d", "label": "Show arrows on desktop", "default": true },
+    { "type": "checkbox", "id": "arrows_m", "label": "Show arrows on mobile", "default": false },
+    {
+      "type": "select", "id": "arrow_pos_d", "label": "Arrow position (desktop)", "default": "outside",
+      "options": [ { "value": "outside", "label": "Sides, outside cards" }, { "value": "inside", "label": "Sides, over cards" }, { "value": "bottom", "label": "Below, next to dots" } ]
+    },
+    {
+      "type": "select", "id": "arrow_pos_m", "label": "Arrow position (mobile)", "default": "bottom",
+      "options": [ { "value": "outside", "label": "Sides, outside cards" }, { "value": "inside", "label": "Sides, over cards" }, { "value": "bottom", "label": "Below, next to dots" } ]
+    },
+    { "type": "range", "id": "arrow_size", "label": "Arrow button size", "min": 24, "max": 64, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "arrow_icon_size", "label": "Arrow icon size", "min": 10, "max": 40, "step": 1, "unit": "px", "default": 26 },
+    { "type": "range", "id": "arrow_offset", "label": "Space between arrows and cards", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "arrow_radius", "label": "Arrow button roundness", "min": 0, "max": 50, "step": 1, "unit": "%", "default": 50 },
+    { "type": "color", "id": "arrow_color", "label": "Arrow color", "default": "#000000" },
+    { "type": "color", "id": "arrow_bg", "label": "Arrow background", "info": "Leave empty for transparent." },
+    { "type": "color", "id": "arrow_border", "label": "Arrow border", "info": "Leave empty for none." },
+
+    { "type": "header", "content": "Pagination" },
+    { "type": "checkbox", "id": "dots_d", "label": "Show pagination on desktop", "default": false },
+    { "type": "checkbox", "id": "dots_m", "label": "Show pagination on mobile", "default": true },
+    {
+      "type": "select", "id": "dots_type", "label": "Pagination style", "default": "bullets",
+      "options": [ { "value": "bullets", "label": "Dots" }, { "value": "progressbar", "label": "Progress bar" }, { "value": "fraction", "label": "Numbers (1 / 5)" } ]
+    },
+    { "type": "range", "id": "dot_size", "label": "Dot size", "min": 4, "max": 16, "step": 1, "unit": "px", "default": 8 },
+    { "type": "color", "id": "dot_color", "label": "Active color", "default": "#27214D" },
+    { "type": "color", "id": "dot_inactive_color", "label": "Inactive color", "default": "#D4D1E6" },
+    { "type": "range", "id": "dots_spacing", "label": "Space above pagination", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 24 },
+
+    { "type": "header", "content": "Card" },
+    {
+      "type": "select", "id": "card_align", "label": "Content alignment", "default": "center",
+      "options": [ { "value": "center", "label": "Center" }, { "value": "left", "label": "Left" } ]
+    },
+    { "type": "color", "id": "card_bg", "label": "Card background", "info": "Leave empty for transparent." },
+    { "type": "color", "id": "card_border_color", "label": "Card border color" },
+    { "type": "range", "id": "card_border_width", "label": "Card border width", "min": 0, "max": 4, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "card_radius", "label": "Card corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "card_pad_d", "label": "Card padding (desktop)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+    { "type": "range", "id": "card_pad_m", "label": "Card padding (mobile)", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 0 },
+    { "type": "checkbox", "id": "card_shadow", "label": "Card shadow", "default": false },
+    { "type": "range", "id": "card_stack_gap", "label": "Space between image and text", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "footer_gap", "label": "Space above dropdowns/button", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    { "type": "range", "id": "footer_inner_gap", "label": "Space between dropdowns and button", "min": 4, "max": 40, "step": 2, "unit": "px", "default": 16 },
+
+    { "type": "header", "content": "Image" },
+    {
+      "type": "select", "id": "img_ratio", "label": "Image shape", "default": "square",
+      "options": [
+        { "value": "square", "label": "Square (1:1)" }, { "value": "portrait", "label": "Portrait (4:5)" },
+        { "value": "tall", "label": "Tall (3:4)" }, { "value": "landscape", "label": "Landscape (4:3)" },
+        { "value": "wide", "label": "Wide (16:9)" }, { "value": "natural", "label": "Original image ratio" }
+      ]
+    },
+    {
+      "type": "select", "id": "img_fit", "label": "Image fit", "default": "contain",
+      "options": [ { "value": "contain", "label": "Fit (show whole image)" }, { "value": "cover", "label": "Fill (crop to shape)" } ]
+    },
+    { "type": "color", "id": "img_bg", "label": "Image background", "info": "Leave empty for transparent." },
+    { "type": "range", "id": "img_radius", "label": "Image corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 0 },
+    { "type": "range", "id": "img_padding", "label": "Image inner padding", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 0 },
+
+    { "type": "header", "content": "Product title" },
+    { "type": "range", "id": "title_size_d", "label": "Size (desktop)", "min": 12, "max": 32, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "title_size_m", "label": "Size (mobile)", "min": 12, "max": 26, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "select", "id": "title_weight", "label": "Weight", "default": "400",
+      "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ]
+    },
+    { "type": "color", "id": "title_color", "label": "Color", "default": "#27214D" },
+    { "type": "range", "id": "title_lines", "label": "Max lines", "min": 0, "max": 4, "step": 1, "default": 2, "info": "0 = no limit." },
+
+    { "type": "header", "content": "Price" },
+    {
+      "type": "select", "id": "price_format", "label": "Price format", "default": "money",
+      "options": [
+        { "value": "money", "label": "$19.95" },
+        { "value": "money_without_trailing_zeros", "label": "$20 (drop .00)" },
+        { "value": "money_with_currency", "label": "$19.95 USD" }
+      ]
+    },
+    { "type": "range", "id": "price_size_d", "label": "Size (desktop)", "min": 12, "max": 36, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "price_size_m", "label": "Size (mobile)", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 17 },
+    {
+      "type": "select", "id": "price_weight", "label": "Weight", "default": "500",
+      "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ]
+    },
+    { "type": "color", "id": "price_color", "label": "Price color", "default": "#27214D" },
+    { "type": "checkbox", "id": "show_compare_at", "label": "Show compare-at price", "default": false, "info": "Also applies to manual compare-at prices on blocks." },
+    { "type": "color", "id": "sale_price_color", "label": "Price color when on sale", "default": "#27214D" },
+    { "type": "color", "id": "compare_color", "label": "Compare-at price color", "default": "#8A87A3" },
+
+    { "type": "header", "content": "Badge" },
+    { "type": "checkbox", "id": "show_badge", "label": "Show block badges", "default": false, "info": "Shows each block's \"Badge text\" (e.g. Best Seller)." },
+    { "type": "checkbox", "id": "show_sale_badge", "label": "Show automatic sale badge", "default": false, "info": "Used when a block has no badge text and its price is below compare-at." },
+    { "type": "text", "id": "sale_badge_text", "label": "Sale badge text", "default": "Save [percent]%", "info": "[percent] = discount percent." },
+    {
+      "type": "select", "id": "badge_position", "label": "Badge position", "default": "top-left",
+      "options": [ { "value": "top-left", "label": "Top left" }, { "value": "top-right", "label": "Top right" } ]
+    },
+    { "type": "color", "id": "badge_bg", "label": "Badge background", "default": "#27214D" },
+    { "type": "color", "id": "badge_color", "label": "Badge text", "default": "#FFFFFF" },
+    { "type": "range", "id": "badge_size", "label": "Badge text size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "badge_radius", "label": "Badge roundness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 30 },
+
+    { "type": "header", "content": "Reviews" },
+    { "type": "checkbox", "id": "show_reviews", "label": "Show star rating", "default": false, "info": "Pulled from Judge.me (product reviews metafields). Hidden when a product has no rating." },
+    { "type": "text", "id": "review_text", "label": "Text next to stars", "default": "([count])", "info": "[count] = number of reviews, [rating] = average rating. Leave empty for stars only." },
+    { "type": "range", "id": "star_size", "label": "Star size", "min": 10, "max": 24, "step": 1, "unit": "px", "default": 14 },
+    { "type": "color", "id": "star_color", "label": "Star color", "default": "#FFCF9B" },
+    { "type": "color", "id": "star_empty_color", "label": "Empty star color", "default": "#E3E1EE" },
+    { "type": "range", "id": "review_size", "label": "Text size", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 13 },
+    { "type": "color", "id": "review_text_color", "label": "Text color", "default": "#6B6889" },
+
+    { "type": "header", "content": "Product description" },
+    { "type": "checkbox", "id": "show_description", "label": "Show description", "default": false },
+    { "type": "range", "id": "description_words", "label": "Max words (from Shopify)", "min": 5, "max": 60, "step": 5, "default": 20, "info": "Only for descriptions pulled from Shopify. Block overrides are shown in full." },
+    { "type": "range", "id": "card_desc_lines", "label": "Max lines", "min": 0, "max": 6, "step": 1, "default": 3, "info": "0 = no limit." },
+    { "type": "range", "id": "card_desc_size", "label": "Text size", "min": 11, "max": 20, "step": 1, "unit": "px", "default": 14 },
+    { "type": "color", "id": "card_desc_color", "label": "Text color", "default": "#4A4766" },
+
+    { "type": "header", "content": "Dropdowns" },
+    { "type": "paragraph", "content": "Variant dropdown appears only when a product has more than one variant. Purchase dropdown appears only when a product has subscription plans." },
+    { "type": "text", "id": "variant_select_label", "label": "Variant dropdown label", "info": "Optional, shown above the dropdown." },
+    { "type": "text", "id": "plan_select_label", "label": "Purchase dropdown label", "info": "Optional, shown above the dropdown." },
+    { "type": "text", "id": "one_time_label", "label": "One-time option text", "default": "One-Time Purchase" },
+    { "type": "text", "id": "subscription_label", "label": "Subscription option text", "default": "[plan]", "info": "[plan] = selling plan name, [discount] = plan discount (e.g. 20%), [group] = plan group name." },
+    { "type": "text", "id": "sold_out_suffix", "label": "Sold-out variant suffix", "default": " - Sold Out" },
+    { "type": "range", "id": "select_h_d", "label": "Height (desktop)", "min": 36, "max": 64, "step": 2, "unit": "px", "default": 52 },
+    { "type": "range", "id": "select_h_m", "label": "Height (mobile)", "min": 32, "max": 60, "step": 2, "unit": "px", "default": 46 },
+    { "type": "range", "id": "select_size_d", "label": "Text size (desktop)", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "select_size_m", "label": "Text size (mobile)", "min": 12, "max": 18, "step": 1, "unit": "px", "default": 16, "info": "16px or more stops iPhones from zooming in when tapped." },
+    { "type": "color", "id": "select_color", "label": "Text color", "default": "#222222" },
+    { "type": "color", "id": "select_bg", "label": "Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "select_border", "label": "Border", "default": "#D6D6D6" },
+    { "type": "range", "id": "select_radius", "label": "Corner radius", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 4 },
+    { "type": "checkbox", "id": "select_divider", "label": "Show divider before arrow", "default": true },
+
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "atc_label", "label": "Add to Cart text", "default": "Add to Cart" },
+    { "type": "text", "id": "adding_label", "label": "Adding text", "default": "Adding..." },
+    { "type": "text", "id": "added_label", "label": "Added text", "default": "Added!" },
+    { "type": "text", "id": "sold_out_label", "label": "Sold out text", "default": "Sold Out" },
+    { "type": "text", "id": "link_button_label", "label": "Link button text", "default": "Shop Now", "info": "For blocks with no product but with a link." },
+    { "type": "text", "id": "error_label", "label": "Error message", "default": "Couldn't add to cart. Please try again." },
+    { "type": "checkbox", "id": "btn_full_width", "label": "Full-width button", "default": true },
+    {
+      "type": "select", "id": "btn_font", "label": "Font", "default": "heading",
+      "options": [ { "value": "heading", "label": "Heading font" }, { "value": "body", "label": "Body font" } ]
+    },
+    { "type": "range", "id": "btn_h_d", "label": "Height (desktop)", "min": 36, "max": 72, "step": 2, "unit": "px", "default": 56 },
+    { "type": "range", "id": "btn_h_m", "label": "Height (mobile)", "min": 36, "max": 64, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "btn_size_d", "label": "Text size (desktop)", "min": 12, "max": 24, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "btn_size_m", "label": "Text size (mobile)", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "select", "id": "btn_weight", "label": "Weight", "default": "600",
+      "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ]
+    },
+    { "type": "range", "id": "btn_radius", "label": "Corner radius", "min": 0, "max": 40, "step": 1, "unit": "px", "default": 40 },
+    { "type": "color", "id": "btn_bg", "label": "Background", "default": "#27214D" },
+    { "type": "color", "id": "btn_color", "label": "Text", "default": "#FFFFFF" },
+    { "type": "color", "id": "btn_bg_hover", "label": "Hover background", "default": "#3B3373" },
+    { "type": "color", "id": "btn_color_hover", "label": "Hover text", "default": "#FFFFFF" },
+    { "type": "color", "id": "btn_border", "label": "Border", "info": "Leave empty to match the background." },
+    { "type": "color", "id": "btn_disabled_bg", "label": "Sold-out background", "default": "#B9B6CC" },
+
+    { "type": "header", "content": "Cart" },
+    { "type": "checkbox", "id": "open_cart", "label": "Open Rebuy Smart Cart after adding", "default": true },
+    { "type": "text", "id": "prop_key", "label": "Line item property name", "default": "_source", "info": "Attached to every item added from this section. A leading underscore hides it from customers. Leave empty to send nothing." },
+    { "type": "text", "id": "prop_value", "label": "Line item property value", "default": "pdp_custom_bundle_lt" },
+
+    { "type": "header", "content": "Visibility & links" },
+    { "type": "checkbox", "id": "hide_current_product", "label": "Hide the product being viewed", "default": false, "info": "Skips a card if its product is the product page it's on." },
+    { "type": "checkbox", "id": "hide_sold_out", "label": "Hide sold-out products", "default": false },
+    { "type": "checkbox", "id": "enable_card_link", "label": "Make cards clickable", "default": false, "info": "Off = nothing on the card links anywhere. On = image and title link to the block's Link, or to the product page if Link is empty." },
+    { "type": "checkbox", "id": "hide_on_desktop", "label": "Hide section on desktop", "default": false },
+    { "type": "checkbox", "id": "hide_on_mobile", "label": "Hide section on mobile", "default": false },
+
+    { "type": "header", "content": "Section spacing" },
+    { "type": "color", "id": "background", "label": "Background", "info": "Leave empty for transparent." },
+    { "type": "range", "id": "max_width", "label": "Content max width", "min": 800, "max": 1800, "step": 20, "unit": "px", "default": 1400 },
+    { "type": "range", "id": "px_d", "label": "Side padding (desktop)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 40 },
+    { "type": "range", "id": "px_m", "label": "Side padding (mobile)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
+    { "type": "range", "id": "pt_d", "label": "Top padding (desktop)", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "pb_d", "label": "Bottom padding (desktop)", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60 },
+    { "type": "range", "id": "pt_m", "label": "Top padding (mobile)", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "pb_m", "label": "Bottom padding (mobile)", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 40 }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product card",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product", "info": "Everything below is optional. Empty fields use this product's data from Shopify." },
+
+        { "type": "header", "content": "Default selection" },
+        { "type": "text", "id": "variant_id", "label": "Default variant ID", "info": "Optional. Otherwise the first available variant is selected." },
+        {
+          "type": "select", "id": "default_purchase", "label": "Default purchase option", "default": "one_time",
+          "options": [ { "value": "one_time", "label": "One-time" }, { "value": "subscription", "label": "Subscription (first plan)" } ],
+          "info": "Subscription only applies if the product has selling plans."
+        },
+        { "type": "checkbox", "id": "hide_variant_select", "label": "Hide variant dropdown", "default": false, "info": "The default variant is added to cart." },
+        { "type": "checkbox", "id": "hide_plan_select", "label": "Hide purchase dropdown", "default": false, "info": "The default purchase option is added to cart." },
+
+        { "type": "header", "content": "Content overrides" },
+        { "type": "image_picker", "id": "image", "label": "Image", "info": "Overrides the product/variant image." },
+        { "type": "image_picker", "id": "mobile_image", "label": "Mobile image", "info": "Optional. Used below 750px." },
+        { "type": "text", "id": "image_alt", "label": "Image alt text" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "richtext", "id": "description", "label": "Description", "info": "Shown when \"Show description\" is on in section settings." },
+        { "type": "text", "id": "badge_text", "label": "Badge text", "info": "e.g. Best Seller. Shown when \"Show block badges\" is on." },
+
+        { "type": "header", "content": "Manual price" },
+        { "type": "paragraph", "content": "Only used when NO product is selected. With a product selected, prices always come from Shopify." },
+        { "type": "text", "id": "price_override", "label": "Price", "info": "Shown exactly as typed, e.g. $19.95 or From $19.95." },
+        { "type": "text", "id": "compare_override", "label": "Compare-at price", "info": "Needs \"Show compare-at price\" on in section settings." },
+
+        { "type": "header", "content": "Reviews override" },
+        { "type": "text", "id": "rating_override", "label": "Rating", "info": "e.g. 4.9 (out of 5). Needs \"Show star rating\" on." },
+        { "type": "text", "id": "review_count_override", "label": "Review count", "info": "e.g. 1,250" },
+
+        { "type": "header", "content": "Labels" },
+        { "type": "text", "id": "button_label", "label": "Button text", "info": "Overrides the section's Add to Cart / Link button text." },
+        { "type": "text", "id": "one_time_label", "label": "One-time option text" },
+        { "type": "text", "id": "subscription_label", "label": "Subscription option text", "info": "Supports [plan], [discount], [group]." },
+
+        { "type": "header", "content": "Link" },
+        { "type": "url", "id": "link", "label": "Link", "info": "Without a product, the button opens this link (no link = no button). With a product, it's only used if \"Make cards clickable\" is on." },
+        { "type": "checkbox", "id": "link_new_tab", "label": "Open link in new tab", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "LT Product Cards",
+      "blocks": [ { "type": "product" }, { "type": "product" }, { "type": "product" } ]
+    }
+  ]
+}
+{% endschema %}

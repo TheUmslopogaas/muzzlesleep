@@ -1,0 +1,10 @@
+{%- comment -%}
+  Formats an amount in cents for the LT Product Cards section.
+  Usage: {% render 'lt-pc-money', cents: 1995, format: 'money' %}
+  format: 'money' | 'money_with_currency' | 'money_without_trailing_zeros'
+{%- endcomment -%}
+{%- case format -%}
+  {%- when 'money_with_currency' -%}{{- cents | money_with_currency | strip_html | strip -}}
+  {%- when 'money_without_trailing_zeros' -%}{{- cents | money_without_trailing_zeros | strip_html | strip -}}
+  {%- else -%}{{- cents | money | strip_html | strip -}}
+{%- endcase -%}
