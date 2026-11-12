@@ -62,6 +62,19 @@ s.price-item.price-item--regular {
     background: #27214D;
     color: #fff;
 }
+{%- if section.settings.disable_product_links -%}
+  #shopify-section-{{ section.id }} a[href*="/products/"] {
+    pointer-events: none;
+    cursor: default;
+  }
+  #shopify-section-{{ section.id }} .card__heading a,
+  #shopify-section-{{ section.id }} .card__heading .full-unstyled-link {
+    text-decoration: none !important;
+  }
+  #shopify-section-{{ section.id }} .product__view-details {
+    display: none;
+  }
+{%- endif -%}
 {%- endstyle -%}
 
 {%- liquid
@@ -227,6 +240,14 @@ s.price-item.price-item--regular {
   el.addEventListener('click', e => e.preventDefault());
 });
 </script> {% endcomment %}
+{%- if section.settings.disable_product_links -%}
+  <script>
+    document.querySelectorAll('#shopify-section-{{ section.id }} .card a[href*="/products/"]').forEach(function (a) {
+      a.setAttribute('tabindex', '-1');
+    });
+  </script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Lt Featured Collection",
@@ -499,6 +520,13 @@ s.price-item.price-item--regular {
       "id": "swipe_on_mobile",
       "default": false,
       "label": "t:sections.featured-collection.settings.swipe_on_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "disable_product_links",
+      "default": false,
+      "label": "Disable product page links",
+      "info": "Cards won't link to the product page. Quick add still works."
     },
     {
       "type": "header",
