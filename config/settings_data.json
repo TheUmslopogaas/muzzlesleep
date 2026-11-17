@@ -261,6 +261,11 @@
         "type": "shopify://apps/nile-ai-commerce/blocks/nile-click/019d46c7-7c2d-78f0-b4eb-3851ba32c786",
         "disabled": false,
         "settings": {}
+      },
+      "16225679183443353566": {
+        "type": "shopify://apps/pixiehog/blocks/posthog_js_web/3bc10c13-7b55-491e-8df6-d5677acf3250",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
