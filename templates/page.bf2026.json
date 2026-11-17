@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -10,56 +19,91 @@
     },
     "bf_banner": {
       "type": "custom-image-banner",
-      "name": "BF Banner",
       "disabled": true,
+      "name": "BF Banner",
       "settings": {
         "image_url": ""
       }
     },
     "bf_deals_b1g1": {
       "type": "lt-bf-deals",
-      "name": "BF Deals – B1G1",
       "blocks": {
         "deal_b1g1_1": {
           "type": "deal",
           "settings": {
+            "product": "bf-strong-hold-mouth-tape-free-nose-strips",
             "highlight": "+ Free Nose Strips",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b1g1_2": {
           "type": "deal",
           "settings": {
+            "product": "bf-medium-hold-mouth-tape-free-nose-strips",
             "highlight": "+ Free Nose Strips",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b1g1_3": {
           "type": "deal",
           "settings": {
+            "product": "bf-kids-mouth-tape-free-nose-strips",
             "highlight": "+ Free Nose Strips",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b1g1_4": {
           "type": "deal",
           "settings": {
+            "product": "bf-adult-sensitive-mouth-tape-free-nose-strips",
             "highlight": "+ Free Nose Strips",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b1g1_5": {
           "type": "deal",
           "settings": {
+            "product": "bf-kids-sensitive-mouth-tape-free-nose-strips",
             "highlight": "+ Free Nose Strips",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b1g1_6": {
           "type": "deal",
           "settings": {
+            "product": "bf-beauty-mouth-tape-free-nose-strips",
             "highlight": "+ Free Nose Strips",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         }
       },
@@ -71,62 +115,191 @@
         "deal_b1g1_5",
         "deal_b1g1_6"
       ],
+      "name": "BF Deals – B1G1",
       "settings": {
         "eyebrow": "Black Friday Deals",
         "heading": "Buy Mouth Tape, Get Nose Strips <em>Free</em>",
-        "anchor_id": "buy-1-get-1",
-        "bg_color_1": "#1B1540",
-        "bg_color_2": "#2E1A6B",
+        "heading_tag": "h2",
+        "heading_size_d": 48,
+        "heading_size_m": 30,
+        "description": "",
+        "header_align": "center",
+        "header_gap_d": 44,
+        "header_gap_m": 28,
         "layout_desktop": "grid",
         "layout_mobile": "carousel",
+        "per_row_d": 3,
+        "per_row_m": 1,
+        "peek_d": 0,
+        "peek_m": 20,
+        "gap_d": 32,
+        "gap_m": 14,
+        "row_gap_d": 36,
+        "row_gap_m": 20,
+        "stack_max_width": 900,
+        "stack_img_width": 40,
+        "arrows_d": true,
+        "arrows_m": false,
+        "dots_d": false,
+        "dots_m": true,
+        "loop": false,
+        "autoplay": false,
+        "autoplay_delay": 5,
+        "arrow_color": "#ffffff",
+        "arrow_bg": "#ffffff1f",
+        "dot_color": "#e3c8ff",
+        "dot_inactive_color": "#ffffff40",
+        "card_bg": "#ffffff0d",
+        "card_border_1": "#b98cff80",
+        "card_border_2": "#ffffff14",
+        "card_glow": "#8e4dff73",
+        "card_hover": true,
+        "card_radius": 24,
+        "card_pad_d": 16,
+        "card_pad_m": 12,
+        "img_ratio": "square",
+        "img_radius": 16,
+        "card_cursor": "pointer",
+        "hide_sold_out": false,
+        "title_strip": "BF –",
+        "title_size_d": 19,
+        "title_size_m": 17,
+        "title_color": "#ffffff",
+        "title_lines": 2,
+        "card_highlight_bg": "#8e4dff",
+        "card_highlight_color": "#ffffff",
+        "price_format": "money",
+        "price_size_d": 26,
+        "price_size_m": 22,
+        "price_color": "#e3c8ff",
+        "show_compare_at": true,
+        "compare_color": "#ffffff99",
+        "compare_line_color": "#ff4d6d",
+        "show_save_badge": true,
+        "save_badge_text": "Save [percent]%",
+        "badge_position": "top-right",
+        "badge_bg": "#e3c8ff",
+        "badge_color": "#1b1540",
+        "atc_label": "Claim This Deal",
+        "adding_label": "Adding...",
+        "added_label": "Added!",
+        "sold_out_label": "Sold Out",
+        "error_label": "Couldn't add to cart. Please try again.",
+        "btn_h_d": 54,
+        "btn_h_m": 48,
+        "btn_size_d": 17,
+        "btn_size_m": 16,
+        "btn_radius": 40,
+        "btn_bg": "#e3c8ff",
+        "btn_color": "#1b1540",
+        "btn_bg_hover": "#ffffff",
+        "btn_color_hover": "#1b1540",
+        "open_cart": true,
+        "prop_key": "_source",
+        "prop_value": "bf2026_page",
+        "bg_color_1": "#1b1540",
+        "bg_color_2": "#2e1a6b",
+        "show_glow": true,
+        "glow_color_1": "#8e4dff66",
+        "glow_color_2": "#d24dff40",
+        "eyebrow_bg": "#ffffff14",
+        "eyebrow_color": "#ffffff",
+        "eyebrow_border": "#e3c8ff",
+        "heading_color": "#ffffff",
+        "highlight_bg": "#e3c8ff",
+        "highlight_color": "#1b1540",
+        "description_color": "#ffffffcc",
+        "anchor_id": "buy-1-get-1",
+        "max_width": 1300,
+        "px_d": 40,
+        "px_m": 16,
         "pt_d": 80,
-        "pt_m": 52
+        "pb_d": 80,
+        "pt_m": 52,
+        "pb_m": 52,
+        "hide_on_desktop": false,
+        "hide_on_mobile": false
       }
     },
     "bf_deals_b2g2": {
       "type": "lt-bf-deals",
-      "name": "BF Deals – B2G2",
       "blocks": {
         "deal_b2g2_1": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nose Strips & Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b2g2_2": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nose Strips & Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b2g2_3": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nose Strips & Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b2g2_4": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nose Strips & Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b2g2_5": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nose Strips & Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_b2g2_6": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nose Strips & Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         }
       },
@@ -138,62 +311,192 @@
         "deal_b2g2_5",
         "deal_b2g2_6"
       ],
+      "disabled": true,
+      "name": "BF Deals – B2G2",
       "settings": {
         "eyebrow": "Double Up",
         "heading": "Buy 2 Mouth Tape, Get <em>2 Free</em>",
-        "anchor_id": "buy-2-get-2",
-        "bg_color_1": "#2E1A6B",
-        "bg_color_2": "#1B1540",
+        "heading_tag": "h2",
+        "heading_size_d": 48,
+        "heading_size_m": 30,
+        "description": "",
+        "header_align": "center",
+        "header_gap_d": 44,
+        "header_gap_m": 28,
         "layout_desktop": "grid",
         "layout_mobile": "carousel",
+        "per_row_d": 3,
+        "per_row_m": 1,
+        "peek_d": 0,
+        "peek_m": 20,
+        "gap_d": 32,
+        "gap_m": 14,
+        "row_gap_d": 36,
+        "row_gap_m": 20,
+        "stack_max_width": 900,
+        "stack_img_width": 40,
+        "arrows_d": true,
+        "arrows_m": false,
+        "dots_d": false,
+        "dots_m": true,
+        "loop": false,
+        "autoplay": false,
+        "autoplay_delay": 5,
+        "arrow_color": "#ffffff",
+        "arrow_bg": "#ffffff1f",
+        "dot_color": "#e3c8ff",
+        "dot_inactive_color": "#ffffff40",
+        "card_bg": "#ffffff0d",
+        "card_border_1": "#b98cff80",
+        "card_border_2": "#ffffff14",
+        "card_glow": "#8e4dff73",
+        "card_hover": true,
+        "card_radius": 24,
+        "card_pad_d": 16,
+        "card_pad_m": 12,
+        "img_ratio": "square",
+        "img_radius": 16,
+        "card_cursor": "pointer",
+        "hide_sold_out": false,
+        "title_strip": "BF –",
+        "title_size_d": 19,
+        "title_size_m": 17,
+        "title_color": "#ffffff",
+        "title_lines": 2,
+        "card_highlight_bg": "#8e4dff",
+        "card_highlight_color": "#ffffff",
+        "price_format": "money",
+        "price_size_d": 26,
+        "price_size_m": 22,
+        "price_color": "#e3c8ff",
+        "show_compare_at": true,
+        "compare_color": "#ffffff99",
+        "compare_line_color": "#ff4d6d",
+        "show_save_badge": true,
+        "save_badge_text": "Save [percent]%",
+        "badge_position": "top-right",
+        "badge_bg": "#e3c8ff",
+        "badge_color": "#1b1540",
+        "atc_label": "Claim This Deal",
+        "adding_label": "Adding...",
+        "added_label": "Added!",
+        "sold_out_label": "Sold Out",
+        "error_label": "Couldn't add to cart. Please try again.",
+        "btn_h_d": 54,
+        "btn_h_m": 48,
+        "btn_size_d": 17,
+        "btn_size_m": 16,
+        "btn_radius": 40,
+        "btn_bg": "#e3c8ff",
+        "btn_color": "#1b1540",
+        "btn_bg_hover": "#ffffff",
+        "btn_color_hover": "#1b1540",
+        "open_cart": true,
+        "prop_key": "_source",
+        "prop_value": "bf2026_page",
+        "bg_color_1": "#2e1a6b",
+        "bg_color_2": "#1b1540",
+        "show_glow": true,
+        "glow_color_1": "#8e4dff66",
+        "glow_color_2": "#d24dff40",
+        "eyebrow_bg": "#ffffff14",
+        "eyebrow_color": "#ffffff",
+        "eyebrow_border": "#e3c8ff",
+        "heading_color": "#ffffff",
+        "highlight_bg": "#e3c8ff",
+        "highlight_color": "#1b1540",
+        "description_color": "#ffffffcc",
+        "anchor_id": "buy-2-get-2",
+        "max_width": 1300,
+        "px_d": 40,
+        "px_m": 16,
         "pt_d": 40,
-        "pt_m": 24
+        "pb_d": 80,
+        "pt_m": 24,
+        "pb_m": 52,
+        "hide_on_desktop": false,
+        "hide_on_mobile": false
       }
     },
     "bf_deals_6m": {
       "type": "lt-bf-deals",
-      "name": "BF Deals – 6M",
       "blocks": {
         "deal_6m_1": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_6m_2": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_6m_3": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_6m_4": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_6m_5": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         },
         "deal_6m_6": {
           "type": "deal",
           "settings": {
+            "product": "",
             "highlight": "+ Free Nasal Sticks",
-            "click_action": "none"
+            "title": "",
+            "badge_text": "",
+            "button_label": "",
+            "click_action": "none",
+            "custom_url": "",
+            "new_tab": false
           }
         }
       },
@@ -205,16 +508,111 @@
         "deal_6m_5",
         "deal_6m_6"
       ],
+      "disabled": true,
+      "name": "BF Deals – 6M",
       "settings": {
         "eyebrow": "Stock Up",
         "heading": "6-Month Supply + <em>Free</em> Nasal Sticks",
-        "anchor_id": "6-month-supply",
-        "bg_color_1": "#1B1540",
-        "bg_color_2": "#2E1A6B",
+        "heading_tag": "h2",
+        "heading_size_d": 48,
+        "heading_size_m": 30,
+        "description": "",
+        "header_align": "center",
+        "header_gap_d": 44,
+        "header_gap_m": 28,
         "layout_desktop": "grid",
         "layout_mobile": "carousel",
+        "per_row_d": 3,
+        "per_row_m": 1,
+        "peek_d": 0,
+        "peek_m": 20,
+        "gap_d": 32,
+        "gap_m": 14,
+        "row_gap_d": 36,
+        "row_gap_m": 20,
+        "stack_max_width": 900,
+        "stack_img_width": 40,
+        "arrows_d": true,
+        "arrows_m": false,
+        "dots_d": false,
+        "dots_m": true,
+        "loop": false,
+        "autoplay": false,
+        "autoplay_delay": 5,
+        "arrow_color": "#ffffff",
+        "arrow_bg": "#ffffff1f",
+        "dot_color": "#e3c8ff",
+        "dot_inactive_color": "#ffffff40",
+        "card_bg": "#ffffff0d",
+        "card_border_1": "#b98cff80",
+        "card_border_2": "#ffffff14",
+        "card_glow": "#8e4dff73",
+        "card_hover": true,
+        "card_radius": 24,
+        "card_pad_d": 16,
+        "card_pad_m": 12,
+        "img_ratio": "square",
+        "img_radius": 16,
+        "card_cursor": "pointer",
+        "hide_sold_out": false,
+        "title_strip": "BF –",
+        "title_size_d": 19,
+        "title_size_m": 17,
+        "title_color": "#ffffff",
+        "title_lines": 2,
+        "card_highlight_bg": "#8e4dff",
+        "card_highlight_color": "#ffffff",
+        "price_format": "money",
+        "price_size_d": 26,
+        "price_size_m": 22,
+        "price_color": "#e3c8ff",
+        "show_compare_at": true,
+        "compare_color": "#ffffff99",
+        "compare_line_color": "#ff4d6d",
+        "show_save_badge": true,
+        "save_badge_text": "Save [percent]%",
+        "badge_position": "top-right",
+        "badge_bg": "#e3c8ff",
+        "badge_color": "#1b1540",
+        "atc_label": "Claim This Deal",
+        "adding_label": "Adding...",
+        "added_label": "Added!",
+        "sold_out_label": "Sold Out",
+        "error_label": "Couldn't add to cart. Please try again.",
+        "btn_h_d": 54,
+        "btn_h_m": 48,
+        "btn_size_d": 17,
+        "btn_size_m": 16,
+        "btn_radius": 40,
+        "btn_bg": "#e3c8ff",
+        "btn_color": "#1b1540",
+        "btn_bg_hover": "#ffffff",
+        "btn_color_hover": "#1b1540",
+        "open_cart": true,
+        "prop_key": "_source",
+        "prop_value": "bf2026_page",
+        "bg_color_1": "#1b1540",
+        "bg_color_2": "#2e1a6b",
+        "show_glow": true,
+        "glow_color_1": "#8e4dff66",
+        "glow_color_2": "#d24dff40",
+        "eyebrow_bg": "#ffffff14",
+        "eyebrow_color": "#ffffff",
+        "eyebrow_border": "#e3c8ff",
+        "heading_color": "#ffffff",
+        "highlight_bg": "#e3c8ff",
+        "highlight_color": "#1b1540",
+        "description_color": "#ffffffcc",
+        "anchor_id": "6-month-supply",
+        "max_width": 1300,
+        "px_d": 40,
+        "px_m": 16,
         "pt_d": 40,
-        "pt_m": 24
+        "pb_d": 80,
+        "pt_m": 24,
+        "pb_m": 52,
+        "hide_on_desktop": false,
+        "hide_on_mobile": false
       }
     }
   },
