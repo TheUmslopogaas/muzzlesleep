@@ -147,7 +147,7 @@
         "layout_desktop": "grid",
         "layout_mobile": "carousel",
         "pt_d": 40,
-        "pt_m": 26
+        "pt_m": 24
       }
     },
     "bf_deals_6m": {
@@ -214,7 +214,7 @@
         "layout_desktop": "grid",
         "layout_mobile": "carousel",
         "pt_d": 40,
-        "pt_m": 26
+        "pt_m": 24
       }
     }
   },
