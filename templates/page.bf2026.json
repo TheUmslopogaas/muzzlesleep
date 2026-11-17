@@ -19,9 +19,10 @@
     },
     "bf_banner": {
       "type": "custom-image-banner",
-      "disabled": true,
       "name": "BF Banner",
       "settings": {
+        "image": "shopify://shop_images/Muzzle_BOGO_Desktop_1.png",
+        "mobile_image": "shopify://shop_images/Muzzle_BOGO_Mobile_1.png",
         "image_url": ""
       }
     },
