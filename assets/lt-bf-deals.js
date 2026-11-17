@@ -1,7 +1,9 @@
 /* ==========================================================================
    LT BF Deals (sections/lt-bf-deals.liquid)
    - Layout per device (750px breakpoint): grid | carousel (Swiper, global) | stack
-   - Variant dropdown (only if a bundle has >1 variant) updates price/badge/image
+   - Optional custom variant dropdown (per block) updates price/badge/image
+   - Subscription cards add the variant with its selling plan; an optional
+     free gift (first variant of the gift product) is added in the same request
    - Add to Cart -> /cart/add.js -> Rebuy Smart Cart
    - Card links are plain <a> tags rendered only when a block asks for them
    ========================================================================== */
@@ -62,6 +64,116 @@
   }
 
   /* ------------------------------------------------------------------------
+     Dropdown (custom listbox, opens upward so carousels never clip it)
+     ------------------------------------------------------------------------ */
+  var openDropdown = null;
+
+  function Dropdown(el, onChange) {
+    this.el = el;
+    this.onChange = onChange;
+    this.btn = el.querySelector('[data-lt-bf-dd-btn]');
+    this.menu = el.querySelector('[data-lt-bf-dd-menu]');
+    this.valueEl = el.querySelector('[data-lt-bf-dd-value]');
+    this.options = Array.prototype.slice.call(el.querySelectorAll('[role="option"]'));
+    this.baseLabel = (this.btn.getAttribute('aria-label') || '').split(':')[0];
+
+    var self = this;
+    this.onBtnClick = function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      self.isOpen() ? self.close(true) : self.open();
+    };
+    this.onBtnKey = function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        self.open();
+      }
+    };
+    this.onMenuClick = function (e) {
+      var opt = e.target.closest('[role="option"]');
+      if (!opt) return;
+      e.preventDefault();
+      e.stopPropagation();
+      self.choose(opt);
+    };
+    this.onMenuKey = function (e) {
+      var idx = self.options.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown') { e.preventDefault(); self.focusAt(idx + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); self.focusAt(idx - 1); }
+      else if (e.key === 'Home') { e.preventDefault(); self.focusAt(0); }
+      else if (e.key === 'End') { e.preventDefault(); self.focusAt(self.options.length - 1); }
+      else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (idx > -1) self.choose(self.options[idx]);
+      } else if (e.key === 'Escape' || e.key === 'Tab') {
+        if (e.key === 'Escape') e.preventDefault();
+        self.close(e.key === 'Escape');
+      }
+    };
+
+    this.btn.addEventListener('click', this.onBtnClick);
+    this.btn.addEventListener('keydown', this.onBtnKey);
+    this.menu.addEventListener('click', this.onMenuClick);
+    this.menu.addEventListener('keydown', this.onMenuKey);
+  }
+
+  Dropdown.prototype.isOpen = function () { return !this.menu.hidden; };
+
+  Dropdown.prototype.open = function () {
+    if (openDropdown && openDropdown !== this) openDropdown.close(false);
+    this.menu.hidden = false;
+    this.el.classList.add('is-open');
+    this.btn.setAttribute('aria-expanded', 'true');
+    openDropdown = this;
+    var selected = this.menu.querySelector('[aria-selected="true"]');
+    this.focusAt(Math.max(0, this.options.indexOf(selected)));
+  };
+
+  Dropdown.prototype.close = function (returnFocus) {
+    if (!this.isOpen()) return;
+    this.menu.hidden = true;
+    this.el.classList.remove('is-open');
+    this.btn.setAttribute('aria-expanded', 'false');
+    if (openDropdown === this) openDropdown = null;
+    if (returnFocus) this.btn.focus();
+  };
+
+  Dropdown.prototype.focusAt = function (i) {
+    var n = this.options.length;
+    if (!n) return;
+    var idx = (i + n) % n;
+    this.options[idx].focus();
+  };
+
+  Dropdown.prototype.choose = function (opt) {
+    if (opt.getAttribute('aria-disabled') === 'true') return;
+    this.close(true);
+    this.onChange(opt.getAttribute('data-value'));
+  };
+
+  Dropdown.prototype.setValue = function (id, title) {
+    var sid = String(id);
+    this.options.forEach(function (o) {
+      o.setAttribute('aria-selected', o.getAttribute('data-value') === sid ? 'true' : 'false');
+    });
+    if (title && this.valueEl) this.valueEl.textContent = title;
+    if (title) this.btn.setAttribute('aria-label', this.baseLabel + ': ' + title);
+  };
+
+  Dropdown.prototype.destroy = function () {
+    this.close(false);
+    this.btn.removeEventListener('click', this.onBtnClick);
+    this.btn.removeEventListener('keydown', this.onBtnKey);
+    this.menu.removeEventListener('click', this.onMenuClick);
+    this.menu.removeEventListener('keydown', this.onMenuKey);
+  };
+
+  /* Close any open dropdown on outside click */
+  document.addEventListener('click', function (e) {
+    if (openDropdown && !openDropdown.el.contains(e.target)) openDropdown.close(false);
+  });
+
+  /* ------------------------------------------------------------------------
      Card
      ------------------------------------------------------------------------ */
   function Card(el, cfg) {
@@ -71,7 +183,7 @@
     this.data = parseJSON(el.querySelector('[data-lt-bf-data]'));
     if (!this.data || !this.data.variants || !this.data.variants.length) return;
 
-    this.variantSel = el.querySelector('[data-lt-bf-variant]');
+    this.dd = el.querySelector('[data-lt-bf-dd]');
     this.priceEl = el.querySelector('[data-lt-bf-price]');
     this.compareEl = el.querySelector('[data-lt-bf-compare]');
     this.badgeEl = el.querySelector('[data-lt-bf-badge]');
@@ -86,18 +198,19 @@
     this.timers = [];
 
     var self = this;
-    this.onVariant = function () {
-      self.variantId = String(self.variantSel.value);
-      self.render(true);
-    };
     this.onAdd = function (e) {
       e.preventDefault();
       e.stopPropagation();
       self.add();
     };
-
-    if (this.variantSel) this.variantSel.addEventListener('change', this.onVariant);
     if (this.btn) this.btn.addEventListener('click', this.onAdd);
+
+    if (this.dd) {
+      this.dropdown = new Dropdown(this.dd, function (id) {
+        self.variantId = String(id);
+        self.render(true);
+      });
+    }
   }
 
   Card.prototype.getVariant = function () {
@@ -126,6 +239,7 @@
           .replace(/\[amount\]/g, v.save || '');
       }
     }
+    if (this.dropdown) this.dropdown.setValue(v.id, v.title);
     if (variantChanged && this.imgEl && v.img) {
       this.imgEl.removeAttribute('srcset');
       this.imgEl.src = v.img;
@@ -166,10 +280,18 @@
 
     var self = this;
     var cfg = this.cfg;
-    var item = { id: Number(v.id), quantity: 1 };
-    if (cfg.propKey && cfg.propValue) {
-      item.properties = {};
-      item.properties[cfg.propKey] = cfg.propValue;
+    var items = [];
+    var main = { id: Number(v.id), quantity: 1, properties: {} };
+    if (v.plan) main.selling_plan = Number(v.plan);
+    if (cfg.propKey && cfg.propValue) main.properties[cfg.propKey] = cfg.propValue;
+    items.push(main);
+
+    var gift = this.data.gift;
+    if (gift && gift.id) {
+      var giftItem = { id: Number(gift.id), quantity: 1, properties: {} };
+      if (cfg.giftKey && gift.note) giftItem.properties[cfg.giftKey] = gift.note;
+      if (cfg.propKey && cfg.propValue) giftItem.properties[cfg.propKey] = cfg.propValue;
+      items.push(giftItem);
     }
 
     this.busy = true;
@@ -184,7 +306,7 @@
         Accept: 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
       },
-      body: JSON.stringify({ items: [item] })
+      body: JSON.stringify({ items: items })
     })
       .then(function (res) {
         return res.json().then(function (data) {
@@ -216,8 +338,8 @@
 
   Card.prototype.destroy = function () {
     this.timers.forEach(clearTimeout);
-    if (this.variantSel) this.variantSel.removeEventListener('change', this.onVariant);
     if (this.btn) this.btn.removeEventListener('click', this.onAdd);
+    if (this.dropdown) this.dropdown.destroy();
   };
 
   /* ------------------------------------------------------------------------

@@ -94,27 +94,118 @@
     {%- assign visible_count = visible_count | plus: 1 -%}
 
     {%- liquid
+      # ---------- Subscription + gift ----------
+      assign is_sub = false
+      if has_product and b.subscription and p.selling_plan_groups.size > 0
+        assign is_sub = true
+      endif
+
+      assign has_gift = false
+      assign gift_available = true
+      assign gift_price = 0
+      assign gift_variant = nil
+      if has_product and b.gift_product != blank
+        assign gift_variant = b.gift_product.variants.first
+        if gift_variant
+          assign has_gift = true
+          assign gift_available = gift_variant.available
+          assign gift_price = gift_variant.price
+        endif
+      endif
+
+      # ---------- Variant loop state ----------
+      assign sel_found = false
       assign sel_variant = nil
-      assign show_variant_select = false
+      assign sel_available = false
+      assign eligible_count = 0
       assign price_cents = 0
       assign cmp_cents = 0
       assign pct = 0
       assign save_cents = 0
+    -%}
+    {%- capture variants_json -%}
+      {%- if has_product -%}
+        {%- for v in p.variants -%}
+          {%- liquid
+            assign eligible = true
+            assign v_plan = 'null'
+            assign v_price = v.price
+            if is_sub
+              assign alloc = v.selling_plan_allocations.first
+              if alloc
+                assign v_plan = alloc.selling_plan.id
+                assign v_price = alloc.price
+              else
+                assign eligible = false
+              endif
+            endif
+          -%}
+          {%- unless eligible -%}{%- continue -%}{%- endunless -%}
+          {%- liquid
+            assign v_base = v.compare_at_price | default: 0
+            if is_sub and v.price > v_base
+              assign v_base = v.price
+            endif
+            if has_gift and s.compare_include_gift
+              if v_base < v.price
+                assign v_base = v.price
+              endif
+              assign v_base = v_base | plus: gift_price
+            endif
+            if v_base <= v_price
+              assign v_base = 0
+            endif
+            assign v_save = 0
+            assign v_pct = 0
+            if v_base > 0
+              assign v_save = v_base | minus: v_price
+              assign v_pct = v_save | times: 100.0 | divided_by: v_base | round
+            endif
+            assign v_available = v.available
+            if gift_available == false
+              assign v_available = false
+            endif
 
-      if has_product
-        assign sel_variant = p.selected_or_first_available_variant | default: p.variants.first
-        if p.has_only_default_variant == false and p.variants.size > 1
-          assign show_variant_select = true
-        endif
+            if sel_found == false
+              assign sel_found = true
+              assign sel_variant = v
+              assign sel_available = v_available
+              assign price_cents = v_price
+              assign cmp_cents = v_base
+              assign save_cents = v_save
+              assign pct = v_pct
+            endif
+            assign eligible_count = eligible_count | plus: 1
+          -%}
+          {%- capture v_price_html -%}{%- render 'lt-pc-money', cents: v_price, format: s.price_format -%}{%- endcapture -%}
+          {%- capture v_cmp_html -%}{%- if v_base > 0 -%}{%- render 'lt-pc-money', cents: v_base, format: s.price_format -%}{%- endif -%}{%- endcapture -%}
+          {%- capture v_save_html -%}{%- if v_save > 0 -%}{%- render 'lt-pc-money', cents: v_save, format: s.price_format -%}{%- endif -%}{%- endcapture -%}
+          {%- if eligible_count > 1 -%},{%- endif -%}
+          {
+            "id": {{ v.id }},
+            "title": {{ v.title | json }},
+            "available": {{ v_available | json }},
+            "plan": {{ v_plan }},
+            "price": {{ v_price_html | strip | json }},
+            "compare": {{ v_cmp_html | strip | json }},
+            "save": {{ v_save_html | strip | json }},
+            "pct": {{ v_pct }},
+            "img": {%- if v.featured_image and b.image == blank -%}{{ v.featured_image | image_url: width: 1000 | json }}{%- else -%}null{%- endif -%}
+          }
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endcapture -%}
+    {%- liquid
+      if has_product and sel_found == false
+        # Subscription is on but no variant has a plan: show the card as unavailable
+        assign sel_variant = p.variants.first
+        assign sel_available = false
         assign price_cents = sel_variant.price
-        assign cmp_cents = sel_variant.compare_at_price | default: 0
-        if cmp_cents <= price_cents
-          assign cmp_cents = 0
-        endif
-        if cmp_cents > 0
-          assign save_cents = cmp_cents | minus: price_cents
-          assign pct = save_cents | times: 100.0 | divided_by: cmp_cents | round
-        endif
+      endif
+
+      assign show_dd = false
+      if b.show_variant_select and eligible_count > 1
+        assign show_dd = true
       endif
 
       # ---------- Title ----------
@@ -131,7 +222,7 @@
         assign card_title = card_title | strip
       endif
       if is_placeholder
-        assign card_title = 'Select a bundle product'
+        assign card_title = 'Select a product'
       endif
 
       # ---------- Image ----------
@@ -237,29 +328,64 @@
 
           {%- if price_html != blank -%}
             <div class="lt-bf__price" data-lt-bf-price-wrap>
-              <span class="lt-bf__price-current" data-lt-bf-price>{{ price_html | escape }}</span>
+              <span class="lt-bf__price-current">
+                <span data-lt-bf-price>{{ price_html | escape }}</span>
+                {%- if is_sub and s.sub_suffix != blank -%}
+                  <span class="lt-bf__price-suffix">{{ s.sub_suffix | escape }}</span>
+                {%- endif -%}
+              </span>
               {%- if s.show_compare_at -%}
                 <s class="lt-bf__price-compare" data-lt-bf-compare {% if cmp_html == blank %}hidden{% endif %}>{{ cmp_html | escape }}</s>
               {%- endif -%}
             </div>
           {%- endif -%}
 
+          {%- if is_sub and s.sub_note != blank -%}
+            <p class="lt-bf__subnote">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M17 2l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13v1a4 4 0 0 1-4 4H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>{{ s.sub_note | escape }}</span>
+            </p>
+          {%- endif -%}
+
           {%- if has_product -%}
             <div class="lt-bf__footer">
-              {%- if show_variant_select -%}
-                <div class="lt-bf__select-wrap">
-                  <select class="lt-bf__select" data-lt-bf-variant aria-label="{{ card_title | escape }} options">
+              {%- if show_dd -%}
+                <div class="lt-bf__dd" data-lt-bf-dd>
+                  <button
+                    type="button"
+                    class="lt-bf__dd-btn"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-controls="lt-bf-dd-{{ block.id }}"
+                    aria-label="{{ card_title | escape }}: {{ sel_variant.title | escape }}"
+                    data-lt-bf-dd-btn
+                  >
+                    <span class="lt-bf__dd-value" data-lt-bf-dd-value>{{ sel_variant.title | escape }}</span>
+                    <svg class="lt-bf__dd-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <ul class="lt-bf__dd-menu" id="lt-bf-dd-{{ block.id }}" role="listbox" tabindex="-1" hidden data-lt-bf-dd-menu>
                     {%- for v in p.variants -%}
-                      <option
-                        value="{{ v.id }}"
-                        {% if v.id == sel_variant.id %}selected{% endif %}
-                        {% unless v.available %}disabled{% endunless %}
+                      {%- if is_sub and v.selling_plan_allocations.size == 0 -%}{%- continue -%}{%- endif -%}
+                      {%- liquid
+                        assign opt_available = v.available
+                        if gift_available == false
+                          assign opt_available = false
+                        endif
+                      -%}
+                      <li
+                        class="lt-bf__dd-option"
+                        role="option"
+                        tabindex="-1"
+                        data-value="{{ v.id }}"
+                        aria-selected="{% if v.id == sel_variant.id %}true{% else %}false{% endif %}"
+                        {% unless opt_available %}aria-disabled="true"{% endunless %}
                       >
-                        {{- v.title | escape -}}
-                        {%- unless v.available %} - {{ s.sold_out_label | escape }}{%- endunless -%}
-                      </option>
+                        <span>{{ v.title | escape }}</span>
+                        {%- unless opt_available -%}<span class="lt-bf__dd-soldout">{{ s.sold_out_label | escape }}</span>{%- endunless -%}
+                        <svg class="lt-bf__dd-check" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </li>
                     {%- endfor -%}
-                  </select>
+                  </ul>
                 </div>
               {%- endif -%}
 
@@ -268,11 +394,11 @@
                 class="lt-bf__btn"
                 data-lt-bf-atc
                 data-label="{{ atc_label | escape }}"
-                {% unless sel_variant.available %}disabled{% endunless %}
+                {% unless sel_available %}disabled{% endunless %}
               >
                 <span class="lt-bf__spinner" aria-hidden="true"></span>
                 <span data-lt-bf-btn-text>
-                  {%- if sel_variant.available -%}{{ atc_label | escape }}{%- else -%}{{ s.sold_out_label | escape }}{%- endif -%}
+                  {%- if sel_available -%}{{ atc_label | escape }}{%- else -%}{{ s.sold_out_label | escape }}{%- endif -%}
                 </span>
               </button>
               <p class="lt-bf__error" role="alert" data-lt-bf-error hidden></p>
@@ -280,35 +406,8 @@
 
             <script type="application/json" data-lt-bf-data>
               {
-                "variants": [
-                  {%- for v in p.variants -%}
-                    {%- liquid
-                      assign v_cmp = v.compare_at_price | default: 0
-                      if v_cmp <= v.price
-                        assign v_cmp = 0
-                      endif
-                      assign v_save = 0
-                      assign v_pct = 0
-                      if v_cmp > 0
-                        assign v_save = v_cmp | minus: v.price
-                        assign v_pct = v_save | times: 100.0 | divided_by: v_cmp | round
-                      endif
-                    -%}
-                    {%- capture v_price -%}{%- render 'lt-pc-money', cents: v.price, format: s.price_format -%}{%- endcapture -%}
-                    {%- capture v_cmp_html -%}{%- if v_cmp > 0 -%}{%- render 'lt-pc-money', cents: v_cmp, format: s.price_format -%}{%- endif -%}{%- endcapture -%}
-                    {%- capture v_save_html -%}{%- if v_save > 0 -%}{%- render 'lt-pc-money', cents: v_save, format: s.price_format -%}{%- endif -%}{%- endcapture -%}
-                    {
-                      "id": {{ v.id }},
-                      "available": {{ v.available | json }},
-                      "price": {{ v_price | strip | json }},
-                      "compare": {{ v_cmp_html | strip | json }},
-                      "save": {{ v_save_html | strip | json }},
-                      "pct": {{ v_pct }},
-                      "img": {%- if v.featured_image and b.image == blank -%}{{ v.featured_image | image_url: width: 1000 | json }}{%- else -%}null{%- endif -%}
-                    }
-                    {%- unless forloop.last -%},{%- endunless -%}
-                  {%- endfor -%}
-                ]
+                "gift": {%- if has_gift -%}{ "id": {{ gift_variant.id }}, "note": {{ b.gift_note | strip | json }} }{%- else -%}null{%- endif -%},
+                "variants": [{{ variants_json }}]
               }
             </script>
           {%- endif -%}
@@ -362,6 +461,10 @@
       --btn-radius: {{ s.btn_radius }}px;
       --btn-bg: {{ s.btn_bg }}; --btn-color: {{ s.btn_color }};
       --btn-bg-h: {{ s.btn_bg_hover }}; --btn-color-h: {{ s.btn_color_hover }};
+
+      --dd-bg: {{ s.dd_bg }}; --dd-border: {{ s.dd_border }}; --dd-color: {{ s.dd_color }};
+      --dd-menu-bg: {{ s.dd_menu_bg }}; --dd-active-bg: {{ s.dd_active_bg }}; --dd-active-color: {{ s.dd_active_color }};
+      --subnote-color: {{ s.sub_note_color }};
 
       --arrow-color: {{ s.arrow_color }}; --arrow-bg: {{ s.arrow_bg }};
       --swiper-pagination-color: {{ s.dot_color }};
@@ -440,6 +543,7 @@
         "openCart": {{ s.open_cart | json }},
         "propKey": {{ s.prop_key | strip | json }},
         "propValue": {{ s.prop_value | strip | json }},
+        "giftKey": {{ s.gift_note_key | strip | json }},
         "labels": {
           "adding": {{ s.adding_label | json }},
           "added": {{ s.added_label | json }},
@@ -554,6 +658,22 @@
     { "type": "color", "id": "compare_color", "label": "Compare-at color", "default": "#FFFFFF99" },
     { "type": "color", "id": "compare_line_color", "label": "Compare-at strike line", "default": "#FF4D6D" },
 
+    { "type": "header", "content": "Subscription & free gift" },
+    { "type": "paragraph", "content": "Applies to cards with \"Sell as subscription\" or a \"Free gift product\" set." },
+    { "type": "text", "id": "sub_suffix", "label": "Subscription price suffix", "default": "/month" },
+    { "type": "text", "id": "sub_note", "label": "Note under subscription price", "default": "Monthly subscription · Cancel anytime" },
+    { "type": "color", "id": "sub_note_color", "label": "Note color", "default": "#FFFFFFCC" },
+    { "type": "checkbox", "id": "compare_include_gift", "label": "Add gift price to compare-at price", "default": true, "info": "e.g. $29.95 tape + $19.95 strips = $49.90 crossed out." },
+    { "type": "text", "id": "gift_note_key", "label": "Gift note label", "default": "Offer", "info": "Shown on the gift in cart, checkout and order emails as \"Offer: <block gift note>\"." },
+
+    { "type": "header", "content": "Variant dropdown" },
+    { "type": "color", "id": "dd_bg", "label": "Background", "default": "#FFFFFF14" },
+    { "type": "color", "id": "dd_border", "label": "Border", "default": "#E3C8FF66" },
+    { "type": "color", "id": "dd_color", "label": "Text", "default": "#FFFFFF" },
+    { "type": "color", "id": "dd_menu_bg", "label": "Menu background", "default": "#2A1B5E" },
+    { "type": "color", "id": "dd_active_bg", "label": "Selected option background", "default": "#E3C8FF" },
+    { "type": "color", "id": "dd_active_color", "label": "Selected option text", "default": "#1B1540" },
+
     { "type": "header", "content": "Savings badge" },
     { "type": "checkbox", "id": "show_save_badge", "label": "Show automatic savings badge", "default": true, "info": "Calculated from the compare-at price. A block's Badge text overrides it." },
     { "type": "text", "id": "save_badge_text", "label": "Badge text", "default": "Save [percent]%", "info": "[percent] = discount %, [amount] = amount saved." },
@@ -618,7 +738,15 @@
       "type": "deal",
       "name": "Deal card",
       "settings": [
-        { "type": "product", "id": "product", "label": "Bundle product" },
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "checkbox", "id": "subscription", "label": "Sell as subscription", "default": false, "info": "Adds the product on its first subscription plan (Recharge). Only variants with that plan can be bought." },
+        { "type": "checkbox", "id": "show_variant_select", "label": "Show variant dropdown", "default": false, "info": "Off = the first variant is used. Only appears when there's more than one option." },
+
+        { "type": "header", "content": "Free gift" },
+        { "type": "product", "id": "gift_product", "label": "Free gift product", "info": "Its first variant is added to cart together with the product. Make it free with a Shopify discount." },
+        { "type": "text", "id": "gift_note", "label": "Gift note", "default": "Free with your subscription (this order only)", "info": "Shown on the gift in cart, checkout and order emails. Empty = no note." },
+
+        { "type": "header", "content": "Content" },
         { "type": "text", "id": "highlight", "label": "Free gift tag", "info": "Small tag above the title, e.g. + FREE Nose Strips" },
         { "type": "text", "id": "title", "label": "Title override", "info": "Empty = product title." },
         { "type": "image_picker", "id": "image", "label": "Image override", "info": "Empty = product image." },
