@@ -121,10 +121,14 @@
       assign card_title = b.title
       if card_title == blank and has_product
         assign card_title = p.title
-        assign strip_text = s.title_strip | strip
-        if strip_text != blank
-          assign card_title = card_title | remove_first: strip_text | strip
-        endif
+        assign strip_parts = s.title_strip | split: '|'
+        for part in strip_parts
+          assign part_clean = part | strip
+          if part_clean != blank
+            assign card_title = card_title | remove_first: part_clean
+          endif
+        endfor
+        assign card_title = card_title | strip
       endif
       if is_placeholder
         assign card_title = 'Select a bundle product'
@@ -526,7 +530,7 @@
     { "type": "checkbox", "id": "hide_sold_out", "label": "Hide sold-out deals", "default": false },
 
     { "type": "header", "content": "Card title" },
-    { "type": "text", "id": "title_strip", "label": "Remove text from product titles", "default": "BF –", "info": "e.g. the \"BF –\" prefix. Block title overrides are shown as typed." },
+    { "type": "text", "id": "title_strip", "label": "Remove text from product titles", "default": "BF –", "info": "Separate multiple with |, e.g. BF – | + Free Nose Strips. Block title overrides are shown as typed." },
     { "type": "range", "id": "title_size_d", "label": "Size (desktop)", "min": 12, "max": 32, "step": 1, "unit": "px", "default": 19 },
     { "type": "range", "id": "title_size_m", "label": "Size (mobile)", "min": 12, "max": 26, "step": 1, "unit": "px", "default": 17 },
     { "type": "color", "id": "title_color", "label": "Color", "default": "#FFFFFF" },
