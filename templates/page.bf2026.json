@@ -1,0 +1,228 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "bf_banner": {
+      "type": "custom-image-banner",
+      "name": "BF Banner",
+      "disabled": true,
+      "settings": {
+        "image_url": ""
+      }
+    },
+    "bf_deals_b1g1": {
+      "type": "lt-bf-deals",
+      "name": "BF Deals – B1G1",
+      "blocks": {
+        "deal_b1g1_1": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips",
+            "click_action": "none"
+          }
+        },
+        "deal_b1g1_2": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips",
+            "click_action": "none"
+          }
+        },
+        "deal_b1g1_3": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips",
+            "click_action": "none"
+          }
+        },
+        "deal_b1g1_4": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips",
+            "click_action": "none"
+          }
+        },
+        "deal_b1g1_5": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips",
+            "click_action": "none"
+          }
+        },
+        "deal_b1g1_6": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips",
+            "click_action": "none"
+          }
+        }
+      },
+      "block_order": [
+        "deal_b1g1_1",
+        "deal_b1g1_2",
+        "deal_b1g1_3",
+        "deal_b1g1_4",
+        "deal_b1g1_5",
+        "deal_b1g1_6"
+      ],
+      "settings": {
+        "eyebrow": "Black Friday Deals",
+        "heading": "Buy Mouth Tape, Get Nose Strips <em>Free</em>",
+        "anchor_id": "buy-1-get-1",
+        "bg_color_1": "#1B1540",
+        "bg_color_2": "#2E1A6B",
+        "layout_desktop": "grid",
+        "layout_mobile": "carousel",
+        "pt_d": 80,
+        "pt_m": 52
+      }
+    },
+    "bf_deals_b2g2": {
+      "type": "lt-bf-deals",
+      "name": "BF Deals – B2G2",
+      "blocks": {
+        "deal_b2g2_1": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips & Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_b2g2_2": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips & Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_b2g2_3": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips & Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_b2g2_4": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips & Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_b2g2_5": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips & Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_b2g2_6": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nose Strips & Nasal Sticks",
+            "click_action": "none"
+          }
+        }
+      },
+      "block_order": [
+        "deal_b2g2_1",
+        "deal_b2g2_2",
+        "deal_b2g2_3",
+        "deal_b2g2_4",
+        "deal_b2g2_5",
+        "deal_b2g2_6"
+      ],
+      "settings": {
+        "eyebrow": "Double Up",
+        "heading": "Buy 2 Mouth Tape, Get <em>2 Free</em>",
+        "anchor_id": "buy-2-get-2",
+        "bg_color_1": "#2E1A6B",
+        "bg_color_2": "#1B1540",
+        "layout_desktop": "grid",
+        "layout_mobile": "carousel",
+        "pt_d": 40,
+        "pt_m": 26
+      }
+    },
+    "bf_deals_6m": {
+      "type": "lt-bf-deals",
+      "name": "BF Deals – 6M",
+      "blocks": {
+        "deal_6m_1": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_6m_2": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_6m_3": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_6m_4": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_6m_5": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nasal Sticks",
+            "click_action": "none"
+          }
+        },
+        "deal_6m_6": {
+          "type": "deal",
+          "settings": {
+            "highlight": "+ Free Nasal Sticks",
+            "click_action": "none"
+          }
+        }
+      },
+      "block_order": [
+        "deal_6m_1",
+        "deal_6m_2",
+        "deal_6m_3",
+        "deal_6m_4",
+        "deal_6m_5",
+        "deal_6m_6"
+      ],
+      "settings": {
+        "eyebrow": "Stock Up",
+        "heading": "6-Month Supply + <em>Free</em> Nasal Sticks",
+        "anchor_id": "6-month-supply",
+        "bg_color_1": "#1B1540",
+        "bg_color_2": "#2E1A6B",
+        "layout_desktop": "grid",
+        "layout_mobile": "carousel",
+        "pt_d": 40,
+        "pt_m": 26
+      }
+    }
+  },
+  "order": [
+    "main",
+    "bf_banner",
+    "bf_deals_b1g1",
+    "bf_deals_b2g2",
+    "bf_deals_6m"
+  ]
+}

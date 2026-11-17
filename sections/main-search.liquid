@@ -264,7 +264,7 @@
                   {%- endif -%}
 
                   <li
-                    class="test grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}{% if item.tags contains 'hide_product' %} hide-prod{% endif %}"
+                    class="test grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}{% if item.tags contains 'hide_product' or item.tags contains 'bf2026' %} hide-prod{% endif %}"
                     {% if settings.animations_reveal_on_scroll %}
                       data-cascade
                     {% endif %}
