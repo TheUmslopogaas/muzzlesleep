@@ -217,6 +217,8 @@
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    {%- comment -%} Minty cashback popup: skipped on the BF deals page (template page.bf2026) {%- endcomment -%}
+    {%- unless template.suffix == 'bf2026' -%}
     <script>
     (function() {
       var script = document.createElement('script');
@@ -227,6 +229,7 @@
       document.head.appendChild(script);
     })();
     </script>
+    {%- endunless -%}
 
     {% render "tw_js" %}
   </body>
