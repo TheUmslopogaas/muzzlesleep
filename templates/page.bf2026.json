@@ -35,7 +35,8 @@
         "clock_label": "Ends in",
         "sticky_d": true,
         "sticky_m": true,
-        "align": "split"
+        "align": "split",
+        "blink_sep": true
       }
     },
     "bf_banner": {
