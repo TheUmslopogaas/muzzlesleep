@@ -269,7 +269,7 @@
         "deal_b2g2_1": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-buy-2-kids-extra-sensitive-mouth-tape-get-nose-strips-nasal-sticks-free",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -286,7 +286,7 @@
         "deal_b2g2_2": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-buy-2-adult-extra-sensitive-mouth-tape-get-nose-strips-nasal-sticks-free",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -303,7 +303,7 @@
         "deal_b2g2_3": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-buy-2-adult-strong-hold-mouth-tape-get-nose-strips-nasal-sticks-free",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -320,7 +320,7 @@
         "deal_b2g2_4": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-buy-2-adult-medium-hold-mouth-tape-get-nose-strips-nasal-sticks-free",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -337,7 +337,7 @@
         "deal_b2g2_5": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-buy-2-kids-medium-hold-mouth-tape-get-nose-strips-nasal-sticks-free",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -354,7 +354,7 @@
         "deal_b2g2_6": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-buy-2-beauty-mouth-tape-get-nose-strips-nasal-sticks-free",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -377,15 +377,14 @@
         "deal_b2g2_5",
         "deal_b2g2_6"
       ],
-      "disabled": true,
       "name": "BF Deals – B2G2",
       "settings": {
         "eyebrow": "Double Up",
-        "heading": "Buy 2 Mouth Tape, Get <em>2 Free</em>",
+        "heading": "Buy 2 Mouth Tape, Get Nose Strips + Nasal Sticks <em>Free</em>",
         "heading_tag": "h2",
         "heading_size_d": 48,
         "heading_size_m": 30,
-        "description": "",
+        "description": "<p>Grab 2 packs of any mouth tape and get a pack of Nose Strips and Nasal Sticks free. One-time purchase, no subscription.</p>",
         "header_align": "center",
         "header_gap_d": 44,
         "header_gap_m": 28,
@@ -424,7 +423,7 @@
         "img_radius": 16,
         "card_cursor": "pointer",
         "hide_sold_out": false,
-        "title_strip": "BF – Buy 2 | , Get 2 Free",
+        "title_strip": "BF – Buy 2 | , Get Nose Strips + Nasal Sticks Free",
         "title_size_d": 19,
         "title_size_m": 17,
         "title_color": "#ffffff",
@@ -501,7 +500,7 @@
         "deal_6m_1": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-6-month-kids-extra-sensitive-mouth-tape-free-nasal-sticks",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -518,7 +517,7 @@
         "deal_6m_2": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-6-month-adult-extra-sensitive-mouth-tape-free-nasal-sticks",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -535,7 +534,7 @@
         "deal_6m_3": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-6-month-adult-strong-hold-mouth-tape-free-nasal-sticks",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -552,7 +551,7 @@
         "deal_6m_4": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-6-month-adult-medium-hold-mouth-tape-free-nasal-sticks",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -569,7 +568,7 @@
         "deal_6m_5": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-6-month-kids-medium-hold-mouth-tape-free-nasal-sticks",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -586,7 +585,7 @@
         "deal_6m_6": {
           "type": "deal",
           "settings": {
-            "product": "",
+            "product": "bf-6-month-beauty-mouth-tape-free-nasal-sticks",
             "subscription": false,
             "show_variant_select": false,
             "gift_product": "",
@@ -609,7 +608,6 @@
         "deal_6m_5",
         "deal_6m_6"
       ],
-      "disabled": true,
       "name": "BF Deals – 6M",
       "settings": {
         "eyebrow": "Stock Up",
@@ -617,7 +615,7 @@
         "heading_tag": "h2",
         "heading_size_d": 48,
         "heading_size_m": 30,
-        "description": "",
+        "description": "<p>Stock up on 6 packs of mouth tape at the 6-month price and get a pack of Nasal Sticks free. One-time purchase, no subscription.</p>",
         "header_align": "center",
         "header_gap_d": 44,
         "header_gap_m": 28,
