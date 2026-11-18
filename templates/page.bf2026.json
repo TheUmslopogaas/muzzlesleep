@@ -21,8 +21,8 @@
       "type": "custom-image-banner",
       "name": "BF Banner",
       "settings": {
-        "image": "shopify://shop_images/Muzzle_BOGO_Desktop_1.png",
-        "mobile_image": "shopify://shop_images/Muzzle_BOGO_Mobile_1.png",
+        "image": "shopify://shop_images/Muzzle_BF_Deals_Desktop.png",
+        "mobile_image": "shopify://shop_images/Muzzle_BF_Deals_Mobile.png",
         "image_url": "/pages/black-friday-deals#buy-1-get-1"
       }
     },
