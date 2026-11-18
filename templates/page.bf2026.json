@@ -17,6 +17,27 @@
         "padding_bottom": 28
       }
     },
+    "bf_countdown": {
+      "type": "lt-bf-countdown",
+      "settings": {
+        "mode": "fixed",
+        "end_date": "2026-11-30",
+        "end_time": "23:59",
+        "timezone": "-08:00",
+        "hide_days": true,
+        "after_end": "hide",
+        "ended_text": "This sale has ended",
+        "title": "Black Friday <em>Sale</em>",
+        "subtitle": "Ends Cyber Monday",
+        "link_label": "Shop the deals",
+        "link_url": "#buy-1-get-1",
+        "hide_sub_m": true,
+        "clock_label": "Ends in",
+        "sticky_d": true,
+        "sticky_m": true,
+        "align": "split"
+      }
+    },
     "bf_banner": {
       "type": "custom-image-banner",
       "name": "BF Banner",
@@ -728,6 +749,7 @@
   },
   "order": [
     "main",
+    "bf_countdown",
     "bf_banner",
     "bf_deals_b1g1",
     "bf_deals_b2g2",
