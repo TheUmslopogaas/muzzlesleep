@@ -805,12 +805,13 @@
     { "type": "range", "id": "header_gap_m", "label": "Space below heading (mobile)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 24 },
 
     { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "max_width", "label": "Section width", "min": 800, "max": 1800, "step": 20, "unit": "px", "default": 1400, "info": "Max width of the cards area on desktop. Lower it to make the cards smaller." },
     {
       "type": "select", "id": "layout_desktop", "label": "Desktop layout", "default": "carousel",
       "options": [ { "value": "carousel", "label": "Carousel" }, { "value": "grid", "label": "Grid" } ]
     },
     {
-      "type": "select", "id": "layout_mobile", "label": "Mobile layout", "default": "same",
+      "type": "select", "id": "layout_mobile", "label": "Mobile layout", "default": "carousel",
       "options": [ { "value": "same", "label": "Same as desktop" }, { "value": "carousel", "label": "Carousel" }, { "value": "grid", "label": "Grid" } ],
       "info": "Mobile is below 750px wide."
     },
@@ -930,7 +931,7 @@
       "options": [ { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semibold" }, { "value": "700", "label": "Bold" } ]
     },
     { "type": "color", "id": "price_color", "label": "Price color", "default": "#27214D" },
-    { "type": "checkbox", "id": "show_compare_at", "label": "Show compare-at price", "default": false, "info": "Also applies to manual compare-at prices on blocks." },
+    { "type": "checkbox", "id": "show_compare_at", "label": "Show compare-at price", "default": true, "info": "Also applies to manual compare-at prices on blocks." },
     { "type": "color", "id": "sale_price_color", "label": "Price color when on sale", "default": "#27214D" },
     { "type": "color", "id": "compare_color", "label": "Compare-at price color", "default": "#8A87A3" },
 
@@ -1022,7 +1023,6 @@
 
     { "type": "header", "content": "Section spacing" },
     { "type": "color", "id": "background", "label": "Background", "info": "Leave empty for transparent." },
-    { "type": "range", "id": "max_width", "label": "Content max width", "min": 800, "max": 1800, "step": 20, "unit": "px", "default": 1400 },
     { "type": "range", "id": "px_d", "label": "Side padding (desktop)", "min": 0, "max": 80, "step": 2, "unit": "px", "default": 40 },
     { "type": "range", "id": "px_m", "label": "Side padding (mobile)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 16 },
     { "type": "range", "id": "pt_d", "label": "Top padding (desktop)", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 60 },
