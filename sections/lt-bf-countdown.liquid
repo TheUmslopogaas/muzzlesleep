@@ -1,0 +1,758 @@
+{%- comment -%}
+  LT BF Countdown
+  ------------------------------------------------------------------
+  - Slim promo bar with a live countdown. Sticky by default; it sits
+    right under the theme header when the header is showing.
+  - Timer: "Fixed end date" counts down to a real date/time in a chosen
+    timezone. "Daily reset" counts down to the visitor's local midnight.
+  - When a fixed timer ends: hide the bar, or show the "ended" message.
+  - CSS and JS live in this file (no separate assets).
+  - The link scrolls to an anchor (e.g. #buy-1-get-1) with offset for
+    the sticky bar, or goes to any URL.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign sid = section.id
+
+  assign end_iso = ''
+  if s.end_date != blank
+    assign t = s.end_time | default: '23:59' | strip
+    assign end_iso = s.end_date | strip | append: 'T' | append: t | append: ':00' | append: s.timezone
+  endif
+
+  assign link_url = s.link_url | strip
+-%}
+
+{%- style -%}
+  #shopify-section-{{ sid }} {
+    {%- if s.sticky_d %}
+      position: sticky;
+      top: var(--lt-cd-top, 0px);
+      z-index: 2;
+    {%- endif %}
+    transition: top 0.15s ease-out;
+  }
+  /* Keep the sections below the bar under it while it's sticky
+     (e.g. the banner's z-index:2 content). The theme header stays above. */
+  #shopify-section-{{ sid }} ~ .shopify-section {
+    position: relative;
+    z-index: 1;
+  }
+  {%- unless s.sticky_m %}
+    @media screen and (max-width: 749px) {
+      #shopify-section-{{ sid }} { position: relative; top: auto; }
+    }
+  {%- endunless %}
+  {%- if s.sticky_m and s.sticky_d == false %}
+    @media screen and (max-width: 749px) {
+      #shopify-section-{{ sid }} { position: sticky; top: var(--lt-cd-top, 0px); z-index: 2; }
+    }
+  {%- endif %}
+
+  #lt-cd-{{ sid }} {
+    --cd-bg-1: {{ s.bg_color_1 }};
+    --cd-bg-2: {{ s.bg_color_2 }};
+    --cd-border: {{ s.border_color }};
+    --cd-glow: {{ s.glow_color }};
+    --cd-title: {{ s.title_color }};
+    --cd-hl-bg: {{ s.highlight_bg }};
+    --cd-hl-color: {{ s.highlight_color }};
+    --cd-sub: {{ s.sub_color }};
+    --cd-link: {{ s.link_color }};
+    --cd-tile-bg: {{ s.tile_bg }};
+    --cd-tile-border: {{ s.tile_border }};
+    --cd-digit: {{ s.digit_color }};
+    --cd-label: {{ s.label_color }};
+    --cd-sep: {{ s.sep_color }};
+    --cd-max: {{ s.max_width }}px;
+
+    --cd-title-size: {{ s.title_size_m }}px;
+    --cd-digit-size: {{ s.digit_size_m }}px;
+    --cd-pt: {{ s.pt_m }}px;
+    --cd-pb: {{ s.pb_m }}px;
+  }
+  @media screen and (min-width: 750px) {
+    #lt-cd-{{ sid }} {
+      --cd-title-size: {{ s.title_size_d }}px;
+      --cd-digit-size: {{ s.digit_size_d }}px;
+      --cd-pt: {{ s.pt_d }}px;
+      --cd-pb: {{ s.pb_d }}px;
+    }
+  }
+  {%- if s.hide_d %}
+    @media screen and (min-width: 750px) { #shopify-section-{{ sid }} { display: none; } }
+  {%- endif %}
+  {%- if s.hide_m %}
+    @media screen and (max-width: 749px) { #shopify-section-{{ sid }} { display: none; } }
+  {%- endif %}
+{%- endstyle -%}
+
+<div
+  id="lt-cd-{{ sid }}"
+  class="lt-cd lt-cd--{{ s.align }}{% if s.show_glow %} lt-cd--glow{% endif %}{% if s.blink_sep %} lt-cd--blink{% endif %}{% if s.hide_sub_m %} lt-cd--nosub-m{% endif %}"
+  data-lt-cd
+  data-mode="{{ s.mode }}"
+  data-end="{{ end_iso | escape }}"
+  data-hide-days="{{ s.hide_days }}"
+  data-after="{{ s.after_end }}"
+  data-design-mode="{{ request.design_mode }}"
+>
+  <div class="lt-cd__inner">
+    <div class="lt-cd__text">
+      {%- if s.title != blank -%}
+        <p class="lt-cd__title">{{ s.title }}</p>
+      {%- endif -%}
+      {%- if s.subtitle != blank or s.link_label != blank -%}
+        <p class="lt-cd__sub">
+          {%- if s.subtitle != blank -%}
+            <span class="lt-cd__subtext">{{ s.subtitle | escape }}</span>
+          {%- endif -%}
+          {%- if s.link_label != blank and link_url != blank -%}
+            <a class="lt-cd__link" href="{{ link_url | escape }}" data-lt-cd-link>
+              {{- s.link_label | escape -}}
+              <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" fill="none">
+                {%- if link_url contains '#' -%}
+                  <path d="M6 2v8M2.5 6.5 6 10l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                {%- else -%}
+                  <path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                {%- endif -%}
+              </svg>
+            </a>
+          {%- endif -%}
+        </p>
+      {%- endif -%}
+    </div>
+
+    <div class="lt-cd__right">
+      {%- if s.clock_label != blank -%}
+        <span class="lt-cd__clock-label" data-lt-cd-clock-label>{{ s.clock_label | escape }}</span>
+      {%- endif -%}
+      <div class="lt-cd__clock" role="timer" aria-live="off" aria-label="{{ s.clock_label | default: 'Time left' | escape }}" data-lt-cd-clock>
+        <span class="lt-cd__unit" data-lt-cd-unit="d">
+          <span class="lt-cd__num" data-lt-cd-num="d">00</span>
+          <span class="lt-cd__label">{{ s.label_days | escape }}</span>
+        </span>
+        <span class="lt-cd__sep" data-lt-cd-sep="d" aria-hidden="true">:</span>
+        <span class="lt-cd__unit" data-lt-cd-unit="h">
+          <span class="lt-cd__num" data-lt-cd-num="h">00</span>
+          <span class="lt-cd__label">{{ s.label_hours | escape }}</span>
+        </span>
+        <span class="lt-cd__sep" aria-hidden="true">:</span>
+        <span class="lt-cd__unit" data-lt-cd-unit="m">
+          <span class="lt-cd__num" data-lt-cd-num="m">00</span>
+          <span class="lt-cd__label">{{ s.label_minutes | escape }}</span>
+        </span>
+        <span class="lt-cd__sep" aria-hidden="true">:</span>
+        <span class="lt-cd__unit" data-lt-cd-unit="s">
+          <span class="lt-cd__num" data-lt-cd-num="s">00</span>
+          <span class="lt-cd__label">{{ s.label_seconds | escape }}</span>
+        </span>
+      </div>
+      <p class="lt-cd__ended" data-lt-cd-ended hidden>{{ s.ended_text | escape }}</p>
+    </div>
+  </div>
+
+  {%- if request.design_mode -%}
+    <p class="lt-cd__editor-note" data-lt-cd-note hidden></p>
+  {%- endif -%}
+</div>
+
+<style>
+/* LT BF Countdown */
+
+.lt-cd {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(100deg, var(--cd-bg-1) 0%, var(--cd-bg-2) 100%);
+  border-bottom: 1px solid var(--cd-border);
+  padding: var(--cd-pt) 16px var(--cd-pb);
+  color: var(--cd-title);
+  isolation: isolate;
+}
+
+.lt-cd--glow::before,
+.lt-cd--glow::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 420px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--cd-glow), transparent);
+  pointer-events: none;
+}
+.lt-cd--glow::before { left: -80px; top: -70px; }
+.lt-cd--glow::after { right: -60px; bottom: -90px; }
+
+.lt-cd__inner {
+  max-width: var(--cd-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+}
+.lt-cd--center .lt-cd__inner {
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.lt-cd__text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.lt-cd--center .lt-cd__text { align-items: center; }
+
+/* Title */
+.lt-cd__title {
+  margin: 0;
+  font-family: var(--font-heading-family);
+  font-weight: 800;
+  font-size: var(--cd-title-size);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--cd-title);
+}
+.lt-cd__title em {
+  display: inline-block;
+  font-style: italic;
+  padding: 0.06em 0.32em 0.02em;
+  margin-left: 0.1em;
+  border-radius: 0.22em;
+  background: var(--cd-hl-bg);
+  color: var(--cd-hl-color);
+  transform: rotate(-2deg);
+}
+
+/* Subtitle + link */
+.lt-cd__sub {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  color: var(--cd-sub);
+}
+.lt-cd__subtext:not(:last-child)::after {
+  content: '·';
+  margin: 0 0.45em;
+  opacity: 0.7;
+}
+.lt-cd__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--cd-link);
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, opacity 0.2s ease;
+}
+.lt-cd__link:hover { border-bottom-color: currentColor; }
+.lt-cd__link svg { transition: transform 0.2s ease; }
+.lt-cd__link:hover svg { transform: translateY(2px); }
+
+/* Timer */
+.lt-cd__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.lt-cd__clock-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cd-label);
+}
+.lt-cd__clock {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.lt-cd__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: calc(var(--cd-digit-size) * 1.9);
+  padding: calc(var(--cd-digit-size) * 0.22) 6px calc(var(--cd-digit-size) * 0.18);
+  border-radius: 10px;
+  background: var(--cd-tile-bg);
+  border: 1px solid var(--cd-tile-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.lt-cd [hidden] { display: none !important; }
+
+.lt-cd__num {
+  display: block;
+  font-family: var(--font-heading-family);
+  font-weight: 800;
+  font-size: var(--cd-digit-size);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--cd-digit);
+}
+.lt-cd__num.is-tick { animation: lt-cd-tick 0.35s ease-out; }
+
+.lt-cd__label {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cd-label);
+}
+
+.lt-cd__sep {
+  align-self: center;
+  margin-top: -0.6em;
+  font-weight: 800;
+  font-size: calc(var(--cd-digit-size) * 0.85);
+  line-height: 1;
+  color: var(--cd-sep);
+}
+.lt-cd--blink .lt-cd__sep { animation: lt-cd-blink 1s steps(1, end) infinite; }
+
+.lt-cd__ended {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cd-link);
+}
+
+.lt-cd__editor-note {
+  max-width: var(--cd-max);
+  margin: 8px auto 0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #ffcc00;
+  color: #1b1540;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@keyframes lt-cd-tick {
+  0% { opacity: 0.35; transform: translateY(-35%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes lt-cd-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Mobile */
+@media screen and (max-width: 749px) {
+  .lt-cd { padding-left: 12px; padding-right: 12px; }
+  .lt-cd__inner { gap: 10px; }
+  .lt-cd__clock-label { display: none; }
+  .lt-cd__clock { gap: 3px; }
+  .lt-cd__unit {
+    min-width: calc(var(--cd-digit-size) * 1.85);
+    padding-left: 3px;
+    padding-right: 3px;
+    border-radius: 8px;
+  }
+  .lt-cd__label { font-size: 8px; letter-spacing: 0.08em; margin-top: 3px; }
+  .lt-cd__sub { font-size: 11px; }
+  .lt-cd__link { font-size: 10px; }
+  .lt-cd--nosub-m .lt-cd__subtext { display: none; }
+  .lt-cd--glow::before,
+  .lt-cd--glow::after { width: 240px; height: 120px; }
+}
+
+/* Very small phones: stack */
+@media screen and (max-width: 359px) {
+  .lt-cd__inner { flex-direction: column; text-align: center; }
+  .lt-cd__text { align-items: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lt-cd__num.is-tick,
+  .lt-cd--blink .lt-cd__sep { animation: none; }
+  .lt-cd__link svg { transition: none; }
+}
+</style>
+
+<script>
+/* LT BF Countdown */
+(function () {
+  'use strict';
+  if (window.LTBFCountdown) { window.LTBFCountdown.init(); return; }
+
+  var instances = [];
+
+  function pad(n) {
+    return n < 10 ? '0' + n : String(n);
+  }
+
+  /* ---------- Sticky offset: sit right under the theme header ---------- */
+
+  var header = null;
+  var rafId = 0;
+  var followUntil = 0;
+
+  function headerBottom() {
+    if (!header || !header.isConnected) header = document.querySelector('.section-header');
+    if (!header) return 0;
+    var pos = window.getComputedStyle(header).position;
+    if (pos !== 'sticky' && pos !== 'fixed') return 0;
+    return Math.max(0, Math.round(header.getBoundingClientRect().bottom));
+  }
+
+  function applyTop() {
+    var top = headerBottom() + 'px';
+    instances.forEach(function (inst) {
+      if (inst.wrap) inst.wrap.style.setProperty('--lt-cd-top', top);
+    });
+  }
+
+  // Follow the header's slide animation for a short while after it changes.
+  function follow(ms) {
+    followUntil = Math.max(followUntil, performance.now() + (ms || 250));
+    if (rafId) return;
+    var step = function () {
+      applyTop();
+      if (performance.now() < followUntil) {
+        rafId = requestAnimationFrame(step);
+      } else {
+        rafId = 0;
+      }
+    };
+    rafId = requestAnimationFrame(step);
+  }
+
+  var stickyBound = false;
+  function bindSticky() {
+    if (stickyBound) return;
+    stickyBound = true;
+    window.addEventListener('scroll', function () { follow(250); }, { passive: true });
+    window.addEventListener('resize', function () { follow(100); });
+    header = document.querySelector('.section-header');
+    if (header && 'MutationObserver' in window) {
+      new MutationObserver(function () { follow(300); }).observe(header, {
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+      });
+    }
+    follow(100);
+  }
+
+  /* ---------- Countdown ---------- */
+
+  function Countdown(root) {
+    this.root = root;
+    this.wrap = root.closest('.shopify-section') || root.parentElement;
+    this.mode = root.getAttribute('data-mode') || 'fixed';
+    this.hideDays = root.getAttribute('data-hide-days') === 'true';
+    this.after = root.getAttribute('data-after') || 'hide';
+    this.designMode = root.getAttribute('data-design-mode') === 'true';
+    this.nums = {};
+    this.last = {};
+    var self = this;
+    ['d', 'h', 'm', 's'].forEach(function (k) {
+      self.nums[k] = root.querySelector('[data-lt-cd-num="' + k + '"]');
+    });
+    this.dayUnit = root.querySelector('[data-lt-cd-unit="d"]');
+    this.daySep = root.querySelector('[data-lt-cd-sep="d"]');
+    this.clock = root.querySelector('[data-lt-cd-clock]');
+    this.clockLabel = root.querySelector('[data-lt-cd-clock-label]');
+    this.endedEl = root.querySelector('[data-lt-cd-ended]');
+    this.note = root.querySelector('[data-lt-cd-note]');
+    this.timer = 0;
+
+    this.end = null;
+    if (this.mode === 'fixed') {
+      var raw = root.getAttribute('data-end') || '';
+      var t = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:00(Z|[+-]\d{2}:\d{2})$/.test(raw) ? Date.parse(raw) : NaN;
+      if (isNaN(t)) {
+        this.invalid = true;
+      } else {
+        this.end = t;
+      }
+    }
+
+    this.onLink = this.onLink.bind(this);
+    this.link = root.querySelector('[data-lt-cd-link]');
+    if (this.link) this.link.addEventListener('click', this.onLink);
+
+    this.tick = this.tick.bind(this);
+    this.onVisible = function () { if (!document.hidden) self.tick(); };
+    document.addEventListener('visibilitychange', this.onVisible);
+    window.addEventListener('pageshow', this.onVisible);
+
+    if (this.invalid) {
+      this.showNote('Countdown: check the End date (YYYY-MM-DD) and End time (HH:MM). The bar is hidden on the live store until this is fixed.');
+      if (!this.designMode) this.setHidden(true);
+      return;
+    }
+    this.tick();
+  }
+
+  Countdown.prototype.showNote = function (msg) {
+    if (!this.note) return;
+    this.note.textContent = msg;
+    this.note.hidden = false;
+  };
+
+  Countdown.prototype.setHidden = function (hide) {
+    if (this.wrap) this.wrap.style.display = hide ? 'none' : '';
+  };
+
+  Countdown.prototype.target = function (now) {
+    if (this.mode === 'daily') {
+      var end = new Date(now);
+      end.setHours(24, 0, 0, 0);
+      return end.getTime();
+    }
+    return this.end;
+  };
+
+  Countdown.prototype.set = function (k, val) {
+    var el = this.nums[k];
+    if (!el || this.last[k] === val) return;
+    var first = this.last[k] === undefined;
+    this.last[k] = val;
+    el.textContent = val;
+    if (!first) {
+      el.classList.remove('is-tick');
+      void el.offsetWidth; // restart animation
+      el.classList.add('is-tick');
+    }
+  };
+
+  Countdown.prototype.tick = function () {
+    clearTimeout(this.timer);
+    if (!this.root.isConnected) return;
+
+    var now = Date.now();
+    var left = Math.max(0, Math.floor((this.target(now) - now) / 1000));
+
+    if (left <= 0 && this.mode === 'fixed') {
+      this.finish();
+      return;
+    }
+
+    var d = Math.floor(left / 86400);
+    var h = Math.floor((left % 86400) / 3600);
+    var m = Math.floor((left % 3600) / 60);
+    var s = left % 60;
+
+    var showDays = d > 0 || !this.hideDays;
+    if (this.dayUnit) this.dayUnit.hidden = !showDays;
+    if (this.daySep) this.daySep.hidden = !showDays;
+
+    this.set('d', pad(d));
+    this.set('h', pad(h));
+    this.set('m', pad(m));
+    this.set('s', pad(s));
+
+    if (!document.hidden) {
+      // Align to the next full second.
+      this.timer = setTimeout(this.tick, 1000 - (Date.now() % 1000) + 10);
+    }
+  };
+
+  Countdown.prototype.finish = function () {
+    if (this.after === 'message') {
+      if (this.clock) this.clock.hidden = true;
+      if (this.clockLabel) this.clockLabel.hidden = true;
+      if (this.endedEl) this.endedEl.hidden = false;
+      return;
+    }
+    if (this.designMode) {
+      this.showNote('Countdown: the end date has passed, so this bar is hidden on the live store.');
+      ['d', 'h', 'm', 's'].forEach(function (k) { this.set(k, '00'); }, this);
+      return;
+    }
+    this.setHidden(true);
+  };
+
+  // Smooth-scroll to on-page anchors, leaving room for the sticky bar.
+  Countdown.prototype.onLink = function (e) {
+    var href = this.link.getAttribute('href') || '';
+    var i = href.indexOf('#');
+    if (i === -1) return;
+    var path = href.slice(0, i);
+    if (path && path !== window.location.pathname) return;
+    var id = decodeURIComponent(href.slice(i + 1));
+    var target = id && document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    var barH = this.wrap ? this.wrap.getBoundingClientRect().height : 0;
+    var anchorRect = target.getBoundingClientRect();
+    // .lt-bf__anchor already sits 80px above its section; aim for the section itself.
+    var extra = target.classList.contains('lt-bf__anchor') ? 80 : 0;
+    var y = window.pageYOffset + anchorRect.top + extra - barH - 12;
+    // The theme header stays on screen when it is always sticky, or reappears
+    // when scrolling up (on-scroll-up), so leave room for it in those cases.
+    var sh = document.querySelector('sticky-header');
+    var type = sh ? sh.getAttribute('data-sticky-type') : '';
+    var hdr = document.querySelector('.section-header');
+    if (hdr && (type === 'always' || type === 'reduce-logo-size' || (type === 'on-scroll-up' && y < window.pageYOffset))) {
+      y -= hdr.offsetHeight;
+    }
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    if (history.replaceState) history.replaceState(null, '', '#' + id);
+  };
+
+  Countdown.prototype.destroy = function () {
+    clearTimeout(this.timer);
+    document.removeEventListener('visibilitychange', this.onVisible);
+    window.removeEventListener('pageshow', this.onVisible);
+    if (this.link) this.link.removeEventListener('click', this.onLink);
+  };
+
+  function init(scope) {
+    (scope || document).querySelectorAll('[data-lt-cd]').forEach(function (root) {
+      if (root.__ltCd) return;
+      root.__ltCd = new Countdown(root);
+      instances.push(root.__ltCd);
+    });
+    bindSticky();
+    follow(100);
+  }
+
+  function destroy(scope) {
+    (scope || document).querySelectorAll('[data-lt-cd]').forEach(function (root) {
+      if (!root.__ltCd) return;
+      root.__ltCd.destroy();
+      instances = instances.filter(function (i) { return i !== root.__ltCd; });
+      root.__ltCd = null;
+    });
+  }
+
+  window.LTBFCountdown = { init: init, destroy: destroy };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { init(); });
+  } else {
+    init();
+  }
+
+  document.addEventListener('shopify:section:load', function (e) { init(e.target); });
+  document.addEventListener('shopify:section:unload', function (e) { destroy(e.target); });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "LT BF Countdown",
+  "tag": "section",
+  "class": "section lt-cd-section",
+  "settings": [
+    { "type": "header", "content": "Timer" },
+    {
+      "type": "select",
+      "id": "mode",
+      "label": "Timer type",
+      "options": [
+        { "value": "fixed", "label": "Fixed end date" },
+        { "value": "daily", "label": "Daily reset (visitor's midnight)" }
+      ],
+      "default": "fixed",
+      "info": "Daily reset restarts every midnight in the visitor's timezone and ignores the end date."
+    },
+    { "type": "text", "id": "end_date", "label": "End date", "default": "2026-11-30", "info": "Format: YYYY-MM-DD" },
+    { "type": "text", "id": "end_time", "label": "End time", "default": "23:59", "info": "24-hour format: HH:MM (e.g. 23:59)" },
+    {
+      "type": "select",
+      "id": "timezone",
+      "label": "Timezone",
+      "options": [
+        { "value": "-08:00", "label": "Pacific Standard (PST, Nov–Mar)" },
+        { "value": "-07:00", "label": "Pacific Daylight (PDT) / Mountain Std (MST)" },
+        { "value": "-06:00", "label": "Central Standard (CST)" },
+        { "value": "-05:00", "label": "Eastern Standard (EST)" },
+        { "value": "-04:00", "label": "Eastern Daylight (EDT)" },
+        { "value": "Z", "label": "UTC" }
+      ],
+      "default": "-08:00"
+    },
+    { "type": "checkbox", "id": "hide_days", "label": "Hide days when under 24 hours left", "default": true },
+    {
+      "type": "select",
+      "id": "after_end",
+      "label": "When the timer ends",
+      "options": [
+        { "value": "hide", "label": "Hide the bar" },
+        { "value": "message", "label": "Show the ended message" }
+      ],
+      "default": "hide"
+    },
+    { "type": "text", "id": "ended_text", "label": "Ended message", "default": "This sale has ended" },
+
+    { "type": "header", "content": "Content" },
+    { "type": "inline_richtext", "id": "title", "label": "Title", "default": "Black Friday <em>Sale</em>", "info": "Wrap a word in italics to highlight it." },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Ends Cyber Monday" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop the deals" },
+    { "type": "text", "id": "link_url", "label": "Link", "default": "#buy-1-get-1", "info": "An anchor on this page (e.g. #buy-1-get-1) or any URL." },
+    { "type": "checkbox", "id": "hide_sub_m", "label": "Hide subtitle text on mobile", "default": true, "info": "The link stays visible." },
+    { "type": "text", "id": "clock_label", "label": "Timer label", "default": "Ends in", "info": "Shown before the timer on desktop." },
+    { "type": "text", "id": "label_days", "label": "Days label", "default": "Days" },
+    { "type": "text", "id": "label_hours", "label": "Hours label", "default": "Hrs" },
+    { "type": "text", "id": "label_minutes", "label": "Minutes label", "default": "Min" },
+    { "type": "text", "id": "label_seconds", "label": "Seconds label", "default": "Sec" },
+
+    { "type": "header", "content": "Layout" },
+    { "type": "checkbox", "id": "sticky_d", "label": "Sticky on desktop", "default": true },
+    { "type": "checkbox", "id": "sticky_m", "label": "Sticky on mobile", "default": true },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Alignment",
+      "options": [
+        { "value": "split", "label": "Text left, timer right" },
+        { "value": "center", "label": "Centered" }
+      ],
+      "default": "split"
+    },
+    { "type": "range", "id": "max_width", "label": "Max content width", "min": 600, "max": 1600, "step": 20, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "pt_d", "label": "Top padding (desktop)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "pb_d", "label": "Bottom padding (desktop)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "pt_m", "label": "Top padding (mobile)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
+    { "type": "range", "id": "pb_m", "label": "Bottom padding (mobile)", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 10 },
+
+    { "type": "header", "content": "Sizes" },
+    { "type": "range", "id": "title_size_d", "label": "Title size (desktop)", "min": 14, "max": 40, "step": 1, "unit": "px", "default": 24 },
+    { "type": "range", "id": "title_size_m", "label": "Title size (mobile)", "min": 12, "max": 28, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "digit_size_d", "label": "Timer size (desktop)", "min": 16, "max": 48, "step": 1, "unit": "px", "default": 26 },
+    { "type": "range", "id": "digit_size_m", "label": "Timer size (mobile)", "min": 12, "max": 32, "step": 1, "unit": "px", "default": 18 },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color_1", "label": "Background start", "default": "#1B1540" },
+    { "type": "color", "id": "bg_color_2", "label": "Background end", "default": "#2E1A6B" },
+    { "type": "color", "id": "border_color", "label": "Bottom border", "default": "#E3C8FF40" },
+    { "type": "checkbox", "id": "show_glow", "label": "Show glow", "default": true },
+    { "type": "color", "id": "glow_color", "label": "Glow", "default": "#8E4DFF59" },
+    { "type": "color", "id": "title_color", "label": "Title", "default": "#FFFFFF" },
+    { "type": "color", "id": "highlight_bg", "label": "Title highlight background", "default": "#E3C8FF" },
+    { "type": "color", "id": "highlight_color", "label": "Title highlight text", "default": "#1B1540" },
+    { "type": "color", "id": "sub_color", "label": "Subtitle", "default": "#FFFFFFCC" },
+    { "type": "color", "id": "link_color", "label": "Link", "default": "#E3C8FF" },
+    { "type": "color", "id": "tile_bg", "label": "Timer box background", "default": "#FFFFFF14" },
+    { "type": "color", "id": "tile_border", "label": "Timer box border", "default": "#E3C8FF59" },
+    { "type": "color", "id": "digit_color", "label": "Timer numbers", "default": "#FFFFFF" },
+    { "type": "color", "id": "label_color", "label": "Timer labels", "default": "#E3C8FF" },
+    { "type": "color", "id": "sep_color", "label": "Timer colons", "default": "#E3C8FF" },
+    { "type": "checkbox", "id": "blink_sep", "label": "Blink colons", "default": true },
+
+    { "type": "header", "content": "Visibility" },
+    { "type": "checkbox", "id": "hide_d", "label": "Hide on desktop", "default": false },
+    { "type": "checkbox", "id": "hide_m", "label": "Hide on mobile", "default": false }
+  ],
+  "presets": [{ "name": "LT BF Countdown" }]
+}
+{% endschema %}
