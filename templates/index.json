@@ -50,6 +50,23 @@
     "lt_custom_banner_slider_wDNahg": {
       "type": "lt-custom-banner-slider",
       "blocks": {
+        "slide_kxM4Ym": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Muzzle_BF_Deals_Desktop.png",
+            "image_mobile": "shopify://shop_images/Muzzle_BF_Deals_Mobile.png",
+            "link": "shopify://pages/black-friday-deals"
+          }
+        },
+        "slide_AWY4NA": {
+          "type": "slide",
+          "disabled": true,
+          "settings": {
+            "image_desktop": "shopify://shop_images/Muzzle_-_Replacement_Banner_-_Desktop_1.jpg",
+            "image_mobile": "shopify://shop_images/Muzzle_-_Replacement_Banner_-_Mobile_1_1.jpg",
+            "link": "https://muzzlesleep.com/pages/quiz"
+          }
+        },
         "slide_7Rq8R6": {
           "type": "slide",
           "disabled": true,
@@ -57,14 +74,6 @@
             "image_desktop": "shopify://shop_images/Muzzle_-_Labor_Day_Banner_-_1.jpg",
             "image_mobile": "shopify://shop_images/Muzzle_-_Labor_Day_Banner_-_Mobile_-_1.jpg",
             "link": "shopify://collections/products"
-          }
-        },
-        "slide_AWY4NA": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/Muzzle_-_Replacement_Banner_-_Desktop_1.jpg",
-            "image_mobile": "shopify://shop_images/Muzzle_-_Replacement_Banner_-_Mobile_1_1.jpg",
-            "link": "https://muzzlesleep.com/pages/quiz"
           }
         },
         "slide_c8MGTQ": {
@@ -177,8 +186,9 @@
         }
       },
       "block_order": [
-        "slide_7Rq8R6",
+        "slide_kxM4Ym",
         "slide_AWY4NA",
+        "slide_7Rq8R6",
         "slide_c8MGTQ",
         "slide_YRHbcG",
         "slide_YpnYKM",
@@ -431,10 +441,10 @@
         "onetime_label": "One-time purchase",
         "button_label": "Checkout Now",
         "caption": "Engineered for Comfort, Crafted for Performance",
-        "description_label": "Description",
-        "custom_id": "landing-product-main",
         "lightlabs_panel_id": "q2cwen5yev-box-button-for-kids-tape",
         "lightlabs_product_id": "11531",
+        "description_label": "Description",
+        "custom_id": "landing-product-main",
         "padding_top": 60,
         "padding_bottom": 60,
         "margin_top": 0,
@@ -575,10 +585,10 @@
         "onetime_label": "One-time purchase",
         "button_label": "Checkout Now",
         "caption": "Engineered for Comfort, Crafted for Performance",
-        "description_label": "Description",
-        "custom_id": "",
         "lightlabs_panel_id": "jge52td9wx-box-button-for-adult-tape",
         "lightlabs_product_id": "3852",
+        "description_label": "Description",
+        "custom_id": "",
         "padding_top": 60,
         "padding_bottom": 60,
         "margin_top": 0,
