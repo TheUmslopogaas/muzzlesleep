@@ -40,10 +40,10 @@
     "lt_product_cards_Bc8kQ2": {
       "type": "lt-product-cards",
       "blocks": {
-        "product_Rk3mT1": {
+        "product_Es1aB1": {
           "type": "product",
           "settings": {
-            "product": "1-mouth-tape-for-adult-1-mouth-tape-for-youth-1",
+            "product": "1-adult-1-youth-mouth-tape-extra-sensitive",
             "variant_id": "",
             "default_purchase": "one_time",
             "hide_variant_select": false,
@@ -63,10 +63,10 @@
             "link_new_tab": false
           }
         },
-        "product_Vx7pL2": {
+        "product_Es2cD2": {
           "type": "product",
           "settings": {
-            "product": "1-adult-strong-hold-1-youth-medium-hold-mouth-tape",
+            "product": "2-adult-extra-sensitive-strong-hold-1-youth-extra-sensitive-mouth-tape",
             "variant_id": "",
             "default_purchase": "one_time",
             "hide_variant_select": false,
@@ -86,10 +86,56 @@
             "link_new_tab": false
           }
         },
-        "product_Hn4qW9": {
+        "product_Es3eF3": {
           "type": "product",
           "settings": {
-            "product": "2-adult-medium-strong-hold-1-youth-medium-hold-mouth-tape",
+            "product": "2-adult-medium-strong-hold-1-youth-extra-sensitive-mouth-tape",
+            "variant_id": "",
+            "default_purchase": "one_time",
+            "hide_variant_select": false,
+            "hide_plan_select": false,
+            "image_alt": "",
+            "title": "",
+            "description": "",
+            "badge_text": "",
+            "price_override": "",
+            "compare_override": "",
+            "rating_override": "",
+            "review_count_override": "",
+            "button_label": "",
+            "one_time_label": "",
+            "subscription_label": "",
+            "link": "",
+            "link_new_tab": false
+          }
+        },
+        "product_Es4gH4": {
+          "type": "product",
+          "settings": {
+            "product": "1-beauty-tape-1-youth-extra-sensitive-mouth-tape",
+            "variant_id": "",
+            "default_purchase": "one_time",
+            "hide_variant_select": false,
+            "hide_plan_select": false,
+            "image_alt": "",
+            "title": "",
+            "description": "",
+            "badge_text": "",
+            "price_override": "",
+            "compare_override": "",
+            "rating_override": "",
+            "review_count_override": "",
+            "button_label": "",
+            "one_time_label": "",
+            "subscription_label": "",
+            "link": "",
+            "link_new_tab": false
+          }
+        },
+        "product_Es5iJ5": {
+          "type": "product",
+          "settings": {
+            "product": "1-beauty-tape-1-adult-extra-sensitive-1-youth-extra-sensitive-mouth-tape",
             "variant_id": "",
             "default_purchase": "one_time",
             "hide_variant_select": false,
@@ -111,9 +157,11 @@
         }
       },
       "block_order": [
-        "product_Rk3mT1",
-        "product_Vx7pL2",
-        "product_Hn4qW9"
+        "product_Es1aB1",
+        "product_Es2cD2",
+        "product_Es3eF3",
+        "product_Es4gH4",
+        "product_Es5iJ5"
       ],
       "name": "LT Product Cards",
       "settings": {
